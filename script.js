@@ -880,12 +880,8 @@ const TeardownShowcase3D = {
         this.state.lipGlow = 1;
         this.state.spill = 1;
         this.state.popout = 1;
-        this.applyStateToScene(0);
-        this.renderer.render(this.scene, this.camera);
-        this.updateCalloutLines();
-      } else {
-        this.startLoop();
       }
+      this.renderFrame();
 
       return true;
     } catch (err) {
@@ -2120,6 +2116,7 @@ const TeardownShowcase3D = {
     this.rafId = requestAnimationFrame(tick);
   }
 };
+window.TeardownShowcase3D = TeardownShowcase3D;
 
 /**
  * ==========================================================================
@@ -2136,16 +2133,17 @@ const AnimationController = {
     const phone = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.phoneAssembly);
 
     this.initSpotlightCards();
+    const webglReady = TeardownShowcase3D.init();
 
     if (DOMUtils.prefersReducedMotion() || typeof window.gsap === 'undefined') {
       const isStacked = window.innerWidth <= 992;
-      if (notebook) {
+      if (notebook && !webglReady) {
         notebook.style.transform = isStacked
           ? 'translate3d(0px, 0px, 0px) rotateX(-18deg) rotateY(0deg) rotateZ(0deg)'
           : 'translate3d(0px, 0px, 0px) rotateX(-18deg) rotateY(-8deg) rotateZ(0deg)';
       }
-      if (lid) lid.style.transform = 'rotateX(12deg)';
-      if (phone) {
+      if (lid && !webglReady) lid.style.transform = 'rotateX(12deg)';
+      if (phone && !webglReady) {
         phone.style.transform = isStacked
           ? 'translate3d(0px, 0px, 0px) rotateX(-10deg) rotateY(0deg) rotateZ(0deg)'
           : 'translate3d(0px, 0px, 0px) rotateX(-10deg) rotateY(-14deg) rotateZ(0deg)';
@@ -2172,6 +2170,7 @@ const AnimationController = {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
+        TeardownShowcase3D.onResize();
         this.initShowcase3D();
         ScrollTrigger.refresh();
       }, 180);
@@ -2193,6 +2192,7 @@ const AnimationController = {
    * - Moment 3 (0.68 -> 1.00): 2.5D UI Pop-out (translateZ 12px..24px) & Studio Specialty Badges
    */
   initShowcase3D() {
+    const webglActive = TeardownShowcase3D.init();
     const notebook = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookAssembly);
     const lid = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookLid);
     const notebookUI = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookScreenUI);
@@ -2206,8 +2206,6 @@ const AnimationController = {
     const badgeMobile = DOMUtils.qs('#studio-badge-mobile');
     const layers25d = DOMUtils.qsa('#showcase-viewport .ui-layer-25d');
 
-    if (!notebook || !lid || !phone) return;
-
     if (this.showcaseTimeline) {
       if (this.showcaseTimeline.scrollTrigger) {
         this.showcaseTimeline.scrollTrigger.kill();
@@ -2217,6 +2215,44 @@ const AnimationController = {
     }
 
     const isStacked = window.innerWidth <= 992;
+
+    if (webglActive) {
+      const tlWebgl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#showcase-viewport',
+          start: 'top 84%',
+          end: isStacked ? 'bottom 66%' : 'center 42%',
+          scrub: 0.85,
+          invalidateOnRefresh: true
+        }
+      });
+
+      // Momento 1 (0.00 -> 0.22): Front-lip amber light bar awakens
+      tlWebgl.fromTo(TeardownShowcase3D.state,
+        { lipGlow: 0.22 },
+        { lipGlow: 1, duration: 0.22, ease: 'power2.out' },
+        0
+      );
+
+      // Momento 2 (0.14 -> 0.78): Articulated lid opens + screen light spill onto 3D keyboard
+      tlWebgl.fromTo(TeardownShowcase3D.state,
+        { lidOpen: 0, spill: 0 },
+        { lidOpen: 1, spill: 1, duration: 0.64, ease: 'power2.inOut' },
+        0.14
+      );
+
+      // Momento 3 (0.64 -> 1.00): 2.5D UI Cards pop out & SVG callouts activate
+      tlWebgl.fromTo(TeardownShowcase3D.state,
+        { popout: 0, scrollProgress: 0 },
+        { popout: 1, scrollProgress: 1, duration: 0.36, ease: 'power3.out' },
+        0.64
+      );
+
+      this.showcaseTimeline = tlWebgl;
+      return;
+    }
+
+    if (!notebook || !lid || !phone) return;
 
     if (notebookUI) gsap.set(notebookUI, { opacity: 1 });
     if (phoneUI) gsap.set(phoneUI, { opacity: 1 });
