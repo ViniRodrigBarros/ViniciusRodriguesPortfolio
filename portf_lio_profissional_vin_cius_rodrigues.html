@@ -41,9 +41,10 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- GSAP & ScrollTrigger -->
+  <!-- GSAP, ScrollTrigger & Three.js PBR Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css" />
@@ -197,21 +198,84 @@
          ========================================================================== -->
     <section id="showcase" class="section-alt py-24 md:py-32 relative">
       <div class="container-editorial depth-transition-shell" data-depth-section="showcase">
-        <div class="max-w-3xl mb-10">
-          <div class="eyebrow-label mb-3">
-            <span class="eyebrow-line"></span>
-            <span>01 / Domínio Multiplataforma &amp; Full Stack</span>
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+          <div class="max-w-3xl">
+            <div class="eyebrow-label mb-3">
+              <span class="eyebrow-line"></span>
+              <span>01 / Domínio Multiplataforma &amp; Full Stack</span>
+            </div>
+            <h2 class="section-title kinetic-heading">
+              Engenharia integrada entre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">sistemas web</span> e <span class="font-serif-editorial italic font-normal text-[#F5F1E8]">aplicações nativas</span>.
+            </h2>
+            <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-2xl">
+              Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: a construção de arquiteturas web/APIs escaláveis e o desenvolvimento de aplicativos móveis de alta precisão.
+            </p>
           </div>
-          <h2 class="section-title kinetic-heading">
-            Engenharia integrada entre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">sistemas web</span> e <span class="font-serif-editorial italic font-normal text-[#F5F1E8]">aplicações nativas</span>.
-          </h2>
-          <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-2xl">
-            Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: a construção de arquiteturas web/APIs escaláveis e o desenvolvimento de aplicativos móveis de alta precisão.
-          </p>
+
+          <!-- @teardown Interactive Camera & Hardware Inspection Controls -->
+          <div id="showcase-toolbar" class="showcase-toolbar flex flex-wrap items-center gap-2" role="toolbar" aria-label="Modos de inspeção 3D e corte técnico">
+            <button type="button" class="teardown-mode-btn active" data-teardown-mode="studio" aria-pressed="true">
+              <span class="teardown-btn-dot"></span>
+              <span>Estúdio</span>
+            </button>
+            <button type="button" class="teardown-mode-btn" data-teardown-mode="exploded" aria-pressed="false">
+              <span>Explodido</span>
+            </button>
+            <button type="button" class="teardown-mode-btn" data-teardown-mode="cutaway" aria-pressed="false">
+              <span>Cutaway</span>
+            </button>
+            <button type="button" class="teardown-mode-btn" data-teardown-mode="mobile" aria-pressed="false">
+              <span>Foco Mobile</span>
+            </button>
+            <button type="button" class="teardown-mode-btn teardown-reset-btn" data-teardown-mode="reset" aria-label="Restaurar câmera e sincronização com a rolagem">
+              <span>Reset</span>
+            </button>
+          </div>
         </div>
 
-        <!-- 3D STUDIO VIEWPORT (Dedicated Left/Center Laptop Slot & Right Phone Slot) -->
-        <div id="showcase-viewport" class="stage-3d-viewport showcase-stage spotlight-card" aria-label="Composição 3D de Notebook e Smartphone sincronizada com a rolagem">
+        <!-- 3D STUDIO VIEWPORT (Three.js PBR Hardware + Exploded/Cutaway + CSS3D Progressive Fallback) -->
+        <div id="showcase-viewport" class="stage-3d-viewport showcase-stage spotlight-card" aria-label="Composição 3D interativa de Notebook e Smartphone com visão explodida e corte técnico">
+          <!-- WebGL Physical PBR Canvas -->
+          <canvas id="showcase-webgl-canvas" class="showcase-webgl-canvas" aria-hidden="true"></canvas>
+
+          <!-- Live 3D-Projected SVG Callout Leaders & Architectural Readouts (@teardown console pattern) -->
+          <div id="showcase-callouts-layer" class="showcase-callouts-layer" aria-hidden="true">
+            <svg id="showcase-callouts-svg" class="showcase-callouts-svg" preserveAspectRatio="none"></svg>
+
+            <div id="callout-card-fullstack" class="teardown-callout-card">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 // FULL STACK ENGINE</div>
+              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">React • TypeScript • NestJS</div>
+              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">GitHub Actions &amp; Jenkins CI/CD</div>
+            </div>
+
+            <div id="callout-card-flavors" class="teardown-callout-card">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 // UNIFIED FLAVORS V5</div>
+              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">AppBus2 v5 • Codebase Único</div>
+              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">-75% Overhead • 80%+ Cobertura</div>
+            </div>
+
+            <div id="callout-card-ai" class="teardown-callout-card">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 // ON-DEVICE AI NPU</div>
+              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">LocalSpeak • 100% Offline</div>
+              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">sherpa_onnx + flutter_gemma</div>
+            </div>
+
+            <div id="callout-card-telemetry" class="teardown-callout-card">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">04 // REAL-TIME TELEMETRY</div>
+              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">NEAT &amp; Bus2Driver • WebSocket</div>
+              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">Dart Isolates • -40% Startup</div>
+            </div>
+          </div>
+
+          <!-- Interactive Stage Status Bar -->
+          <div class="showcase-hud-footer" aria-hidden="true">
+            <span id="showcase-hud-status" class="font-mono-meta text-[10px] text-[#AAA6A0]">
+              MODO: ESTÚDIO PBR • SINCRONIZADO AO SCROLL
+            </span>
+            <span class="font-mono-meta text-[10px] text-[#8E8A84] hidden sm:inline">
+              ARRASTE PARA ORBITAR 3D • SELECIONE EXPLODIDO OU CUTAWAY PARA INSPECIONAR CAMADAS
+            </span>
+          </div>
           <!-- Moment 3 Floating Studio Indicator: Full Stack Architecture -->
           <div id="studio-badge-fullstack" class="studio-specialty-badge studio-badge-left" aria-hidden="true">
             <span class="studio-badge-dot"></span>

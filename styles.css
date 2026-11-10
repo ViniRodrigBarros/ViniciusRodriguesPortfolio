@@ -408,12 +408,60 @@ li {
 }
 
 /* ==========================================================================
-   5. 3D DEVICE SHOWCASE — DEFINITIVE UNIFIED HINGE GEOMETRY (y=0, z=0)
+   5. 3D DEVICE SHOWCASE — THREE.JS PBR + TEARDOWN MODES + CSS3D FALLBACK
    ========================================================================== */
+.showcase-toolbar {
+  background: rgba(21, 21, 25, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 0.3rem;
+}
+
+.teardown-mode-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.teardown-mode-btn:hover {
+  color: var(--text-primary);
+  background: rgba(245, 241, 232, 0.05);
+}
+
+.teardown-mode-btn.active {
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  border-color: rgba(240, 120, 60, 0.45);
+}
+
+.teardown-btn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+}
+
+.teardown-reset-btn {
+  color: var(--accent-secondary);
+}
+
 .stage-3d-viewport,
 .showcase-stage {
   width: 100%;
-  min-height: 580px;
+  min-height: 600px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
@@ -428,6 +476,105 @@ li {
     linear-gradient(180deg, #131317 0%, #0C0C0F 100%);
   border: 1px solid var(--border-hairline);
   overflow: hidden;
+}
+
+/* WebGL Physical PBR Canvas & @teardown Callout Overlay */
+.showcase-webgl-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 4;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.showcase-webgl-canvas:active {
+  cursor: grabbing;
+}
+
+.stage-3d-viewport.webgl-ready .showcase-webgl-canvas {
+  display: block;
+}
+
+.stage-3d-viewport.webgl-ready .laptop-stage-slot,
+.stage-3d-viewport.webgl-ready .phone-stage-slot,
+.stage-3d-viewport.webgl-ready .studio-specialty-badge {
+  display: none !important;
+}
+
+.showcase-callouts-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  display: none;
+}
+
+.stage-3d-viewport.webgl-ready .showcase-callouts-layer {
+  display: block;
+}
+
+.showcase-callouts-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.teardown-callout-card {
+  position: absolute;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(17, 17, 20, 0.92);
+  border: 1px solid rgba(240, 120, 60, 0.36);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#callout-card-fullstack {
+  top: 22px;
+  left: 24px;
+}
+
+#callout-card-flavors {
+  bottom: 52px;
+  left: 24px;
+}
+
+#callout-card-ai {
+  top: 22px;
+  right: 24px;
+  text-align: right;
+}
+
+#callout-card-telemetry {
+  bottom: 52px;
+  right: 24px;
+  text-align: right;
+}
+
+.showcase-hud-footer {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 14px;
+  z-index: 7;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 241, 232, 0.08);
+  pointer-events: none;
+}
+
+.stage-3d-viewport.webgl-ready .showcase-hud-footer {
+  display: flex;
 }
 
 /* Dedicated Spatial Slots: Laptop and Smartphone NEVER collide or overlap */
@@ -1306,6 +1453,10 @@ li {
     --laptop-scale: 0.72;
     --phone-scale: 0.76;
   }
+  .showcase-toolbar {
+    border-radius: 16px;
+    padding: 0.35rem;
+  }
   .stage-3d-viewport,
   .showcase-stage {
     display: flex;
@@ -1317,6 +1468,9 @@ li {
     overflow: hidden;
     padding: 52px 12px;
     gap: 24px;
+  }
+  .stage-3d-viewport.webgl-ready {
+    min-height: 660px;
   }
   .studio-badge-left {
     top: 12px;
@@ -1349,6 +1503,30 @@ li {
   :root {
     --laptop-scale: 0.54;
     --phone-scale: 0.66;
+  }
+  .stage-3d-viewport.webgl-ready {
+    min-height: 620px;
+  }
+  .teardown-callout-card {
+    padding: 0.4rem 0.65rem;
+  }
+  #callout-card-fullstack {
+    top: 14px;
+    left: 14px;
+  }
+  #callout-card-ai {
+    bottom: 44px;
+    top: auto;
+    right: 14px;
+  }
+  #callout-card-flavors,
+  #callout-card-telemetry {
+    display: none;
+  }
+  .showcase-hud-footer {
+    left: 14px;
+    right: 14px;
+    bottom: 10px;
   }
   .laptop-stage-slot {
     height: 240px;
