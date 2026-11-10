@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<!-- ==========================================================================
+   1. DOCUMENT STRUCTURE (SEO, OpenGraph, Editorial Fonts & GSAP)
+   ========================================================================== -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinícius Rodrigues — Mobile &amp; Full Stack Software Engineer</title>
+  <meta name="description" content="Portfólio profissional de Vinícius Rodrigues Barros — Engenheiro de Software Mobile (Flutter, Dart, Kotlin) & Full Stack (React, NestJS). Liderança técnica, arquitetura limpa e aplicações em escala." />
+  <meta name="author" content="Vinícius Rodrigues Barros" />
+  <meta name="theme-color" content="#0B0B0D" />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vinícius Rodrigues — Mobile & Full Stack Software Engineer" />
+  <meta property="og:description" content="3+ anos construindo aplicações mobile e full stack de alta performance na STTP, Bus2 e Accenture. Especialista em Flutter, Clean Architecture, Kotlin, React e NestJS." />
+  <meta property="og:locale" content="pt_BR" />
+
+  <!-- Minimalist Architectural Favicon (Dark Charcoal + Warm Orange) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B0B0D' stroke='%232D2B29' stroke-width='2'/%3E%3Cpath d='M16 20L27 45L34 29' stroke='%23F5F1E8' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M36 20H45C48.5 20 50 22 50 25.5C50 29 47.5 31 44 31H38M43 31L49 45' stroke='%23F0783C' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Instrument Serif (Editorial Display), Plus Jakarta Sans (Primary UI), JetBrains Mono (Technical Meta) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Configuration & Utility Base -->
+  <script>
+    tailwind = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ==========================================================================
+       HEADER & EDITORIAL NAVIGATION
+       ========================================================================== -->
+  <header id="site-header" class="site-header py-4 md:py-5">
+    <div class="container-editorial flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-3 rounded-lg" aria-label="Início — Vinícius Rodrigues">
+        <div class="w-9 h-9 rounded-lg bg-[#19191E] border border-[#F5F1E8]/15 flex items-center justify-center font-semibold text-sm text-[#F5F1E8]">
+          VR<span class="text-[#F0783C]">.</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold text-[#F5F1E8] tracking-tight leading-none">Vinícius Rodrigues</span>
+          <span class="font-mono-meta text-[11px] text-[#AAA6A0] mt-1">Mobile &amp; Full Stack Engineer</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav (5 Core Destinations) -->
+      <nav class="hidden lg:flex items-center gap-8" aria-label="Navegação Principal">
+        <a href="#showcase" class="nav-link" data-section="showcase">Especialidades</a>
+        <a href="#sobre" class="nav-link" data-section="sobre">Sobre</a>
+        <a href="#experiencia" class="nav-link" data-section="experiencia">Experiência</a>
+        <a href="#projetos" class="nav-link" data-section="projetos">Projetos</a>
+        <a href="#stack" class="nav-link" data-section="stack">Stack</a>
+      </nav>
+
+      <!-- Primary Contact CTA & Mobile Drawer Trigger -->
+      <div class="flex items-center gap-3">
+        <a href="#contato" data-section="contato" class="nav-cta-pill hidden sm:inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold bg-[#19191E] text-[#F5F1E8] border border-[#F5F1E8]/15 hover:border-[#F0783C] hover:text-[#FF9A5C] transition-colors">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#F0783C]"></span>
+          <span>Contato</span>
+        </a>
+
+        <button id="mobile-menu-btn" type="button" class="lg:hidden min-w-[44px] min-h-[44px] inline-flex items-center justify-center p-2.5 rounded-lg bg-[#19191E] border border-[#F5F1E8]/10 text-[#F5F1E8]" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="mobile-menu-drawer">
+          <svg id="menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 7h16M4 12h16M10 17h10" />
+          </svg>
+          <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu-drawer" class="lg:hidden hidden bg-[#111114]/95 backdrop-blur-xl border-b border-[#F5F1E8]/10">
+      <nav class="container-editorial py-5 flex flex-col gap-1" aria-label="Menu Mobile">
+        <a href="#showcase" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Especialidades</a>
+        <a href="#sobre" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Sobre</a>
+        <a href="#experiencia" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Experiência</a>
+        <a href="#projetos" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Projetos</a>
+        <a href="#stack" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Stack</a>
+        <a href="#formacao" class="mobile-nav-link min-h-[44px] flex items-center text-sm text-[#F5F1E8] border-b border-[#F5F1E8]/5">Formação</a>
+        <a href="#contato" class="mobile-nav-link min-h-[44px] flex items-center text-sm font-semibold text-[#FF9A5C]">Contato →</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         SEÇÃO 01 — HERO (EDITORIAL, MATURE & HIGH-CRAFT)
+         ========================================================================== -->
+    <section id="hero" class="relative lg:min-h-[92vh] flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-10">
+      <div class="container-editorial my-auto">
+        <!-- Editorial Eyebrow -->
+        <div class="hero-reveal flex flex-wrap items-center justify-between gap-2.5 sm:gap-4 pb-4 mb-5 md:pb-5 md:mb-6 border-b border-[#F5F1E8]/10">
+          <div class="eyebrow-label">
+            <span class="eyebrow-line"></span>
+            <span>Engenharia de Software Mobile &amp; Full Stack</span>
+          </div>
+          <div class="font-mono-meta text-xs text-[#AAA6A0]">
+            3+ anos de experiência • 5+ aplicações em produção
+          </div>
+        </div>
+
+        <!-- Main Editorial Headline -->
+        <div class="max-w-5xl">
+          <h1 class="display-heading hero-reveal">
+            Vinícius Rodrigues
+            <span class="block text-[#AAA6A0] font-normal mt-1">
+              Arquitetura <span class="font-serif-editorial italic text-[#F5F1E8]">Mobile</span> em escala &amp; sistemas <span class="font-serif-editorial italic text-[#FF9A5C]">Full Stack</span>.
+            </span>
+          </h1>
+        </div>
+
+        <!-- Asymmetric Editorial Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mt-6 md:mt-10 items-end">
+          <div class="lg:col-span-7 hero-reveal">
+            <p class="text-[#AAA6A0] text-base sm:text-lg md:text-xl leading-relaxed font-normal max-w-2xl">
+              Engenheiro de software especializado em <strong class="text-[#F5F1E8] font-medium">Flutter, Dart e Kotlin</strong> para Android e iOS, com atuação sólida em <strong class="text-[#F5F1E8] font-medium">React e NestJS</strong>. Experiência comprovada liderando decisões de arquitetura, unificando codebases complexos e construindo sistemas de missão crítica na <strong class="text-[#F5F1E8] font-medium">STTP, Bus2 e Accenture</strong>.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-2.5 xl:gap-3.5 mt-5 sm:mt-7">
+              <a href="#experiencia" class="btn-primary-editorial">
+                <span>Trajetória Profissional</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+              <a href="#projetos" class="btn-secondary-editorial">
+                <span>Estudos de Caso</span>
+              </a>
+              <a href="https://github.com/ViniRodrigBarros" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial" aria-label="GitHub de Vinícius Rodrigues">
+                <span>GitHub</span>
+                <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/in/vinicius-rodrigues-948656225/" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial" aria-label="LinkedIn de Vinícius Rodrigues">
+                <span>LinkedIn</span>
+                <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Key Impact Metrics from Real Trajectory -->
+          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 hero-reveal">
+            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
+              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#FF9A5C] min-w-[4.25rem] sm:min-w-0 shrink-0">-75%</div>
+              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
+                Overhead de repositórios com unificação em Flutter Flavors na Bus2.
+              </p>
+            </div>
+            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
+              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#F5F1E8] min-w-[4.25rem] sm:min-w-0 shrink-0">5+</div>
+              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
+                Apps em produção liderados tecnicamente para mobilidade urbana.
+              </p>
+            </div>
+            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
+              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#FF9A5C] min-w-[4.25rem] sm:min-w-0 shrink-0">-50%</div>
+              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
+                Tempo de deploy com automação CI/CD para Google Play &amp; App Store.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtle Scroll Cue -->
+      <div class="container-editorial mt-6 md:mt-8 pt-4 md:pt-5 border-t border-[#F5F1E8]/10 flex items-center justify-between text-xs text-[#AAA6A0]">
+        <span>Role naturalmente para acompanhar a composição 3D</span>
+        <span class="font-mono-meta text-[#F0783C]">SCROLL ↓</span>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 02 — SHOWCASE 3D (GEOMETRIA UNIFICADA y=0, z=0 • 100% SCROLL)
+         ========================================================================== -->
+    <section id="showcase" class="section-alt py-24 md:py-32 relative">
+      <div class="container-editorial depth-transition-shell" data-depth-section="showcase">
+        <div class="max-w-3xl mb-10">
+          <div class="eyebrow-label mb-3">
+            <span class="eyebrow-line"></span>
+            <span>01 / Domínio Multiplataforma &amp; Full Stack</span>
+          </div>
+          <h2 class="section-title kinetic-heading">
+            Engenharia integrada entre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">sistemas web</span> e <span class="font-serif-editorial italic font-normal text-[#F5F1E8]">aplicações nativas</span>.
+          </h2>
+          <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-2xl">
+            Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: a construção de arquiteturas web/APIs escaláveis e o desenvolvimento de aplicativos móveis de alta precisão.
+          </p>
+        </div>
+
+        <!-- 3D STUDIO VIEWPORT (Dedicated Left/Center Laptop Slot & Right Phone Slot) -->
+        <div id="showcase-viewport" class="stage-3d-viewport showcase-stage spotlight-card" aria-label="Composição 3D de Notebook e Smartphone sincronizada com a rolagem">
+          <!-- Moment 3 Floating Studio Indicator: Full Stack Architecture -->
+          <div id="studio-badge-fullstack" class="studio-specialty-badge studio-badge-left" aria-hidden="true">
+            <span class="studio-badge-dot"></span>
+            <span class="font-mono-meta text-[10px] tracking-wider text-[#F5F1E8]">FULL STACK ARCHITECTURE</span>
+            <span class="font-mono-meta text-[9px] text-[#FF9A5C]">REACT • NESTJS • CI/CD</span>
+          </div>
+
+          <!-- Moment 3 Floating Studio Indicator: Mobile Engineering -->
+          <div id="studio-badge-mobile" class="studio-specialty-badge studio-badge-right" aria-hidden="true">
+            <span class="studio-badge-dot"></span>
+            <span class="font-mono-meta text-[10px] tracking-wider text-[#F5F1E8]">MOBILE ENGINEERING</span>
+            <span class="font-mono-meta text-[9px] text-[#FF9A5C]">FLUTTER • KOTLIN • ON-DEVICE AI</span>
+          </div>
+
+          <!-- SLOT 1: COHESIVE 3D WORKSTATION LAPTOP (Unified Hinge Axis y=0, z=0) -->
+          <div class="laptop-stage-slot">
+            <div class="laptop-scale-wrapper">
+              <div id="notebook-assembly" class="laptop-assembly">
+                <div class="laptop-floor-shadow" aria-hidden="true"></div>
+
+                <!-- Physical Hinge Cylinder at y=0, z=0 -->
+                <div class="laptop-hinge-cylinder" aria-hidden="true"></div>
+
+                <!-- LAPTOP LID (top: -330px, transform-origin: 50% 100% 0px -> pivots at y=0, z=0) -->
+                <div id="notebook-lid" class="laptop-lid">
+                  <div class="lid-outer-back" aria-hidden="true">
+                    <div class="notebook-emblem">VR<span class="text-[#F0783C]">.</span></div>
+                  </div>
+                  <div class="lid-bevel-top" aria-hidden="true"></div>
+                  <div class="lid-bevel-left" aria-hidden="true"></div>
+                  <div class="lid-bevel-right" aria-hidden="true"></div>
+
+                  <div class="lid-inner-screen">
+                    <!-- Dynamic Specular Glass Sheen reactive to scroll rotation -->
+                    <div id="laptop-specular-sheen" class="screen-specular-sheen" aria-hidden="true"></div>
+
+                    <div class="notebook-camera-notch" aria-hidden="true">
+                      <span class="notebook-camera-dot"></span>
+                    </div>
+
+                    <!-- Notebook Screen Content: Full Stack & Mobility Architecture (with 2.5D Z-axis Layers) -->
+                    <div id="notebook-screen-ui" class="notebook-screen-viewport p-3.5 select-none">
+                      <div class="ui-layer-25d flex items-center justify-between pb-2 mb-2.5 border-b border-[#F5F1E8]/10" data-depth="12">
+                        <div class="flex items-center gap-1.5">
+                          <span class="w-2.5 h-2.5 rounded-full bg-[#6F3826]"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-[#AAA6A0]/40"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-[#F0783C]"></span>
+                          <span class="ml-2 font-mono-meta text-[9px] text-[#AAA6A0]">architecture // fullstack-mobility-engine.ts</span>
+                        </div>
+                        <span class="font-mono-meta text-[9px] text-[#FF9A5C]">CI/CD • ACTIVE</span>
+                      </div>
+
+                      <div class="grid grid-cols-12 gap-3 flex-1 preserve-3d-grid">
+                        <!-- Left Panel: Clean Architecture & NestJS / REST (2.5D Layer z=20px) -->
+                        <div class="ui-layer-25d col-span-5 pr-2.5 border-r border-[#F5F1E8]/10 flex flex-col justify-between" data-depth="20">
+                          <div>
+                            <div class="font-mono-meta text-[8.5px] text-[#FF9A5C] mb-1">React + NestJS Telemetry</div>
+                            <pre class="font-mono-meta text-[8.5px] leading-relaxed text-[#F5F1E8] overflow-hidden"><span class="text-[#F0783C]">class</span> MobilityGateway {
+  <span class="text-[#8E8A84]">// WebSocket Live Stream</span>
+  async streamETA(
+    payload: TelemetryDto
+  ): Promise&lt;Ack&gt; {
+    return this.busService
+      .broadcast(payload);
+  }
+}</pre>
+                          </div>
+                          <div class="pt-1.5 border-t border-[#F5F1E8]/10 flex items-center justify-between text-[8.5px] font-mono-meta text-[#AAA6A0]">
+                            <span>Flavors: Dev • Stg • Prod</span>
+                            <span class="text-[#FF9A5C]">WS ● LIVE</span>
+                          </div>
+                        </div>
+
+                        <!-- Right Panel: Telemetry & Multi-Flavor Release Pipeline (2.5D Layers z=24px and z=16px) -->
+                        <div class="col-span-7 flex flex-col justify-between preserve-3d-grid">
+                          <div class="ui-layer-25d pb-2.5 border-b border-[#F5F1E8]/10 flex-1 flex flex-col justify-between" data-depth="24">
+                            <div class="flex items-center justify-between">
+                              <span class="font-mono-meta text-[8.5px] text-[#F5F1E8]">Unified Codebase • Flavors</span>
+                              <span class="font-mono-meta text-[8.5px] text-[#FF9A5C]">-75% Overhead</span>
+                            </div>
+                            <div class="grid grid-cols-3 divide-x divide-[#F5F1E8]/10 my-1.5">
+                              <div class="pr-2">
+                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">DEV / STG</div>
+                                <div class="text-[10px] font-semibold text-[#F5F1E8] mt-0.5">Automated</div>
+                              </div>
+                              <div class="px-2">
+                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">PRODUCTION</div>
+                                <div class="text-[10px] font-semibold text-[#FF9A5C] mt-0.5">Multi-Store</div>
+                              </div>
+                              <div class="pl-2">
+                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">COVERAGE</div>
+                                <div class="text-[10px] font-semibold text-[#F5F1E8] mt-0.5">80%+ Tests</div>
+                              </div>
+                            </div>
+                            <div class="w-full bg-[#222228] h-1.5 rounded-full overflow-hidden">
+                              <div class="bg-[#F0783C] h-full w-4/5 rounded-full"></div>
+                            </div>
+                          </div>
+
+                          <div class="ui-layer-25d grid grid-cols-2 divide-x divide-[#F5F1E8]/10 pt-2" data-depth="16">
+                            <div class="pr-2">
+                              <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">WEB &amp; BACKEND</div>
+                              <div class="text-[10px] font-medium text-[#F5F1E8] mt-0.5">React • TypeScript • NestJS</div>
+                            </div>
+                            <div class="pl-2">
+                              <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">DEVOPS</div>
+                              <div class="text-[10px] font-medium text-[#F5F1E8] mt-0.5">GitHub Actions &amp; Jenkins</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="lid-chin-logo" aria-hidden="true">REACT • NESTJS • FLUTTER ARCHITECTURE</div>
+                  </div>
+                </div>
+
+                <!-- LAPTOP BASE (top: 0, transform-origin: 50% 0% 0px, rotateX(90deg) -> 100% right-side up!) -->
+                <div class="laptop-base" aria-hidden="true">
+                  <div class="base-top-deck">
+                    <!-- Dynamic Screen Light Spill cast onto Keyboard & Base Deck as Lid Opens -->
+                    <div id="keyboard-light-spill" class="keyboard-light-spill"></div>
+
+                    <!-- Top near Hinge (y=0): Speaker Grilles & Vent -->
+                    <div class="base-speaker-bar">
+                      <div class="speaker-dots"></div>
+                      <div class="hinge-vent-slot"></div>
+                      <div class="speaker-dots"></div>
+                    </div>
+
+                    <!-- Middle: Right-Side Up QWERTY Keyboard (ESC & F1-F12 near Hinge, Spacebar near Trackpad) -->
+                    <div class="keyboard-well">
+                      <!-- Row 1: Function Row near Hinge -->
+                      <div class="kb-row">
+                        <span class="kb-key accent-esc">ESC</span>
+                        <span class="kb-key">F1</span><span class="kb-key">F2</span><span class="kb-key">F3</span><span class="kb-key">F4</span>
+                        <span class="kb-key">F5</span><span class="kb-key">F6</span><span class="kb-key">F7</span><span class="kb-key">F8</span>
+                        <span class="kb-key">F9</span><span class="kb-key">F10</span><span class="kb-key">F11</span><span class="kb-key">F12</span>
+                        <span class="kb-key">⏻</span>
+                      </div>
+                      <!-- Row 2: Numbers -->
+                      <div class="kb-row">
+                        <span class="kb-key">~</span><span class="kb-key">1</span><span class="kb-key">2</span><span class="kb-key">3</span><span class="kb-key">4</span>
+                        <span class="kb-key">5</span><span class="kb-key">6</span><span class="kb-key">7</span><span class="kb-key">8</span><span class="kb-key">9</span>
+                        <span class="kb-key">0</span><span class="kb-key">-</span><span class="kb-key">=</span><span class="kb-key">⌫</span>
+                      </div>
+                      <!-- Row 3: QWERTY -->
+                      <div class="kb-row">
+                        <span class="kb-key">⇥</span><span class="kb-key">Q</span><span class="kb-key">W</span><span class="kb-key">E</span><span class="kb-key">R</span>
+                        <span class="kb-key">T</span><span class="kb-key">Y</span><span class="kb-key">U</span><span class="kb-key">I</span><span class="kb-key">O</span>
+                        <span class="kb-key">P</span><span class="kb-key">[</span><span class="kb-key">]</span><span class="kb-key">\</span>
+                      </div>
+                      <!-- Row 4: ASDF -->
+                      <div class="kb-row">
+                        <span class="kb-key">⇪</span><span class="kb-key">A</span><span class="kb-key">S</span><span class="kb-key">D</span><span class="kb-key">F</span>
+                        <span class="kb-key">G</span><span class="kb-key">H</span><span class="kb-key">J</span><span class="kb-key">K</span><span class="kb-key">L</span>
+                        <span class="kb-key">;</span><span class="kb-key">'</span><span class="kb-key col-span-2">⏎</span>
+                      </div>
+                      <!-- Row 5: ZXCV -->
+                      <div class="kb-row">
+                        <span class="kb-key col-span-2">⇧</span><span class="kb-key">Z</span><span class="kb-key">X</span><span class="kb-key">C</span><span class="kb-key">V</span>
+                        <span class="kb-key">B</span><span class="kb-key">N</span><span class="kb-key">M</span><span class="kb-key">,</span><span class="kb-key">.</span>
+                        <span class="kb-key">/</span><span class="kb-key col-span-2">⇧</span>
+                      </div>
+                      <!-- Row 6: Modifiers & Spacebar closest to Trackpad -->
+                      <div class="kb-row">
+                        <span class="kb-key">fn</span><span class="kb-key">⌃</span><span class="kb-key">⌥</span><span class="kb-key">⌘</span>
+                        <span class="kb-key col-span-6"></span>
+                        <span class="kb-key">⌘</span><span class="kb-key">⌥</span><span class="kb-key">◀</span><span class="kb-key">▶</span>
+                      </div>
+                    </div>
+
+                    <!-- Bottom closest to viewer (y=330px): Precision Glass Trackpad -->
+                    <div class="trackpad-well"></div>
+                  </div>
+
+                  <!-- Physical 14px Base Thickness & Ports -->
+                  <div class="base-bottom-plate"></div>
+                  <div class="base-front-lip">
+                    <!-- Moment 1 Awakening Amber Light Line along the Front Lip -->
+                    <div id="lip-awakening-glow" class="lip-awakening-glow"></div>
+                    <div class="base-thumb-notch"></div>
+                  </div>
+                  <div class="base-side-left">
+                    <span class="chassis-port-slot"></span>
+                    <span class="chassis-port-slot"></span>
+                  </div>
+                  <div class="base-side-right">
+                    <span class="chassis-port-slot"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLOT 2: COHESIVE 3D SMARTPHONE (Dedicated Right-Hand Studio Lane — Zero Overlap) -->
+          <div class="phone-stage-slot">
+            <div class="phone-scale-wrapper">
+              <div id="phone-assembly" class="phone-assembly">
+                <div class="phone-floor-shadow" aria-hidden="true"></div>
+
+                <div class="phone-chassis">
+                  <div class="phone-back-plate" aria-hidden="true"></div>
+                  <div class="phone-rail-left" aria-hidden="true"></div>
+                  <div class="phone-rail-right" aria-hidden="true"></div>
+
+                  <div id="phone-screen-ui" class="phone-oled select-none">
+                    <!-- Dynamic Specular Glass Sheen on Smartphone OLED -->
+                    <div id="phone-specular-sheen" class="phone-specular-sheen" aria-hidden="true"></div>
+
+                    <div class="preserve-3d-grid">
+                      <div class="phone-pill-cutout">
+                        <span class="phone-sensor-dot"></span>
+                      </div>
+                      <div class="ui-layer-25d flex items-center justify-between text-[9px] font-mono-meta text-[#AAA6A0] mt-1" data-depth="12">
+                        <span>FLUTTER • BLoC</span>
+                        <span class="text-[#FF9A5C]">ANDROID &amp; iOS</span>
+                      </div>
+
+                      <!-- App Block 1: LocalSpeak On-Device AI (2.5D Layer z=22px) -->
+                      <div class="ui-layer-25d mt-3 pt-2.5 border-t border-[#F5F1E8]/10" data-depth="22">
+                        <div class="flex items-center justify-between">
+                          <span class="font-mono-meta text-[9px] text-[#FF9A5C]">LocalSpeak AI</span>
+                          <span class="text-[8px] font-mono-meta px-1.5 py-0.5 rounded bg-[#F0783C]/15 text-[#FF9A5C]">Offline LLM</span>
+                        </div>
+                        <div class="text-xs font-semibold text-[#F5F1E8] mt-1">Conversação Local</div>
+                        <p class="text-[10px] text-[#AAA6A0] mt-1 leading-snug">
+                          Pipeline neural offline: STT/TTS (sherpa_onnx) e LLM (flutter_gemma) sem rede.
+                        </p>
+                      </div>
+
+                      <!-- App Block 2: Real-Time Geolocation & WebSocket (2.5D Layer z=18px) -->
+                      <div class="ui-layer-25d mt-2.5 pt-2.5 border-t border-[#F5F1E8]/10" data-depth="18">
+                        <div class="flex items-center justify-between">
+                          <span class="font-mono-meta text-[9px] text-[#F5F1E8]">Mobilidade Urbana</span>
+                          <span class="text-[8px] font-mono-meta text-[#FF9A5C]">WebSocket</span>
+                        </div>
+                        <div class="text-xs font-semibold text-[#F5F1E8] mt-1">AppBus2 v5 &amp; NEAT</div>
+                        <div class="mt-1.5 flex items-center justify-between text-[9px] font-mono-meta text-[#AAA6A0]">
+                          <span>Google Maps API</span>
+                          <span class="text-[#F0783C]">● Live ETA</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="ui-layer-25d space-y-1.5 pt-2 border-t border-[#F5F1E8]/10" data-depth="14">
+                      <div class="flex items-center justify-between text-[9px] font-mono-meta">
+                        <span class="text-[#F5F1E8]">Dart Isolates &amp; Native</span>
+                        <span class="text-[#FF9A5C]">-40% Startup</span>
+                      </div>
+                      <div class="w-14 h-1 bg-[#F5F1E8]/25 rounded-full mx-auto mt-1"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Core Engineering Pillars -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div class="editorial-panel spotlight-card p-7 md:p-9">
+            <div class="font-mono-meta text-xs text-[#FF9A5C] mb-2">01 / Mobile Engineering &amp; Technical Leadership</div>
+            <h3 class="text-xl md:text-2xl font-semibold text-[#F5F1E8]">
+              Flutter, Dart &amp; Kotlin em Escala de Produção
+            </h3>
+            <p class="text-[#AAA6A0] text-sm md:text-base mt-3 leading-relaxed max-w-[65ch]">
+              Mais de 3 anos projetando e publicando aplicativos Android e iOS desde a concepção até a Google Play e App Store. Domínio de <strong class="text-[#F5F1E8] font-medium">Clean Architecture, MVVM, BLoC/Cubit, Flutter Modular e Flavors</strong>, com experiência prática em geolocalização em tempo real via WebSocket, persistência offline com SQLite, Method Channels nativos e processamento paralelo com Dart Isolates.
+            </p>
+          </div>
+
+          <div class="editorial-panel spotlight-card p-7 md:p-9">
+            <div class="font-mono-meta text-xs text-[#FF9A5C] mb-2">02 / Full Stack &amp; Software Architecture</div>
+            <h3 class="text-xl md:text-2xl font-semibold text-[#F5F1E8]">
+              Ecossistema Web, APIs &amp; Automação CI/CD
+            </h3>
+            <p class="text-[#AAA6A0] text-sm md:text-base mt-3 leading-relaxed max-w-[65ch]">
+              Atuação transversal integrando interfaces web em <strong class="text-[#F5F1E8] font-medium">React e TypeScript</strong> a serviços backend em <strong class="text-[#F5F1E8] font-medium">NestJS, Java (Spring Boot) e bancos SQL/MongoDB</strong>. Estruturação completa de esteiras de CI/CD com GitHub Actions e Jenkins para versionamento, testes automatizados (Unit, Widget e Integration) e deploy contínuo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 03 — SOBRE MIM & ABORDAGEM DE ENGENHARIA
+         ========================================================================== -->
+    <section id="sobre" class="section-canvas py-24 md:py-32 relative">
+      <div class="container-editorial depth-transition-shell" data-depth-section="sobre">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <!-- Left Column -->
+          <div class="lg:col-span-5">
+            <div class="eyebrow-label mb-3">
+              <span class="eyebrow-line"></span>
+              <span>02 / Perfil &amp; Visão de Engenharia</span>
+            </div>
+            <h2 class="section-title kinetic-heading">
+              Arquitetura pensada para <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">durar</span> e escalar.
+            </h2>
+
+            <div class="editorial-panel spotlight-card p-6 mt-8 space-y-4">
+              <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-4">
+                <div>
+                  <div class="text-base font-semibold text-[#F5F1E8]">Vinícius Rodrigues Barros</div>
+                  <div class="font-mono-meta text-xs text-[#AAA6A0] mt-0.5">Engenheiro de Computação (IFPB)</div>
+                </div>
+                <span class="px-2.5 py-1 rounded text-xs font-mono-meta bg-[#F0783C]/15 text-[#FF9A5C] border border-[#F0783C]/30">
+                  3+ Anos Exp.
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <span class="text-[#8E8A84] block font-mono-meta">LOCALIZAÇÃO</span>
+                  <span class="text-[#F5F1E8] font-medium mt-0.5 block">Campina Grande, PB</span>
+                </div>
+                <div>
+                  <span class="text-[#8E8A84] block font-mono-meta">IDIOMAS</span>
+                  <span class="text-[#F5F1E8] font-medium mt-0.5 block">Inglês Avançado • PT Nativo</span>
+                </div>
+                <div>
+                  <span class="text-[#8E8A84] block font-mono-meta">ESPECIALIDADE</span>
+                  <span class="text-[#F5F1E8] font-medium mt-0.5 block">Flutter, Kotlin, React, NestJS</span>
+                </div>
+                <div>
+                  <span class="text-[#8E8A84] block font-mono-meta">ATUAÇÃO</span>
+                  <span class="text-[#F5F1E8] font-medium mt-0.5 block">Tech Lead / Mid-Level Eng.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Narrative -->
+          <div class="lg:col-span-7 space-y-6 text-[#AAA6A0] text-base md:text-lg leading-relaxed max-w-prose">
+            <p class="text-xl md:text-2xl text-[#F5F1E8] font-normal leading-snug">
+              “Meu foco como engenheiro de software é transformar complexidade arquitetural em produtos móveis e web rápidos, previsíveis e fáceis de manter pela equipe.”
+            </p>
+
+            <p>
+              Iniciei minha trajetória profissional em janeiro de 2022 na <strong class="text-[#F5F1E8] font-medium">STTP</strong>, enquanto cursava Engenharia de Computação no <strong class="text-[#F5F1E8] font-medium">Instituto Federal da Paraíba (IFPB)</strong>. Desde o início, atuei diretamente em aplicações reais de mobilidade urbana, implantando pipelines de CI/CD que reduziram o tempo de publicação nas lojas pela metade e estabelecendo uma cultura de testes automatizados com cobertura superior a 80%.
+            </p>
+
+            <p>
+              Na <strong class="text-[#F5F1E8] font-medium">Bus2</strong>, assumi desafios de escala internacional: executei a refatoração arquitetural completa do <strong class="text-[#F5F1E8] font-medium">AppBus2 v5</strong> — unificando múltiplos repositórios fragmentados em um único codebase Flutter com Flavors para uma base de milhões de usuários — e desenvolvi o aplicativo operacional <strong class="text-[#F5F1E8] font-medium">Bus2Driver</strong> com rastreamento em tempo real via WebSocket e otimizações profundas com Dart Isolates e Method Channels.
+            </p>
+
+            <p>
+              Evoluí para <strong class="text-[#F5F1E8] font-medium">Mobile Development Lead na STTP</strong>, conduzindo decisões de arquitetura, padrões de código e mentoria técnica em mais de 5 aplicações em produção, somando a essa bagagem minha atuação corporativa na <strong class="text-[#F5F1E8] font-medium">Accenture</strong> e minha pesquisa aplicada em Inteligência Artificial embarcada no dispositivo com o projeto <strong class="text-[#F5F1E8] font-medium">LocalSpeak</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 04 — EXPERIÊNCIA PROFISSIONAL (STTP, BUS2 & ACCENTURE)
+         ========================================================================== -->
+    <section id="experiencia" class="section-alt py-24 md:py-32 relative">
+      <div class="container-editorial">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+          <div>
+            <div class="eyebrow-label mb-3">
+              <span class="eyebrow-line"></span>
+              <span>03 / Trajetória Profissional Verificada</span>
+            </div>
+            <h2 class="section-title kinetic-heading">
+              Experiência em <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">Produção</span>.
+            </h2>
+          </div>
+          <p class="text-[#AAA6A0] max-w-md text-sm md:text-base">
+            Histórico detalhado de liderança técnica, arquitetura mobile, desenvolvimento full stack e impacto mensurável em engenharia de software.
+          </p>
+        </div>
+
+        <!-- Animated Architectural Guide Line (scaleX) -->
+        <div class="arch-draw-line-x mb-4" aria-hidden="true"></div>
+
+        <!-- Timeline Rows with Vertical Progress Rail (scaleY) -->
+        <div class="timeline-stage-wrapper relative">
+          <div class="timeline-vertical-rail" aria-hidden="true">
+            <div id="timeline-vertical-fill" class="timeline-vertical-fill"></div>
+          </div>
+          <div id="experience-timeline"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 05 — PROJETOS EM DESTAQUE (CARROSSEL EDITORIAL INTERATIVO)
+         ========================================================================== -->
+    <section id="projetos" class="section-canvas py-24 md:py-32 relative">
+      <div class="container-editorial">
+        <!-- Header + Carousel Controls -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <div class="eyebrow-label mb-3">
+              <span class="eyebrow-line"></span>
+              <span>04 / Estudos de Caso Selecionados</span>
+            </div>
+            <h2 class="section-title kinetic-heading">
+              Projetos &amp; <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">Engenharia</span>.
+            </h2>
+          </div>
+
+          <!-- Carousel Navigation Bar -->
+          <div class="flex items-center gap-4">
+            <div class="font-mono-meta text-xs text-[#AAA6A0] mr-2" aria-live="polite" aria-atomic="true">
+              <span class="sr-only">Projeto ativo: </span>
+              <span id="carousel-current-index" class="text-[#F5F1E8] font-medium">01</span>
+              <span class="mx-1">/</span>
+              <span id="carousel-total-count">04</span>
+            </div>
+
+            <div id="carousel-dots" class="flex items-center gap-1" role="tablist" aria-label="Selecionar projeto"></div>
+
+            <div class="flex items-center gap-2 ml-2">
+              <button type="button" id="carousel-prev-btn" class="carousel-nav-btn magnetic-btn" aria-label="Projeto anterior">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button type="button" id="carousel-next-btn" class="carousel-nav-btn magnetic-btn" aria-label="Próximo projeto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Widescreen Carousel Viewport -->
+        <div id="carousel-viewport" class="carousel-viewport spotlight-card" tabindex="0" aria-roledescription="carousel" aria-label="Carrossel de projetos em destaque (use as setas do teclado para navegar)">
+          <div id="carousel-track" class="carousel-track"></div>
+        </div>
+
+        <div class="mt-4 flex items-center justify-between text-xs text-[#8E8A84] font-mono-meta">
+          <span>Dica: Utilize as setas, teclado (←/→), indicadores ou arraste horizontalmente para navegar entre os projetos.</span>
+          <span class="hidden sm:inline">Clique em "Detalhamento Técnico" para abrir a arquitetura completa.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 06 — STACK TECNOLÓGICA
+         ========================================================================== -->
+    <section id="stack" class="section-alt py-24 md:py-32 relative">
+      <div class="container-editorial">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+          <div>
+            <div class="eyebrow-label mb-3">
+              <span class="eyebrow-line"></span>
+              <span>05 / Competências Técnicas</span>
+            </div>
+            <h2 class="section-title kinetic-heading">
+              Stack &amp; <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">Ferramentas</span>.
+            </h2>
+          </div>
+          <p class="text-[#AAA6A0] max-w-md text-sm md:text-base">
+            Tecnologias, padrões de arquitetura e ferramentas aplicadas em projetos de produção.
+          </p>
+        </div>
+
+        <!-- Animated Architectural Guide Line (scaleX & scaleY crosshairs) -->
+        <div class="arch-draw-line-x mb-10" aria-hidden="true"></div>
+
+        <div class="stack-stage-wrapper relative">
+          <div class="stack-vertical-axis hidden lg:block" aria-hidden="true"></div>
+          <div id="stack-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 07 — FORMAÇÃO ACADÊMICA & IDIOMAS
+         ========================================================================== -->
+    <section id="formacao" class="section-canvas py-24 md:py-28 relative">
+      <div class="container-editorial">
+        <div class="mb-12">
+          <div class="eyebrow-label mb-3">
+            <span class="eyebrow-line"></span>
+            <span>06 / Formação Acadêmica &amp; Idiomas</span>
+          </div>
+          <h2 class="section-title kinetic-heading">
+            Base <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">Acadêmica</span>.
+          </h2>
+        </div>
+
+        <div id="education-container" class="grid grid-cols-1 lg:grid-cols-12 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEÇÃO 08 — CONTATO
+         ========================================================================== -->
+    <section id="contato" class="section-elevated py-24 md:py-32 relative">
+      <div class="container-editorial">
+        <div class="editorial-panel spotlight-card p-8 sm:p-12 md:p-16">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+            <div class="lg:col-span-7">
+              <div class="eyebrow-label mb-4">
+                <span class="eyebrow-line"></span>
+                <span>07 / Contato Profissional</span>
+              </div>
+              <h2 class="section-title kinetic-heading">
+                Vamos conversar sobre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">engenharia</span>, produto ou novas oportunidades?
+              </h2>
+              <p class="text-[#AAA6A0] text-base md:text-lg mt-5 leading-relaxed max-w-2xl">
+                Disponível para posições e projetos em <strong class="text-[#F5F1E8] font-medium">Desenvolvimento Mobile (Flutter / Kotlin)</strong>, <strong class="text-[#F5F1E8] font-medium">Full Stack (React / NestJS)</strong> e Arquitetura de Software.
+              </p>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col gap-3">
+              <a href="mailto:vinicius.rodrigues.barros@gmail.com" class="btn-primary-editorial justify-between w-full">
+                <span>vinicius.rodrigues.barros@gmail.com</span>
+                <svg class="w-4 h-4 shrink-0 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </a>
+              <button id="copy-email-btn" type="button" class="btn-secondary-editorial justify-between w-full">
+                <span id="copy-email-label">Copiar endereço de e-mail</span>
+                <span class="font-mono-meta text-xs text-[#FF9A5C]">COPIAR</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 pt-10 border-t border-[#F5F1E8]/10">
+            <a href="https://www.linkedin.com/in/vinicius-rodrigues-948656225/" target="_blank" rel="noopener noreferrer" class="group py-2 flex flex-col justify-between border-b border-[#F5F1E8]/10 hover:border-[#F0783C] transition-colors min-h-[56px]">
+              <div class="font-mono-meta text-xs text-[#AAA6A0] group-hover:text-[#FF9A5C] transition-colors">LINKEDIN</div>
+              <div class="text-sm font-medium text-[#F5F1E8] mt-1.5 flex items-center justify-between gap-2">
+                <span class="truncate">/in/vinicius-rodrigues-948656225</span>
+                <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </div>
+            </a>
+
+            <a href="https://github.com/ViniRodrigBarros" target="_blank" rel="noopener noreferrer" class="group py-2 flex flex-col justify-between border-b border-[#F5F1E8]/10 hover:border-[#F0783C] transition-colors min-h-[56px]">
+              <div class="font-mono-meta text-xs text-[#AAA6A0] group-hover:text-[#FF9A5C] transition-colors">GITHUB</div>
+              <div class="text-sm font-medium text-[#F5F1E8] mt-1.5 flex items-center justify-between gap-2">
+                <span>@ViniRodrigBarros</span>
+                <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+              </div>
+            </a>
+
+            <a href="tel:+5583998326890" class="group py-2 flex flex-col justify-between border-b border-[#F5F1E8]/10 hover:border-[#F0783C] transition-colors min-h-[56px]">
+              <div class="font-mono-meta text-xs text-[#AAA6A0] group-hover:text-[#FF9A5C] transition-colors">TELEFONE / WHATSAPP</div>
+              <div class="text-sm font-medium text-[#F5F1E8] mt-1.5 flex items-center justify-between gap-2">
+                <span>+55 (83) 99832-6890</span>
+                <span class="font-mono-meta text-xs text-[#F0783C]" aria-hidden="true">→</span>
+              </div>
+            </a>
+
+            <div class="py-2 pl-4 border-l border-[#F5F1E8]/15 flex flex-col justify-between">
+              <div class="font-mono-meta text-xs text-[#8E8A84]">LOCALIZAÇÃO (BASE)</div>
+              <div class="text-sm text-[#AAA6A0] mt-1.5">Campina Grande, PB — Brasil</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="py-8 border-t border-[#F5F1E8]/10 text-xs text-[#8E8A84]">
+    <div class="container-editorial flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        © 2026 Vinícius Rodrigues Barros. Engenharia de Software Mobile &amp; Full Stack.
+      </div>
+      <div class="flex items-center gap-4 font-mono-meta">
+        <a href="https://github.com/ViniRodrigBarros" target="_blank" rel="noopener noreferrer" class="inline-flex items-center min-h-[44px] px-2 hover:text-[#FF9A5C] transition-colors">GitHub</a>
+        <a href="https://www.linkedin.com/in/vinicius-rodrigues-948656225/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center min-h-[44px] px-2 hover:text-[#FF9A5C] transition-colors">LinkedIn</a>
+        <a href="#hero" class="inline-flex items-center min-h-[44px] px-2 hover:text-[#FF9A5C] transition-colors">Topo ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       CASE STUDY TECHNICAL MODAL
+       ========================================================================== -->
+  <div id="case-modal" class="case-modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="case-modal-dialog">
+      <div class="flex items-start justify-between gap-4 pb-5 border-b border-[#F5F1E8]/10">
+        <div>
+          <span id="modal-category" class="font-mono-meta text-xs text-[#FF9A5C]"></span>
+          <h3 id="modal-title" class="text-2xl md:text-3xl font-semibold text-[#F5F1E8] mt-1"></h3>
+        </div>
+        <button id="modal-close-btn" type="button" class="min-w-[44px] min-h-[44px] inline-flex items-center justify-center p-2 rounded-lg bg-[#222228] text-[#AAA6A0] hover:text-[#F5F1E8] border border-[#F5F1E8]/10" aria-label="Fechar detalhamento técnico">
+          ✕
+        </button>
+      </div>
+      <div id="modal-body" class="mt-6 space-y-6 text-[#AAA6A0] text-sm md:text-base leading-relaxed"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT ARCHITECTURE (MODULES 7 TO 13)
+       ========================================================================== -->
+  <script src="script.js" defer></script>
+</body>
+</html>

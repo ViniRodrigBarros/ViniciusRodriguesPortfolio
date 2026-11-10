@@ -1,0 +1,1415 @@
+/* ==========================================================================
+   2. DESIGN TOKENS (Dark Charcoal + Warm Burnt Orange Editorial Identity)
+   ========================================================================== */
+:root {
+  /* Layered Charcoal Surface System */
+  --bg-primary: #0B0B0D;
+  --bg-secondary: #111114;
+  --bg-tertiary: #151519;
+  --surface-card: #19191E;
+  --surface-elevated: #222228;
+  --surface-glass: rgba(25, 25, 30, 0.84);
+
+  /* Backwards-compatible aliases */
+  --bg-canvas: var(--bg-primary);
+  --bg-section-alt: var(--bg-secondary);
+  --bg-elevated: var(--surface-card);
+  --bg-card: var(--surface-card);
+  --bg-card-hover: var(--surface-elevated);
+
+  /* Warm Editorial Typography Colors (WCAG AA Compliant) */
+  --text-primary: #F5F1E8;
+  --text-secondary: #AAA6A0;
+  --text-muted: #8E8A84;
+
+  /* Signature Warm Burnt Orange & Amber Accents */
+  --accent-primary: #F0783C;
+  --accent-secondary: #FF9A5C;
+  --accent-soft: #6F3826;
+  --accent-tint: rgba(240, 120, 60, 0.10);
+
+  /* Hairline Warm Neutral Borders */
+  --border-hairline: rgba(245, 241, 232, 0.07);
+  --border-subtle: rgba(245, 241, 232, 0.12);
+  --border-focus: rgba(240, 120, 60, 0.85);
+
+  /* Font Stacks */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Fluid Editorial Type Scale */
+  --fs-display: clamp(2.15rem, 4.2vw + 0.5rem, 4.25rem);
+  --fs-h2: clamp(2rem, 3.4vw + 0.5rem, 3.5rem);
+  --fs-h3: clamp(1.35rem, 1.8vw + 0.35rem, 2rem);
+
+  /* Layout Tokens */
+  --container-max: 1320px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Responsive 3D Device Scale Tokens (Desktop > 1200px default) */
+  --laptop-scale: 0.95;
+  --phone-scale: 0.92;
+}
+
+/* ==========================================================================
+   3. GLOBAL & EDITORIAL TYPOGRAPHY STYLES
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+::selection {
+  background: rgba(240, 120, 60, 0.26);
+  color: var(--text-primary);
+}
+
+/* Typography Utility Classes */
+.font-serif-editorial {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.font-mono-meta {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+.display-heading {
+  font-family: var(--font-sans);
+  font-size: var(--fs-display);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.section-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Section Background Variations (Distinct Atmospheric Depth) */
+.section-canvas {
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.section-alt {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-hairline);
+}
+
+.section-elevated {
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-top: 1px solid var(--border-hairline);
+}
+
+/* Minimal Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #2C2A29;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   4. COMPONENT STYLES
+   ========================================================================== */
+.container-editorial {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: clamp(1.25rem, 4vw, 3.25rem);
+  padding-right: clamp(1.25rem, 4vw, 3.25rem);
+  position: relative;
+}
+
+/* Header Navigation */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 80;
+  transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.scrolled {
+  background-color: var(--surface-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--border-hairline);
+}
+
+.nav-link {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.25s ease;
+  padding: 0.25rem 0;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--accent-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-primary);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Editorial Index Label */
+.eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.eyebrow-line {
+  width: 24px;
+  height: 1.5px;
+  background-color: var(--accent-primary);
+}
+
+.nav-cta-pill.active {
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
+}
+
+/* Editorial Buttons — Strict WCAG AA Contrast (> 6.8:1 with #0B0B0D on #F0783C) */
+.btn-primary,
+.btn-primary-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 9999px;
+  background-color: var(--accent-primary);
+  color: #0B0B0D;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid rgba(255, 154, 92, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s var(--ease-out-expo), background-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+.btn-primary-editorial:hover {
+  background-color: var(--accent-secondary);
+  color: #0B0B0D;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary-editorial svg,
+.btn-secondary-editorial svg {
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.btn-primary-editorial:hover svg,
+.btn-secondary-editorial:hover svg {
+  transform: translate3d(2px, -1px, 0);
+}
+
+.btn-secondary-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 9999px;
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s var(--ease-out-expo);
+  cursor: pointer;
+}
+
+.btn-secondary-editorial:hover {
+  border-color: var(--border-focus);
+  background-color: var(--surface-elevated);
+  transform: translateY(-2px);
+}
+
+/* Architectural Panels & Radial Cursor Spotlight */
+.editorial-panel {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  transition: border-color 0.35s ease, background-color 0.35s ease, transform 0.35s var(--ease-out-expo), box-shadow 0.35s ease;
+}
+
+/* Subtle top specular hairline on editorial panels */
+.editorial-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 241, 232, 0.16) 35%, rgba(255, 154, 92, 0.34) 50%, rgba(245, 241, 232, 0.16) 65%, transparent 100%);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.editorial-panel:hover {
+  background-color: var(--surface-elevated);
+  border-color: var(--border-subtle);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.68);
+}
+
+.editorial-panel:hover::after {
+  opacity: 1;
+}
+
+/* Radial Mouse Spotlight Effect (Warm Burnt Orange / Amber at Low Opacity) */
+.spotlight-card {
+  position: relative;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-opacity: 0;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    460px circle at var(--spot-x) var(--spot-y),
+    rgba(240, 120, 60, 0.085) 0%,
+    rgba(255, 154, 92, 0.03) 38%,
+    transparent 70%
+  );
+  opacity: var(--spot-opacity, 0);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.spotlight-card:hover {
+  --spot-opacity: 1;
+}
+
+.spotlight-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Experience Timeline Styling */
+.exp-row {
+  position: relative;
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 2.75rem;
+  padding-bottom: 2.75rem;
+  transition: background-color 0.3s ease;
+}
+
+.exp-row:last-child {
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background-color: var(--accent-tint);
+  border: 1px solid rgba(240, 120, 60, 0.28);
+  color: var(--accent-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   5. 3D DEVICE SHOWCASE — DEFINITIVE UNIFIED HINGE GEOMETRY (y=0, z=0)
+   ========================================================================== */
+.stage-3d-viewport,
+.showcase-stage {
+  width: 100%;
+  min-height: 580px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
+  align-items: center;
+  justify-items: center;
+  gap: 2rem;
+  padding: 3.5rem 1.5rem;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 34% 52%, rgba(240, 120, 60, 0.09) 0%, rgba(111, 56, 38, 0.04) 38%, transparent 70%),
+    radial-gradient(circle at 78% 48%, rgba(255, 154, 92, 0.07) 0%, transparent 55%),
+    linear-gradient(180deg, #131317 0%, #0C0C0F 100%);
+  border: 1px solid var(--border-hairline);
+  overflow: hidden;
+}
+
+/* Dedicated Spatial Slots: Laptop and Smartphone NEVER collide or overlap */
+.laptop-stage-slot,
+.phone-stage-slot {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.laptop-stage-slot {
+  height: 470px;
+}
+
+.phone-stage-slot {
+  height: 500px;
+}
+
+/* Exact Center-Anchored Scale Wrappers isolated from GSAP transforms */
+.laptop-scale-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 58%; /* offsets upward-opening lid so open laptop (lid + base) is vertically centered inside the slot */
+  width: 520px;
+  height: 0;
+  transform: translate(-50%, -50%) scale(var(--laptop-scale, 0.95));
+  transform-origin: center center;
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+
+.phone-scale-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 256px;
+  height: 510px;
+  transform: translate(-50%, -50%) scale(var(--phone-scale, 0.92));
+  transform-origin: center center;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+/* Studio Ambient Floor Shadows */
+.laptop-floor-shadow {
+  position: absolute;
+  width: 540px;
+  height: 310px;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -20%, -60px) rotateX(90deg);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.88) 15%, rgba(240, 120, 60, 0.12) 55%, transparent 76%);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+.phone-floor-shadow {
+  position: absolute;
+  width: 220px;
+  height: 90px;
+  bottom: -26px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(80deg);
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 20%, rgba(240, 120, 60, 0.14) 58%, transparent 78%);
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   UNIFIED 3D LAPTOP ASSEMBLY
+   Origin (x = 260px, y = 0, z = 0) is the exact physical hinge axis!
+   Camera looks DOWN from above using NEGATIVE rotateX (-28deg -> -18deg).
+   -------------------------------------------------------------------------- */
+.laptop-assembly {
+  width: 520px;
+  height: 0;
+  position: relative;
+  margin: 0;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  transform-origin: 260px 0px 0px;
+  transform: rotateX(-24deg) rotateY(-12deg) rotateZ(0deg);
+  will-change: transform;
+}
+
+/* Central Physical Anodized Hinge Barrel right at (y = 0, z = 0) */
+.laptop-hinge-cylinder {
+  position: absolute;
+  top: -5px;
+  left: 60px;
+  width: 400px;
+  height: 10px;
+  transform-style: preserve-3d;
+  transform: translateZ(-2px);
+  background: linear-gradient(180deg, #0E0E11 0%, #32302E 48%, #121215 100%);
+  border-radius: 4px;
+  border: 1px solid rgba(245, 241, 232, 0.12);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- LAPTOP BASE (Anchored at Hinge y=0, z=0, rotated +90deg forward) ----
+   Because rotateX(+90deg) maps local +Y (0..330px) to world +Z (0..+330px towards viewer),
+   and local +Z normal to world -Y (pointing UP), when viewed from above (parent rotateX < 0):
+   - y = 0 (top of .base-top-deck) sits at the back hinge.
+   - y = 330px (bottom of .base-top-deck) sits at the front lip closest to the viewer.
+   - The keyboard & trackpad are 100% right-side up and facing the user!
+*/
+.laptop-base {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 520px;
+  height: 330px;
+  transform-origin: 50% 0% 0px;
+  transform: rotateX(90deg);
+  transform-style: preserve-3d;
+}
+
+/* Top Keyboard & Trackpad Deck (z = 0 in base local coords) */
+.base-top-deck {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 6px 18px 18px;
+  background: linear-gradient(180deg, #242327 0%, #1B1A1E 60%, #161519 100%);
+  border: 1.5px solid rgba(245, 241, 232, 0.16);
+  padding: 12px 24px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backface-visibility: hidden;
+  box-shadow: inset 0 1px 0 rgba(255, 154, 92, 0.14), inset 0 0 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Bottom Plate of Laptop Base (14px chassis thickness) */
+.base-bottom-plate {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 6px 18px 18px;
+  background: #0F0E12;
+  border: 1px solid rgba(245, 241, 232, 0.08);
+  transform: translateZ(-14px) rotateX(180deg);
+  backface-visibility: hidden;
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.9);
+}
+
+/* Extruded Front Lip at y = 330px (closest to viewer) with machined thumb notch */
+.base-front-lip {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  width: 500px;
+  height: 14px;
+  transform-origin: 50% 100% 0px;
+  transform: rotateX(-90deg);
+  background: linear-gradient(90deg, #141316 0%, #2A282D 25%, #333036 50%, #2A282D 75%, #141316 100%);
+  border-top: 1px solid rgba(245, 241, 232, 0.18);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  backface-visibility: hidden;
+}
+
+.base-thumb-notch {
+  width: 68px;
+  height: 5px;
+  border-radius: 0 0 6px 6px;
+  background: #0B0B0D;
+  border: 1px solid rgba(245, 241, 232, 0.12);
+  border-top: none;
+}
+
+/* Extruded Left & Right Side Walls with USB-C / MagSafe Ports */
+.base-side-left {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 312px;
+  transform-origin: 0% 50% 0px;
+  transform: rotateY(-90deg);
+  background: linear-gradient(180deg, #19181C 0%, #27252A 50%, #151418 100%);
+  border-top: 1px solid rgba(245, 241, 232, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-top: 36px;
+  align-items: center;
+}
+
+.base-side-right {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  width: 14px;
+  height: 312px;
+  transform-origin: 100% 50% 0px;
+  transform: rotateY(90deg);
+  background: linear-gradient(180deg, #19181C 0%, #27252A 50%, #151418 100%);
+  border-top: 1px solid rgba(245, 241, 232, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-top: 36px;
+  align-items: center;
+}
+
+.chassis-port-slot {
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: #070709;
+  border: 1px solid rgba(240, 120, 60, 0.3);
+}
+
+/* Speaker Grille & Vent Bar near Hinge (top of base deck, y near 0) */
+.base-speaker-bar {
+  width: 100%;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.speaker-dots {
+  width: 110px;
+  height: 4px;
+  background-image: radial-gradient(rgba(245, 241, 232, 0.22) 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.75;
+}
+
+.hinge-vent-slot {
+  width: 140px;
+  height: 4px;
+  border-radius: 999px;
+  background: #0D0D10;
+  border: 1px solid rgba(245, 241, 232, 0.06);
+}
+
+/* Realistic Recessed Backlit Keyboard Well (Right-Side Up!) */
+.keyboard-well {
+  width: 100%;
+  height: 192px;
+  background: #0D0D10;
+  border-radius: 8px;
+  padding: 7px 8px;
+  border: 1px solid rgba(245, 241, 232, 0.08);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.9);
+  display: grid;
+  grid-template-rows: 0.78fr 1fr 1fr 1fr 1fr 1.05fr;
+  gap: 4px;
+}
+
+.kb-row {
+  display: grid;
+  grid-template-columns: repeat(14, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.kb-key {
+  background: #1B1A1F;
+  border-radius: 3px;
+  border: 1px solid rgba(245, 241, 232, 0.07);
+  border-bottom: 1.5px solid rgba(240, 120, 60, 0.18);
+  color: rgba(245, 241, 232, 0.65);
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  line-height: 1;
+}
+
+.kb-key.accent-esc {
+  background: rgba(240, 120, 60, 0.22);
+  border-color: rgba(240, 120, 60, 0.45);
+  color: #F5F1E8;
+  font-weight: 600;
+}
+
+/* Precision Glass Trackpad at the bottom of the deck (closest to viewer) */
+.trackpad-well {
+  width: 168px;
+  height: 82px;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #18171C 0%, #141317 100%);
+  border: 1px solid rgba(245, 241, 232, 0.11);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.65);
+  position: relative;
+}
+
+/* ---- LAPTOP LID (Positioned at top: -330px, hinged at 50% 100% 0px -> y=0, z=0) ----
+   Shares the exact hinge line with .laptop-base!
+   GSAP animates rotateX from -82deg (folded forward over keyboard) to +12deg (opened working angle).
+*/
+.laptop-lid {
+  position: absolute;
+  top: -330px;
+  left: 0;
+  width: 520px;
+  height: 330px;
+  transform-origin: 50% 100% 0px;
+  transform-style: preserve-3d;
+  transform: rotateX(-82deg);
+  will-change: transform;
+}
+
+/* Inner Screen Face (Facing Viewer when Open, z = +1px) */
+.lid-inner-screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px 16px 4px 4px;
+  background: #0D0D10;
+  border: 2px solid #2E2C30;
+  padding: 9px 10px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  transform: translateZ(1px);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  box-shadow: inset 0 0 0 1px rgba(245, 241, 232, 0.06);
+}
+
+/* Outer Anodized Shell Back (Visible when Lid is Closed/Folded Forward, z = -7px) */
+.lid-outer-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px 16px 4px 4px;
+  background: linear-gradient(135deg, #27252A 0%, #18171B 52%, #101013 100%);
+  border: 1.5px solid rgba(245, 241, 232, 0.16);
+  transform: translateZ(-7px) rotateX(180deg);
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 1px rgba(255, 154, 92, 0.18);
+}
+
+.lid-bevel-top {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  width: 492px;
+  height: 8px;
+  transform-origin: 50% 0% 0px;
+  transform: rotateX(90deg);
+  background: linear-gradient(90deg, #1B1A1E, #353238, #1B1A1E);
+}
+
+.lid-bevel-left {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 8px;
+  height: 308px;
+  transform-origin: 0% 50% 0px;
+  transform: rotateY(-90deg);
+  background: #232126;
+}
+
+.lid-bevel-right {
+  position: absolute;
+  top: 14px;
+  right: 0;
+  width: 8px;
+  height: 308px;
+  transform-origin: 100% 50% 0px;
+  transform: rotateY(90deg);
+  background: #232126;
+}
+
+.notebook-emblem {
+  width: 46px;
+  height: 46px;
+  border-radius: 11px;
+  border: 1px solid rgba(240, 120, 60, 0.45);
+  background: rgba(11, 11, 13, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+}
+
+.notebook-camera-notch {
+  width: 64px;
+  height: 8px;
+  background: #060608;
+  margin: 0 auto 4px;
+  border-radius: 0 0 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notebook-camera-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+}
+
+.notebook-screen-viewport {
+  flex: 1;
+  background: #0B0B0E;
+  border-radius: 7px;
+  border: 1px solid rgba(245, 241, 232, 0.08);
+  padding: 0.875rem;
+  overflow: visible;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+}
+
+.lid-chin-logo {
+  height: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  padding-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   DYNAMIC 3D LIGHTING, SPECULAR SHEEN, 2.5D UI POP-OUT & STUDIO BADGES
+   -------------------------------------------------------------------------- */
+.preserve-3d-grid {
+  transform-style: preserve-3d;
+}
+
+/* 2.5D UI Pop-out Layers inside Notebook & Smartphone Screens */
+.ui-layer-25d {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, 0px);
+  will-change: transform, filter;
+}
+
+/* Moment 1: Amber Awakening Light along Laptop Front Lip */
+.lip-awakening-glow {
+  position: absolute;
+  top: 0;
+  left: 16%;
+  right: 16%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #FF9A5C 25%, #F0783C 50%, #FF9A5C 75%, transparent 100%);
+  opacity: 0.2;
+  transform: scaleX(0.35);
+  transform-origin: center center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Moment 2: Screen Light Spill cast onto Keyboard & Base Deck as Lid Opens */
+.keyboard-light-spill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 78% 58% at 50% 8%, rgba(255, 154, 92, 0.24) 0%, rgba(240, 120, 60, 0.09) 46%, transparent 78%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  will-change: opacity;
+}
+
+/* Moment 2: Specular Sheen sweeping across Screen Glass with Scroll Angle */
+.screen-specular-sheen,
+.phone-specular-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 10;
+  background: linear-gradient(
+    112deg,
+    transparent 24%,
+    rgba(245, 241, 232, 0.05) 43%,
+    rgba(255, 154, 92, 0.11) 50%,
+    rgba(245, 241, 232, 0.03) 56%,
+    transparent 74%
+  );
+  background-size: 220% 100%;
+  background-position: 120% 0%;
+  opacity: 0.85;
+  will-change: background-position, opacity;
+}
+
+/* Moment 3: Floating Studio Specialty Indicators */
+.studio-specialty-badge {
+  position: absolute;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(17, 17, 20, 0.88);
+  border: 1px solid rgba(240, 120, 60, 0.32);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  will-change: transform, opacity;
+}
+
+.studio-badge-left {
+  top: 22px;
+  left: 24px;
+}
+
+.studio-badge-right {
+  bottom: 22px;
+  right: 24px;
+}
+
+.studio-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+}
+
+/* --------------------------------------------------------------------------
+   COHESIVE 3D SMARTPHONE ASSEMBLY (Dedicated Right-Hand / Bottom Studio Slot)
+   -------------------------------------------------------------------------- */
+.phone-assembly {
+  width: 256px;
+  height: 510px;
+  position: relative;
+  margin: 0;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  transform: rotateX(-16deg) rotateY(-14deg) rotateZ(0deg);
+  will-change: transform;
+}
+
+.phone-chassis {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 38px;
+  background: linear-gradient(145deg, #27252A 0%, #141317 100%);
+  border: 2px solid #3A373E;
+  padding: 9px;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(245, 241, 232, 0.1);
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Back Plate of Smartphone (12px physical depth) */
+.phone-back-plate {
+  position: absolute;
+  inset: 0;
+  border-radius: 38px;
+  background: linear-gradient(145deg, #1E1C21 0%, #111014 100%);
+  border: 1.5px solid rgba(245, 241, 232, 0.12);
+  transform: translateZ(-12px) rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+/* 12px Titanium Side Rails */
+.phone-rail-left {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  width: 12px;
+  height: 454px;
+  transform-origin: 0% 50% 0px;
+  transform: rotateY(-90deg);
+  background: linear-gradient(180deg, #1B1A1E 0%, #343138 50%, #1B1A1E 100%);
+}
+
+.phone-rail-right {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 12px;
+  height: 454px;
+  transform-origin: 100% 50% 0px;
+  transform: rotateY(90deg);
+  background: linear-gradient(180deg, #1B1A1E 0%, #343138 50%, #1B1A1E 100%);
+}
+
+.phone-oled {
+  flex: 1;
+  background: #0B0B0D;
+  border-radius: 28px;
+  border: 1px solid rgba(245, 241, 232, 0.08);
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 12px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.phone-pill-cutout {
+  width: 62px;
+  height: 15px;
+  background: #030304;
+  border-radius: 999px;
+  margin: 2px auto 6px;
+  border: 1px solid rgba(245, 241, 232, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.phone-sensor-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #F0783C 0%, #19191E 80%);
+}
+
+/* ==========================================================================
+   SECTION CONTINUITY, ARCHITECTURAL DRAW LINES & KINETIC TYPOGRAPHY
+   ========================================================================== */
+.depth-transition-shell {
+  transform-origin: center top;
+  will-change: transform;
+}
+
+/* Horizontal Architectural Guide Line (scaleX animated on scroll) */
+.arch-draw-line-x {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-primary) 0%, rgba(245, 241, 232, 0.22) 38%, rgba(245, 241, 232, 0.08) 100%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* Vertical Timeline Guide Rail & Active Scroll Fill (scaleY animated on scroll) */
+.timeline-stage-wrapper {
+  position: relative;
+}
+
+.timeline-vertical-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -18px;
+  width: 1px;
+  background: rgba(245, 241, 232, 0.08);
+  pointer-events: none;
+}
+
+.timeline-vertical-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-primary) 0%, var(--accent-secondary) 75%, transparent 100%);
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+}
+
+@media (max-width: 1024px) {
+  .timeline-vertical-rail {
+    display: none;
+  }
+}
+
+/* Subtle Vertical Architectural Axis in Tech Stack */
+.stack-vertical-axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 33.333%;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(240, 120, 60, 0.22) 0%, rgba(245, 241, 232, 0.05) 100%);
+  transform-origin: top center;
+  transform: scaleY(0);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+/* Masked Kinetic Text Reveal for Section Headings */
+.kinetic-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.kinetic-word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   CAROUSEL STYLES (EDITORIAL PROJECT SHOWCASE + CINEMATIC CLIP-PATH)
+   ========================================================================== */
+.carousel-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  cursor: grab;
+}
+
+.carousel-viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 154, 92, 0.35) 50%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.project-visual-stage {
+  will-change: clip-path, transform;
+}
+
+.carousel-viewport:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.65s var(--ease-editorial);
+  will-change: transform;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.carousel-nav-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  cursor: pointer;
+}
+
+.carousel-nav-btn:hover {
+  background-color: var(--surface-elevated);
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
+  transform: scale(1.04);
+}
+
+.carousel-dot {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.carousel-dot-bar {
+  display: block;
+  height: 6px;
+  width: 8px;
+  border-radius: 999px;
+  background-color: rgba(245, 241, 232, 0.22);
+  transition: width 0.35s var(--ease-out-expo), background-color 0.35s ease;
+}
+
+.carousel-dot.active .carousel-dot-bar {
+  width: 30px;
+  background-color: var(--accent-primary);
+}
+
+/* Modal Backdrop */
+.case-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 11, 13, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.case-modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.case-modal-dialog {
+  width: 100%;
+  max-width: 860px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
+  transform: translateY(18px);
+  transition: transform 0.35s var(--ease-out-expo);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9);
+}
+
+.case-modal-backdrop.open .case-modal-dialog {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   6. RESPONSIVE STYLES & REDUCED MOTION
+   ========================================================================== */
+/* Small Desktop (993px – 1200px) */
+@media (max-width: 1200px) and (min-width: 993px) {
+  :root {
+    --laptop-scale: 0.80;
+    --phone-scale: 0.82;
+  }
+  .laptop-stage-slot {
+    height: 420px;
+  }
+  .phone-stage-slot {
+    height: 440px;
+  }
+}
+
+/* Tablet & Mobile (<= 992px, Stacked One Below the Other — Perfectly Centered) */
+@media (max-width: 992px) {
+  :root {
+    --laptop-scale: 0.72;
+    --phone-scale: 0.76;
+  }
+  .stage-3d-viewport,
+  .showcase-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: auto;
+    overflow: hidden;
+    padding: 52px 12px;
+    gap: 24px;
+  }
+  .studio-badge-left {
+    top: 12px;
+    left: 16px;
+  }
+  .studio-badge-right {
+    bottom: 12px;
+    right: 16px;
+  }
+  .laptop-stage-slot,
+  .phone-stage-slot {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+  .laptop-stage-slot {
+    height: 300px;
+  }
+  .phone-stage-slot {
+    height: 380px;
+  }
+}
+
+/* Mobile (421px – 640px, Stacked) */
+@media (max-width: 640px) {
+  :root {
+    --laptop-scale: 0.54;
+    --phone-scale: 0.66;
+  }
+  .laptop-stage-slot {
+    height: 240px;
+  }
+  .phone-stage-slot {
+    height: 340px;
+  }
+}
+
+/* Small Mobile (<= 420px, Stacked) */
+@media (max-width: 420px) {
+  :root {
+    --laptop-scale: 0.46;
+    --phone-scale: 0.60;
+  }
+  .laptop-stage-slot {
+    height: 210px;
+  }
+  .phone-stage-slot {
+    height: 310px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .laptop-assembly {
+    transform: rotateX(-18deg) rotateY(0deg) rotateZ(0deg) !important;
+  }
+  .laptop-lid {
+    transform: rotateX(12deg) !important;
+  }
+  .phone-assembly {
+    transform: rotateX(-10deg) rotateY(0deg) rotateZ(0deg) !important;
+  }
+  .arch-draw-line-x {
+    transform: scaleX(1) !important;
+  }
+  .timeline-vertical-fill,
+  .stack-vertical-axis {
+    transform: scaleY(1) !important;
+  }
+  .studio-specialty-badge {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+  .keyboard-light-spill,
+  .lip-awakening-glow {
+    opacity: 0.85 !important;
+    transform: scaleX(1) !important;
+  }
+  .depth-transition-shell,
+  .kinetic-word,
+  .project-visual-stage {
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
