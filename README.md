@@ -2,6 +2,8 @@
 
 Portfólio web interativo desenvolvido para apresentar a trajetória, decisões arquiteturais, estudos de caso e stack técnica de **Vinícius Rodrigues Barros** — **Mobile & Full Stack Software Engineer** especializado em **Flutter, Dart, Kotlin, React e NestJS**.
 
+- **Deploy no GitHub Pages**: [https://vinirodrigbarros.github.io/ViniciusRodriguesPortfolio/](https://vinirodrigbarros.github.io/ViniciusRodriguesPortfolio/)
+
 O projeto foi construído sem etapa de compilação (*zero-build*), combinando HTML5 semântico, CSS3 editorial, Tailwind CSS, GSAP (ScrollTrigger) e WebGL interativo com foco em desempenho, legibilidade (WCAG AA/AAA) e responsividade entre desktop, tablet e mobile.
 
 ---
@@ -58,14 +60,15 @@ O projeto foi construído sem etapa de compilação (*zero-build*), combinando H
 
 ```text
 ViniRb/
-├── portf_lio_profissional_vin_cius_rodrigues.html   # Documento principal e estrutura das seções
-├── styles.css                                       # Tokens, estilos editoriais, superfície fosca e responsividade
-├── script.js                                        # Dados estruturados, canvas topográfico, cena 3D e UI/animações
-├── README.md                                        # Documentação do projeto
+├── index.html                           # Página principal (GitHub Pages entry point) e estrutura das seções
+├── .nojekyll                            # Desativa processamento Jekyll no GitHub Pages
+├── styles.css                           # Tokens, estilos editoriais, superfície fosca e responsividade
+├── script.js                            # Dados estruturados, canvas topográfico, cena 3D e UI/animações
+├── README.md                            # Documentação do projeto
 └── assets/
-    ├── foto1.png                                    # Retrato editorial com transparência
-    ├── foto1_original.png                           # Arquivo original do retrato
-    ├── showcase-workstation.jpg                     # Fallback visual em alta resolução do showcase 3D
+    ├── foto1.png                        # Retrato editorial com transparência
+    ├── foto1_original.png               # Arquivo original do retrato
+    ├── showcase-workstation.jpg         # Fallback visual em alta resolução do showcase 3D
     └── logos/
         ├── accenture.png
         ├── bus2.png
@@ -89,7 +92,7 @@ npx serve . -l 8080
 Em seguida, acesse no navegador:
 
 ```text
-http://localhost:8080/portf_lio_profissional_vin_cius_rodrigues.html
+http://localhost:8080/
 ```
 
 ---
