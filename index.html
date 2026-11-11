@@ -453,7 +453,7 @@
     <section id="projetos" class="section-canvas py-24 md:py-32 relative">
       <div class="container-editorial">
         <!-- Header + Carousel Controls -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-7 gap-6">
           <div>
             <div class="eyebrow-label mb-3">
               <span class="eyebrow-line"></span>
@@ -462,32 +462,57 @@
             <h2 class="section-title kinetic-heading">
               Projetos &amp; <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">Engenharia</span>.
             </h2>
+            <p class="text-[#AAA6A0] text-sm md:text-base mt-3 leading-relaxed max-w-xl">
+              Alguns dos meus principais projetos — uma seleção representativa entre entregas corporativas, iniciativas acadêmicas e sistemas em evolução, além de outros repositórios públicos e projetos privados.
+            </p>
           </div>
 
           <!-- Carousel Navigation Bar -->
-          <div class="flex items-center gap-4">
-            <div class="font-mono-meta text-xs text-[#AAA6A0] mr-2" aria-live="polite" aria-atomic="true">
+          <div class="flex flex-wrap items-center justify-between md:justify-end gap-3 sm:gap-4 shrink-0 w-full md:w-auto">
+            <div class="font-mono-meta text-xs text-[#AAA6A0] whitespace-nowrap shrink-0 mr-1 sm:mr-2" aria-live="polite" aria-atomic="true">
               <span class="sr-only">Projeto ativo: </span>
               <span id="carousel-current-index" class="text-[#F5F1E8] font-medium">01</span>
               <span class="mx-1">/</span>
               <span id="carousel-total-count">04</span>
             </div>
 
-            <div id="carousel-dots" class="flex items-center gap-1" role="tablist" aria-label="Selecionar projeto"></div>
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div id="carousel-dots" class="flex items-center" role="tablist" aria-label="Selecionar projeto"></div>
 
-            <div class="flex items-center gap-2 ml-2">
-              <button type="button" id="carousel-prev-btn" class="carousel-nav-btn magnetic-btn" aria-label="Projeto anterior">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button type="button" id="carousel-next-btn" class="carousel-nav-btn magnetic-btn" aria-label="Próximo projeto">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+              <div class="flex items-center gap-2 ml-1 sm:ml-2">
+                <button type="button" id="carousel-prev-btn" class="carousel-nav-btn magnetic-btn" aria-label="Projeto anterior">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button type="button" id="carousel-next-btn" class="carousel-nav-btn magnetic-btn" aria-label="Próximo projeto">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Project Classification Filter Pills -->
+        <div id="project-filters" class="flex flex-wrap items-center gap-2.5 mb-8" role="group" aria-label="Filtrar projetos por classificação">
+          <button type="button" data-project-filter="all" class="project-filter-pill active" aria-pressed="true">
+            <span>Todos</span>
+            <span class="project-filter-count" data-filter-count="all">04</span>
+          </button>
+          <button type="button" data-project-filter="work" class="project-filter-pill" aria-pressed="false">
+            <span>Projetos de Trabalho</span>
+            <span class="project-filter-count" data-filter-count="work">03</span>
+          </button>
+          <button type="button" data-project-filter="personal" class="project-filter-pill" aria-pressed="false">
+            <span>Projetos Pessoais</span>
+            <span class="project-filter-count" data-filter-count="personal">00</span>
+          </button>
+          <button type="button" data-project-filter="academic" class="project-filter-pill" aria-pressed="false">
+            <span>Projetos Acadêmicos</span>
+            <span class="project-filter-count" data-filter-count="academic">01</span>
+          </button>
         </div>
 
         <!-- Interactive Widescreen Carousel Viewport -->

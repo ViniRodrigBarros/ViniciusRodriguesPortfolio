@@ -231,6 +231,8 @@ const PORTFOLIO_DATA = Object.freeze({
     {
       id: 'appbus2-v5',
       index: '01',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
       companyOrContext: 'Bus2 • Escala Internacional',
       categoryLabel: 'Unificação Arquitetural & Alta Performance',
       title: 'AppBus2 v5 — Unificação Multi-Flavor em Escala',
@@ -251,13 +253,17 @@ const PORTFOLIO_DATA = Object.freeze({
         'Releases reduzidos de horas para minutos'
       ],
       technologies: ['Flutter', 'Dart', 'Clean Architecture', 'Flutter Flavors', 'Dart Isolates', 'Method Channels', 'CI/CD Automation'],
-      productionBadge: 'Sistema em Produção • Bus2 (Android & iOS)',
-      linkLabel: null,
-      linkUrl: null
+      productionBadge: 'Aplicativo Oficial em Produção • Bus2',
+      linkLabel: 'Acessar landing page oficial',
+      linkDomain: 'bus2.app',
+      linkImage: 'assets/logos/bus2.png',
+      linkUrl: 'https://bus2.app/'
     },
     {
       id: 'neat-sttp',
       index: '02',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
       companyOrContext: 'STTP • Mobilidade Urbana & Segurança Viária',
       categoryLabel: 'Arquitetura Offline-First & Geolocalização',
       title: 'NEAT (STTP) — Mapeamento Geoespacial Offline-First',
@@ -278,12 +284,16 @@ const PORTFOLIO_DATA = Object.freeze({
       ],
       technologies: ['Flutter', 'Dart', 'Google Maps API', 'SQLite', 'Firebase', 'REST APIs', 'Clean Architecture'],
       productionBadge: 'Sistema Oficial em Produção • STTP',
+      accessNotice: 'Projeto de uso interno, não disponível para o público',
+      accessNoticeType: 'internal',
       linkLabel: null,
       linkUrl: null
     },
     {
       id: 'bus2driver',
       index: '03',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
       companyOrContext: 'Bus2 • Operação de Frotas em Tempo Real',
       categoryLabel: 'WebSocket Telemetry & Live Tracking',
       title: 'Bus2Driver — Telemetria Veicular & Streams WebSocket',
@@ -304,15 +314,19 @@ const PORTFOLIO_DATA = Object.freeze({
       ],
       technologies: ['Flutter', 'Dart', 'WebSocket', 'Google Maps API', 'Geolocation Services', 'BLoC / Cubit', 'REST APIs'],
       productionBadge: 'Sistema Operacional em Produção • Bus2',
+      accessNotice: 'Projeto de uso interno, não disponível para o público',
+      accessNoticeType: 'internal',
       linkLabel: null,
       linkUrl: null
     },
     {
       id: 'localspeak',
       index: '04',
+      classification: 'academic',
+      classificationLabel: 'Projeto Acadêmico',
       companyOrContext: 'TCC Engenharia de Computação • IFPB',
       categoryLabel: 'IA On-Device & Offline Mobile Architecture',
-      title: 'LocalSpeak — Conversação em Inglês com IA 100% On-Device',
+      title: 'LocalSpeak (TCC Speak Lab) — Conversação com IA 100% On-Device',
       subtitle: 'Execução local de LLMs (Qwen / Gemma) e motores offline de STT/TTS diretamente no dispositivo móvel em Flutter.',
       description: 'Soluções tradicionais de conversação com IA dependem de APIs em nuvem com alto custo por token, latência variável de rede e envio externo de dados biométricos de voz.',
       problemSolved: 'Arquitetura mobile em Flutter capaz de executar LLMs quantizados (Qwen / Gemma via flutter_gemma) e motores neurais de STT/TTS (sherpa_onnx) 100% offline no próprio smartphone.',
@@ -330,6 +344,8 @@ const PORTFOLIO_DATA = Object.freeze({
       ],
       technologies: ['Flutter', 'Dart', 'Local LLM (Qwen / Gemma)', 'flutter_gemma', 'sherpa_onnx (Offline STT/TTS)', 'Clean Architecture'],
       productionBadge: 'Pesquisa Aplicada & Open Source • IFPB',
+      accessNotice: 'Projeto em desenvolvimento para TCC',
+      accessNoticeType: 'dev',
       linkLabel: 'Repositório no GitHub',
       linkUrl: 'https://github.com/ViniRodrigBarros/tcc_speak_lab'
     }
@@ -1388,26 +1404,138 @@ const UIComponents = {
     `;
   },
 
-  renderCarousel() {
+  /**
+   * Renders classification status / official landing card shared between carousel slides and modal.
+   */
+  renderProjectAccessControl(project) {
+    const parts = [];
+
+    if (project.linkUrl && project.linkImage) {
+      parts.push(`
+        <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="project-official-card group" aria-label="${DOMUtils.escapeHTML(project.linkLabel || 'Acessar landing page oficial')}">
+          <span class="project-official-thumb">
+            <img src="${DOMUtils.escapeHTML(project.linkImage)}" alt="${DOMUtils.escapeHTML(project.linkDomain || 'Logo oficial')}" loading="lazy" />
+          </span>
+          <span class="flex flex-col text-left leading-tight">
+            <span class="font-mono-meta text-[10px] text-[#FF9A5C]">LANDING PAGE OFICIAL</span>
+            <span class="text-xs font-medium text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">${DOMUtils.escapeHTML(project.linkDomain || 'Site Oficial')}</span>
+          </span>
+          <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C] ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </a>
+      `);
+    } else if (project.linkUrl) {
+      parts.push(`
+        <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial text-xs py-3 px-5 flex items-center gap-2">
+          <span>${DOMUtils.escapeHTML(project.linkLabel || 'Acessar projeto')}</span>
+          <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </a>
+      `);
+    }
+
+    if (project.accessNotice) {
+      const isDev = project.accessNoticeType === 'dev';
+      const iconPath = isDev
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M16 11V7a4 4 0 00-8 0v4m-2 0h12a1 1 0 011 1v7a1 1 0 01-1 1H6a1 1 0 01-1-1v-7a1 1 0 011-1z" />';
+      parts.push(`
+        <span class="project-status-pill ${isDev ? 'is-dev' : 'is-internal'}">
+          <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">${iconPath}</svg>
+          <span>${DOMUtils.escapeHTML(project.accessNotice)}</span>
+        </span>
+      `);
+    } else if (!project.linkUrl && project.productionBadge) {
+      parts.push(`
+        <span class="font-mono-meta text-xs text-[#8E8A84] px-2 py-1">
+          ${DOMUtils.escapeHTML(project.productionBadge)}
+        </span>
+      `);
+    }
+
+    return parts.join('');
+  },
+
+  renderCarousel(filter = 'all') {
     const track = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselTrack);
     const dotsContainer = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselDots);
+    const viewport = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselViewport);
+    const prevBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselPrevBtn);
+    const nextBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselNextBtn);
+    const currentEl = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselCurrentIndex);
     const totalEl = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselTotalCount);
 
-    if (!track || !dotsContainer) return;
+    if (!track || !dotsContainer) return { totalSlides: 0 };
 
-    const projects = PORTFOLIO_DATA.projects;
+    const allProjects = PORTFOLIO_DATA.projects;
+    const counts = {
+      all: allProjects.length,
+      work: allProjects.filter(p => p.classification === 'work').length,
+      personal: allProjects.filter(p => p.classification === 'personal').length,
+      academic: allProjects.filter(p => p.classification === 'academic').length
+    };
+    Object.entries(counts).forEach(([key, val]) => {
+      const badge = DOMUtils.qs(`[data-filter-count="${key}"]`);
+      if (badge) badge.textContent = String(val).padStart(2, '0');
+    });
+
+    const projects = filter === 'all'
+      ? allProjects
+      : allProjects.filter(p => p.classification === filter);
+
     if (totalEl) totalEl.textContent = String(projects.length).padStart(2, '0');
+    if (currentEl) currentEl.textContent = projects.length ? '01' : '00';
+
+    const disableNav = projects.length <= 1;
+    if (prevBtn) prevBtn.disabled = disableNav;
+    if (nextBtn) nextBtn.disabled = disableNav;
+    if (viewport) viewport.classList.toggle('is-static', disableNav);
+
+    track.style.transform = 'translate3d(0%, 0, 0)';
+
+    if (!projects.length) {
+      track.innerHTML = `
+        <article class="carousel-slide p-8 sm:p-12 md:p-16 text-center">
+          <div class="max-w-xl mx-auto space-y-4">
+            <span class="font-mono-meta text-xs text-[#FF9A5C] inline-block">
+              PROJETOS PESSOAIS • PORTFÓLIO EM CURADORIA
+            </span>
+            <h3 class="text-2xl sm:text-3xl font-semibold text-[#F5F1E8]">
+              Mais projetos disponíveis no GitHub
+            </h3>
+            <p class="text-[#AAA6A0] text-sm md:text-base leading-relaxed">
+              Alguns dos meus principais projetos pessoais, experimentos e utilitários ficam publicados diretamente no meu perfil do GitHub enquanto preparo estudos de caso detalhados para esta vitrine.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <a href="https://github.com/ViniRodrigBarros?tab=repositories" target="_blank" rel="noopener noreferrer" class="btn-primary-editorial text-xs py-3 px-5">
+                <span>Explorar repositórios no GitHub</span>
+                <svg class="w-3.5 h-3.5 shrink-0 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </a>
+              <button type="button" data-reset-project-filter class="btn-secondary-editorial text-xs py-3 px-5">
+                Ver todos os projetos
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+      dotsContainer.innerHTML = '';
+      return { totalSlides: 0 };
+    }
 
     track.innerHTML = projects.map((project, idx) => `
       <article id="carousel-slide-${idx}" class="carousel-slide p-7 sm:p-10 md:p-12" ${idx === 0 ? '' : 'inert'}>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           <!-- Left Column: Case Info -->
           <div class="lg:col-span-6 space-y-5">
-            <div class="slide-stagger-item flex flex-wrap items-center gap-3">
+            <div class="slide-stagger-item flex flex-wrap items-center gap-2.5">
               <span class="font-mono-meta text-xs text-[#FF9A5C]">
-                PROJETO ${DOMUtils.escapeHTML(project.index)}
+                ${DOMUtils.escapeHTML(project.classificationLabel || `PROJETO ${project.index}`)}
               </span>
-              <span class="text-[#8E8A84]">•</span>
+              <span class="text-[#8E8A84]" aria-hidden="true">•</span>
               <span class="font-mono-meta text-xs text-[#AAA6A0]">
                 ${DOMUtils.escapeHTML(project.companyOrContext)}
               </span>
@@ -1437,16 +1565,7 @@ const UIComponents = {
                 <span>Detalhamento Técnico</span>
                 <span aria-hidden="true">→</span>
               </button>
-              ${project.linkUrl ? `
-                <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial text-xs py-3 px-5 flex items-center gap-2">
-                  <span>${DOMUtils.escapeHTML(project.linkLabel)}</span>
-                  <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
-                </a>
-              ` : `
-                <span class="font-mono-meta text-xs text-[#8E8A84] px-2 py-1">
-                  ${DOMUtils.escapeHTML(project.productionBadge || '')}
-                </span>
-              `}
+              ${this.renderProjectAccessControl(project)}
             </div>
           </div>
 
@@ -1469,6 +1588,8 @@ const UIComponents = {
         aria-label="Ir para o projeto ${DOMUtils.escapeHTML(p.title)}"
       ><span class="carousel-dot-bar" aria-hidden="true"></span></button>
     `).join('');
+
+    return { totalSlides: projects.length };
   },
 
   renderTechStack() {
@@ -1555,7 +1676,7 @@ const UIComponents = {
 
     this.lastModalTrigger = triggerEl || document.activeElement;
 
-    catEl.textContent = `${project.companyOrContext} — ${project.categoryLabel}`;
+    catEl.textContent = `${project.classificationLabel || project.companyOrContext} — ${project.categoryLabel}`;
     titleEl.textContent = project.title;
 
     bodyEl.innerHTML = `
@@ -1589,16 +1710,9 @@ const UIComponents = {
         <div class="font-mono-meta text-xs text-[#AAA6A0]">
           <span class="text-[#F5F1E8]">Tecnologias:</span> ${project.technologies.map(t => DOMUtils.escapeHTML(t)).join(' · ')}
         </div>
-        ${project.linkUrl ? `
-          <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="btn-primary-editorial text-xs py-2.5 px-5 flex items-center gap-2">
-            <span>${DOMUtils.escapeHTML(project.linkLabel)}</span>
-            <svg class="w-3.5 h-3.5 shrink-0 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
-          </a>
-        ` : `
-          <span class="font-mono-meta text-xs text-[#8E8A84]">
-            ${DOMUtils.escapeHTML(project.productionBadge || '')}
-          </span>
-        `}
+        <div class="flex flex-wrap items-center gap-3">
+          ${this.renderProjectAccessControl(project)}
+        </div>
       </div>
     `;
 
@@ -2820,16 +2934,47 @@ const AnimationController = {
 const NavigationController = {
   currentSlide: 0,
   totalSlides: PORTFOLIO_DATA.projects.length,
+  activeProjectFilter: 'all',
   dragStartX: 0,
   isDragging: false,
 
   init() {
     this.bindHeaderScroll();
     this.bindMobileDrawer();
+    this.bindProjectFilters();
     this.bindCarousel();
     this.bindCaseModals();
     this.bindClipboardCopy();
     this.bindActiveSectionObserver();
+  },
+
+  setProjectFilter(filterKey) {
+    this.activeProjectFilter = filterKey || 'all';
+    const buttons = DOMUtils.qsa('#project-filters [data-project-filter]');
+    buttons.forEach((btn) => {
+      const active = btn.getAttribute('data-project-filter') === this.activeProjectFilter;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+
+    const { totalSlides } = UIComponents.renderCarousel(this.activeProjectFilter);
+    this.currentSlide = 0;
+    this.totalSlides = totalSlides;
+    if (this.totalSlides > 0) {
+      this.goToSlide(0);
+    }
+  },
+
+  bindProjectFilters() {
+    const filterBar = DOMUtils.qs('#project-filters');
+    if (!filterBar) return;
+
+    filterBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-project-filter]');
+      if (!btn) return;
+      const filterKey = btn.getAttribute('data-project-filter') || 'all';
+      this.setProjectFilter(filterKey);
+    });
   },
 
   bindHeaderScroll() {
@@ -2889,7 +3034,7 @@ const NavigationController = {
     const dots = DOMUtils.qsa('.carousel-dot');
     const slides = DOMUtils.qsa('.carousel-slide');
 
-    if (!track) return;
+    if (!track || this.totalSlides <= 0) return;
 
     this.currentSlide = (index + this.totalSlides) % this.totalSlides;
     track.style.transform = `translate3d(-${this.currentSlide * 100}%, 0, 0)`;
@@ -2952,21 +3097,28 @@ const NavigationController = {
     const prevBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselPrevBtn);
     const nextBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselNextBtn);
     const viewport = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselViewport);
-    const dots = DOMUtils.qsa('.carousel-dot');
+    const dotsContainer = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselDots);
 
-    if (prevBtn) prevBtn.addEventListener('click', () => this.goToSlide(this.currentSlide - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => this.goToSlide(this.currentSlide + 1));
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+      if (this.totalSlides > 1) this.goToSlide(this.currentSlide - 1);
+    });
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+      if (this.totalSlides > 1) this.goToSlide(this.currentSlide + 1);
+    });
 
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
+    if (dotsContainer) {
+      dotsContainer.addEventListener('click', (e) => {
+        const dot = e.target.closest('.carousel-dot');
+        if (!dot) return;
         const target = Number(dot.getAttribute('data-slide-to'));
         if (!Number.isNaN(target)) this.goToSlide(target);
       });
-    });
+    }
 
     // Pointer / Touch Drag Support (respects text selection and interactive controls)
     if (viewport) {
       const startDrag = (clientX) => {
+        if (this.totalSlides <= 1) return;
         this.isDragging = true;
         this.dragStartX = clientX;
       };
@@ -2974,6 +3126,7 @@ const NavigationController = {
       const endDrag = (clientX) => {
         if (!this.isDragging) return;
         this.isDragging = false;
+        if (this.totalSlides <= 1) return;
 
         const selection = window.getSelection ? window.getSelection() : null;
         if (selection && selection.toString().trim().length > 0) {
@@ -3007,6 +3160,7 @@ const NavigationController = {
 
       // Keyboard Left / Right Navigation Support
       viewport.addEventListener('keydown', (e) => {
+        if (this.totalSlides <= 1) return;
         if (e.key === 'ArrowLeft') {
           e.preventDefault();
           this.goToSlide(this.currentSlide - 1);
@@ -3019,17 +3173,26 @@ const NavigationController = {
   },
 
   bindCaseModals() {
-    const openBtns = DOMUtils.qsa('.open-case-modal-btn');
+    const viewport = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.carouselViewport);
     const companyBtns = DOMUtils.qsa('.hero-company-card');
     const closeBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalCloseBtn);
     const backdrop = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.caseModal);
 
-    openBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-project-id');
-        if (id) UIComponents.openCaseModal(id, btn);
+    if (viewport) {
+      viewport.addEventListener('click', (e) => {
+        const caseBtn = e.target.closest('.open-case-modal-btn');
+        if (caseBtn) {
+          const id = caseBtn.getAttribute('data-project-id');
+          if (id) UIComponents.openCaseModal(id, caseBtn);
+          return;
+        }
+
+        const resetBtn = e.target.closest('[data-reset-project-filter]');
+        if (resetBtn) {
+          this.setProjectFilter('all');
+        }
       });
-    });
+    }
 
     companyBtns.forEach(btn => {
       btn.addEventListener('click', () => {
