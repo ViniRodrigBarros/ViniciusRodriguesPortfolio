@@ -58,10 +58,10 @@ const PORTFOLIO_DATA = Object.freeze({
       metrics: [
         '+25% Velocidade de Sprint',
         '-30% Defeitos em Produção',
-        '5+ Apps Públicos em Operação',
+        'Apps Públicos em Operação',
         '+20% Eficiência em Campo'
       ],
-      scopeOverview: 'Trajetória completa desde o primeiro estágio em engenharia de software (Jan 2022) até a liderança técnica da frente mobile municipal, coordenando arquitetura, Code Review, padronização em BLoC/Clean Architecture e sustentação de mais de 5 aplicativos oficiais utilizados diariamente por agentes de trânsito e cidadãos.',
+      scopeOverview: 'Trajetória completa desde o primeiro estágio em engenharia de software (Jan 2022) até a liderança técnica da frente mobile municipal, coordenando arquitetura, Code Review, padronização em BLoC/Clean Architecture e sustentação de aplicativos oficiais utilizados diariamente por agentes de trânsito e cidadãos.',
       progression: [
         {
           role: 'Mobile Development Lead | Flutter Developer (Mid-Level)',
@@ -173,9 +173,9 @@ const PORTFOLIO_DATA = Object.freeze({
       metrics: [
         '+25% velocidade de sprint',
         '-30% defeitos em produção',
-        '5+ apps móveis em produção'
+        'Apps móveis em produção contínua'
       ],
-      summary: 'Liderança técnica da frente mobile municipal, coordenando a arquitetura, qualidade de código e evolução de mais de 5 aplicativos públicos em operação.',
+      summary: 'Liderança técnica da frente mobile municipal, coordenando a arquitetura, qualidade de código e evolução dos aplicativos públicos em operação.',
       responsibilities: [
         'Direcionamento técnico da equipe mobile, conduzindo processos de Code Review, padronização em BLoC/Clean Architecture e mentoria direta de desenvolvedores juniores.',
         'Elevação da velocidade de entrega em 25% nas sprints e redução de 30% em defeitos em produção por meio de governança técnica e modularização.',
