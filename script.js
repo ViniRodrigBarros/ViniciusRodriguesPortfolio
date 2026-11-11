@@ -433,62 +433,116 @@ const DOMUtils = {
 
 /**
  * ==========================================================================
- * 9B. TOPOGRAPHICAL HERO BACKGROUND (@kokonutui/topo-background v1.1.0 PORT)
+ * 9B. TOPOGRAPHICAL HERO BACKGROUND (@kokonutui/topo-background v1.1.0)
  * ==========================================================================
- * Soft editorial contour map with 3D Perlin noise, marching-squares contour
- * tracing, destination-out knockout elevation labels, interactive cursor hill,
- * click wave ripples, and idle frame rate throttling.
+ * Direct implementation of @dorianbaffier's Topo Background:
+ * 3D Ken Perlin noise, marching-squares with Path2D, index contour labels with
+ * destination-out knockouts, content occlusion avoidance, pointer-following
+ * hill, and click wave ripples.
  */
-function createTopoNoise(seed = 42) {
-  const p = new Uint8Array(256);
-  for (let i = 0; i < 256; i++) p[i] = i;
-  let s = seed;
+
+// Distance between field samples, in CSS px. Contours are traced through
+// this grid, so it trades smoothness for work per frame.
+const TOPO_CELL = 12;
+// Width of a hill in the terrain, in px.
+const TOPO_TERRAIN_SCALE = 360;
+// Every fifth line is an index contour, drawn heavier, as on a real map.
+const TOPO_INDEX_EVERY = 5;
+// The hill that follows the cursor: height in field units, and spread (px).
+const TOPO_HILL_HEIGHT = 0.5;
+const TOPO_HILL_SPREAD = 120;
+// How quickly the hill catches up with the cursor (per second) and how
+// quickly it rises or sinks when the cursor arrives or leaves.
+const TOPO_HILL_FOLLOW = 9;
+const TOPO_HILL_RISE = 5;
+// A click sends a ring outwards through the terrain.
+const TOPO_RIPPLE_MS = 1800;
+const TOPO_RIPPLE_SPEED = 0.24; // px per ms
+const TOPO_RIPPLE_WIDTH = 42;
+const TOPO_RIPPLE_HEIGHT = 0.2;
+// Distance between the crests of the wave train, in px.
+const TOPO_RIPPLE_WAVELENGTH = 96;
+// When nothing is moving but the drift, a frame every 33ms is plenty.
+const TOPO_IDLE_FRAME_MS = 33;
+// Elevation labels: one per slot of this size at most (px), riding along
+// with the terrain. Elevation of level n is BASE + n * STEP metres, so the
+// index contours read as round hundreds.
+const TOPO_LABEL_SPACING = 210;
+const TOPO_LABEL_BASE = 500;
+const TOPO_LABEL_STEP = 20;
+// Labels keep clear of the faded top and bottom edges.
+const TOPO_LABEL_MARGIN = 0.16;
+const TOPO_MAX_LABEL_ANGLE = Math.PI / 3;
+const TOPO_LABEL_FONT =
+  '500 10px ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif';
+
+/** Seeded 3D gradient noise (Ken Perlin's improved noise), about -1 to 1. */
+function createTopoNoise(seed = 26) {
+  const p = Array.from({ length: 256 }, (_, i) => i);
+  let state = (seed >>> 0) || 1;
+  const random = () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
   for (let i = 255; i > 0; i--) {
-    s = (s * 16807) % 2147483647;
-    const j = s % (i + 1);
-    const tmp = p[i];
-    p[i] = p[j];
-    p[j] = tmp;
+    const j = Math.floor(random() * (i + 1));
+    [p[i], p[j]] = [p[j], p[i]];
   }
   const perm = new Uint8Array(512);
-  for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
-
+  for (let i = 0; i < 512; i++) {
+    perm[i] = p[i & 255];
+  }
   const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
-  const lerp = (a, b, t) => a + t * (b - a);
+  const lerp = (a, b, t) => a + (b - a) * t;
   const grad = (hash, x, y, z) => {
     const h = hash & 15;
     const u = h < 8 ? x : y;
-    const v = h < 4 ? y : (h === 12 || h === 14 ? x : z);
+    let v = z;
+    if (h < 4) {
+      v = y;
+    } else if (h === 12 || h === 14) {
+      v = x;
+    }
     return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
   };
 
-  return function noise3D(x, y, z = 0) {
+  return (x, y, z) => {
     const X = Math.floor(x) & 255;
     const Y = Math.floor(y) & 255;
     const Z = Math.floor(z) & 255;
-    const xf = x - Math.floor(x);
-    const yf = y - Math.floor(y);
-    const zf = z - Math.floor(z);
-    const u = fade(xf);
-    const v = fade(yf);
-    const w = fade(zf);
-
+    const fx = x - Math.floor(x);
+    const fy = y - Math.floor(y);
+    const fz = z - Math.floor(z);
+    const u = fade(fx);
+    const v = fade(fy);
+    const w = fade(fz);
     const A = perm[X] + Y;
     const AA = perm[A] + Z;
     const AB = perm[A + 1] + Z;
     const B = perm[X + 1] + Y;
     const BA = perm[B] + Z;
     const BB = perm[B + 1] + Z;
-
     return lerp(
       lerp(
-        lerp(grad(perm[AA], xf, yf, zf), grad(perm[BA], xf - 1, yf, zf), u),
-        lerp(grad(perm[AB], xf, yf - 1, zf), grad(perm[BB], xf - 1, yf - 1, zf), u),
+        lerp(grad(perm[AA], fx, fy, fz), grad(perm[BA], fx - 1, fy, fz), u),
+        lerp(
+          grad(perm[AB], fx, fy - 1, fz),
+          grad(perm[BB], fx - 1, fy - 1, fz),
+          u
+        ),
         v
       ),
       lerp(
-        lerp(grad(perm[AA + 1], xf, yf, zf - 1), grad(perm[BA + 1], xf - 1, yf, zf - 1), u),
-        lerp(grad(perm[AB + 1], xf, yf - 1, zf - 1), grad(perm[BB + 1], xf - 1, yf - 1, zf - 1), u),
+        lerp(
+          grad(perm[AA + 1], fx, fy, fz - 1),
+          grad(perm[BA + 1], fx - 1, fy, fz - 1),
+          u
+        ),
+        lerp(
+          grad(perm[AB + 1], fx, fy - 1, fz - 1),
+          grad(perm[BB + 1], fx - 1, fy - 1, fz - 1),
+          u
+        ),
         v
       ),
       w
@@ -496,357 +550,516 @@ function createTopoNoise(seed = 42) {
   };
 }
 
+/**
+ * The segment a contour draws through one grid cell, given which corners
+ * are above the level (bits: top-left 8, top-right 4, bottom-right 2,
+ * bottom-left 1) and where it crosses each edge.
+ */
+function topoCellSegments(path, index, box, cross) {
+  const { x0, y0, x1, y1 } = box;
+  const { top, right, bottom, left } = cross;
+  const line = (ax, ay, bx, by) => {
+    path.moveTo(ax, ay);
+    path.lineTo(bx, by);
+  };
+  switch (index) {
+    case 1:
+    case 14:
+      line(x0, left, bottom, y1);
+      break;
+    case 2:
+    case 13:
+      line(bottom, y1, x1, right);
+      break;
+    case 3:
+    case 12:
+      line(x0, left, x1, right);
+      break;
+    case 4:
+    case 11:
+      line(top, y0, x1, right);
+      break;
+    case 6:
+    case 9:
+      line(top, y0, bottom, y1);
+      break;
+    case 7:
+    case 8:
+      line(x0, left, top, y0);
+      break;
+    // The two saddles: opposite corners are high, so the level crosses
+    // the cell twice.
+    case 5:
+      line(x0, left, top, y0);
+      line(bottom, y1, x1, right);
+      break;
+    case 10:
+      line(top, y0, x1, right);
+      line(x0, left, bottom, y1);
+      break;
+    default:
+      break;
+  }
+}
+
+/**
+ * Offer a point on an index contour as a label spot. Slots are laid out in
+ * terrain space (they drift with the map) and every other row is offset by
+ * half a slot, so labels scatter instead of lining up in a grid.
+ */
+function topoOfferLabel(slots, label) {
+  const { x, y } = label;
+  if (
+    y < slots.height * TOPO_LABEL_MARGIN ||
+    y > slots.height * (1 - TOPO_LABEL_MARGIN) ||
+    x < 24 ||
+    x > slots.width - 24 ||
+    slots.avoid.some((r) => x > r.x0 && x < r.x1 && y > r.y0 && y < r.y1)
+  ) {
+    return;
+  }
+  const row = Math.floor(y / TOPO_LABEL_SPACING);
+  const shifted = x + slots.drift + (row % 2) * (TOPO_LABEL_SPACING / 2);
+  const col = Math.floor(shifted / TOPO_LABEL_SPACING);
+  const cx = (col + 0.5) * TOPO_LABEL_SPACING;
+  const cy = (row + 0.5) * TOPO_LABEL_SPACING;
+  const score = (shifted - cx) ** 2 + (y - cy) ** 2;
+  // Too far from the slot centre: a neighbouring label could sit right next to it.
+  if (score > (TOPO_LABEL_SPACING * 0.32) ** 2) {
+    return;
+  }
+  const key = row * 100000 + col;
+  const current = slots.best.get(key);
+  if (!current || score < current.score) {
+    slots.best.set(key, { ...label, score });
+  }
+}
+
+/** Offer the middle of a cell an index contour passes through. */
+function topoOfferCellLabel(slots, [a, b, c, d], x0, y0, level, t) {
+  // The contour runs across the slope; the cell's gradient gives a steadier
+  // direction than the short segment itself.
+  const gx = b - a + c - d;
+  const gy = d - a + c - b;
+  // Slide from the cell's centre along the slope onto the line itself.
+  const px = gx / (2 * TOPO_CELL);
+  const py = gy / (2 * TOPO_CELL);
+  const g2 = px * px + py * py;
+  const lift = g2 > 0 ? (t - (a + b + c + d) / 4) / g2 : 0;
+  const half = TOPO_CELL / 2;
+  const ox = Math.max(-half, Math.min(half, lift * px));
+  const oy = Math.max(-half, Math.min(half, lift * py));
+  let angle = Math.atan2(gx, -gy);
+  // Keep text upright, and skip steep stretches: a number on its side is hard to read.
+  if (angle > Math.PI / 2) {
+    angle -= Math.PI;
+  } else if (angle < -Math.PI / 2) {
+    angle += Math.PI;
+  }
+  if (Math.abs(angle) > TOPO_MAX_LABEL_ANGLE) {
+    return;
+  }
+  topoOfferLabel(slots, { x: x0 + half + ox, y: y0 + half + oy, angle, level });
+}
+
+/** Every contour level that passes through one cell, usually none or one. */
+function topoTraceCell(field, cols, i, j, interval, paths) {
+  const a = field[j * cols + i];
+  const b = field[j * cols + i + 1];
+  const c = field[(j + 1) * cols + i + 1];
+  const d = field[(j + 1) * cols + i];
+  const x0 = i * TOPO_CELL;
+  const y0 = j * TOPO_CELL;
+  const first = Math.ceil(Math.min(a, b, c, d) / interval);
+  const last = Math.floor(Math.max(a, b, c, d) / interval);
+  if (first > last) {
+    return;
+  }
+  const box = { x0, y0, x1: x0 + TOPO_CELL, y1: y0 + TOPO_CELL };
+  for (let level = first; level <= last; level++) {
+    const t = level * interval;
+    const index =
+      (a > t ? 8 : 0) | (b > t ? 4 : 0) | (c > t ? 2 : 0) | (d > t ? 1 : 0);
+    if (index === 0 || index === 15) {
+      continue;
+    }
+    const isIndex = level % TOPO_INDEX_EVERY === 0;
+    topoCellSegments(isIndex ? paths.major : paths.minor, index, box, {
+      top: x0 + TOPO_CELL * ((t - a) / (b - a)),
+      right: y0 + TOPO_CELL * ((t - b) / (c - b)),
+      bottom: x0 + TOPO_CELL * ((t - d) / (c - d)),
+      left: y0 + TOPO_CELL * ((t - a) / (d - a)),
+    });
+    // Saddles are poor label spots: the line turns sharply there.
+    if (isIndex && paths.slots && index !== 5 && index !== 10) {
+      topoOfferCellLabel(paths.slots, [a, b, c, d], x0, y0, level, t);
+    }
+  }
+}
+
+/**
+ * Marching squares: for each cell, find where each contour level crosses
+ * its edges and join those points. Index contours go into their own path
+ * so each group is stroked once.
+ */
+function topoTraceContours(field, cols, rows, interval, minor, major, slots) {
+  const paths = { minor, major, slots };
+  for (let j = 0; j < rows - 1; j++) {
+    for (let i = 0; i < cols - 1; i++) {
+      topoTraceCell(field, cols, i, j, interval, paths);
+    }
+  }
+}
+
+/** Ease the hill towards the cursor and up or down. True while it moves. */
+function topoStepHill(hill, dt) {
+  const follow = 1 - Math.exp(-TOPO_HILL_FOLLOW * dt);
+  hill.x += (hill.targetX - hill.x) * follow;
+  hill.y += (hill.targetY - hill.y) * follow;
+  const goal = hill.on ? 1 : 0;
+  hill.amount += (goal - hill.amount) * (1 - Math.exp(-TOPO_HILL_RISE * dt));
+  return (
+    Math.abs(hill.targetX - hill.x) > 0.5 ||
+    Math.abs(hill.targetY - hill.y) > 0.5 ||
+    Math.abs(goal - hill.amount) > 0.002
+  );
+}
+
 const TopoHeroBackground = {
   rafId: 0,
-  isVisible: true,
+  cleanup: null,
 
-  init() {
-    const container = DOMUtils.qs('#hero');
+  init(options = {}) {
+    const root = DOMUtils.qs('#hero');
     const canvas = DOMUtils.qs('#hero-topo-canvas');
-    if (!container || !canvas) return;
+    if (!root || !canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const noise = createTopoNoise(42);
-    const CELL = 22;
-    const interval = 0.085;
-    const speed = 0.45;
-    const HILL_RADIUS = 220;
-    const HILL_STRENGTH = 0.32;
-    const RIPPLE_SPEED = 160;
-    const RIPPLE_MAX_R = 260;
-    const RIPPLE_WAVELENGTH = 54;
-    const RIPPLE_STRENGTH = 0.12;
-    const SPRING = 0.035;
-    const DAMPING = 0.85;
+    // Teardown previous instance if any
+    if (this.cleanup) {
+      this.cleanup();
+      this.cleanup = null;
+    }
 
+    const interval = options.interval ?? 0.07;
+    const speed = options.speed ?? 1;
+    const interactive = options.interactive ?? true;
+    const seed = options.seed ?? 26;
+    const labels = options.labels ?? true;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const noise = createTopoNoise(seed);
+
+    let width = 0;
+    let height = 0;
+    let cols = 0;
+    let rows = 0;
+    let field = new Float32Array(0);
+    let color = '';
+
+    // The cursor hill, eased towards the pointer so it glides, not jumps.
     const hill = {
-      x: -9999,
-      y: -9999,
-      vx: 0,
-      vy: 0,
-      targetX: -9999,
-      targetY: -9999,
-      active: false,
-      strength: 0
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      amount: 0,
+      on: false,
     };
     const ripples = [];
     let time = 0;
-    let lastRenderTime = 0;
-    let lastInteractionTime = performance.now();
+    let last = 0;
+    let lastPaint = 0;
+    let raf = 0;
+    let visible = true;
 
-    const syncSize = () => {
-      const isMobile = window.innerWidth <= 768;
-      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.25);
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    syncSize();
-
-    if ('ResizeObserver' in window) {
-      const ro = new ResizeObserver(syncSize);
-      ro.observe(container);
-    }
-
-    const noteInteraction = () => {
-      lastInteractionTime = performance.now();
+    const slots = {
+      drift: 0,
+      width: 0,
+      height: 0,
+      best: new Map(),
+      avoid: [],
     };
 
-    container.addEventListener('pointermove', (e) => {
-      noteInteraction();
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      if (!hill.active) {
-        hill.x = x;
-        hill.y = y;
-        hill.vx = 0;
-        hill.vy = 0;
-      }
-      hill.targetX = x;
-      hill.targetY = y;
-      hill.active = true;
-    }, { passive: true });
-
-    container.addEventListener('pointerleave', () => {
-      noteInteraction();
-      hill.active = false;
-    }, { passive: true });
-
-    container.addEventListener('click', (e) => {
-      if (e.target.closest('button, a')) return;
-      noteInteraction();
-      const rect = canvas.getBoundingClientRect();
-      ripples.push({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        t0: time
-      });
-    }, { passive: true });
-
-    const stepHill = () => {
-      const target = hill.active ? 1 : 0;
-      hill.strength += (target - hill.strength) * 0.055;
-      if (hill.strength < 0.002 && !hill.active) {
-        hill.strength = 0;
-        return;
-      }
-      const ax = (hill.targetX - hill.x) * SPRING;
-      const ay = (hill.targetY - hill.y) * SPRING;
-      hill.vx = (hill.vx + ax) * DAMPING;
-      hill.vy = (hill.vy + ay) * DAMPING;
-      hill.x += hill.vx;
-      hill.y += hill.vy;
-    };
-
-    const getElevation = (gx, gy, t) => {
-      const scale = 0.0024;
-      const px = gx * CELL;
-      const py = gy * CELL;
-      const x = px * scale;
-      const y = py * scale;
-
-      let val =
-        noise(x + t * 0.09, y + t * 0.07, t * 0.05) * 0.62 +
-        noise(x * 2.2 - t * 0.06, y * 2.2 + t * 0.08, t * 0.04) * 0.26 +
-        noise(x * 4.4 + t * 0.12, y * 4.4 - t * 0.09, t * 0.03) * 0.12;
-
-      if (hill.strength > 0) {
-        const dx = px - hill.x;
-        const dy = py - hill.y;
-        const r2 = dx * dx + dy * dy;
-        const R2 = HILL_RADIUS * HILL_RADIUS;
-        if (r2 < R2 * 3) {
-          val += HILL_STRENGTH * hill.strength * Math.exp(-r2 / (2 * R2 * 0.42));
+    // Keep labels out from under the content laid over the map.
+    const measureContent = () => {
+      const origin = canvas.getBoundingClientRect();
+      slots.avoid = [];
+      const children = Array.from(root.children);
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.contains(canvas) || child.id === 'hero-topo-root') {
+          continue;
         }
-      }
-
-      for (let i = 0; i < ripples.length; i++) {
-        const rp = ripples[i];
-        const age = t - rp.t0;
-        const frontR = age * RIPPLE_SPEED;
-        const dx = px - rp.x;
-        const dy = py - rp.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const delta = dist - frontR;
-        const envelope = Math.exp(-(delta * delta) / (2 * 26 * 26));
-        const distFade = Math.max(0, 1 - frontR / RIPPLE_MAX_R);
-        val += RIPPLE_STRENGTH * envelope * distFade * Math.cos((delta / RIPPLE_WAVELENGTH) * Math.PI * 2);
-      }
-
-      return val;
-    };
-
-    // Marching squares segment tables (KokonutUI algorithm)
-    const traceContours = (field, cols, rows, level) => {
-      const segments = [];
-      const interp = (v0, v1) => {
-        if (Math.abs(v1 - v0) < 1e-6) return 0.5;
-        return (level - v0) / (v1 - v0);
-      };
-
-      for (let gy = 0; gy < rows - 1; gy++) {
-        for (let gx = 0; gx < cols - 1; gx++) {
-          const idx = gy * cols + gx;
-          const tl = field[idx];
-          const tr = field[idx + 1];
-          const br = field[idx + cols + 1];
-          const bl = field[idx + cols];
-
-          let code = 0;
-          if (tl >= level) code |= 8;
-          if (tr >= level) code |= 4;
-          if (br >= level) code |= 2;
-          if (bl >= level) code |= 1;
-          if (code === 0 || code === 15) continue;
-
-          const x = gx * CELL;
-          const y = gy * CELL;
-          const top = [x + interp(tl, tr) * CELL, y];
-          const right = [x + CELL, y + interp(tr, br) * CELL];
-          const bottom = [x + interp(bl, br) * CELL, y + CELL];
-          const left = [x, y + interp(tl, bl) * CELL];
-
-          switch (code) {
-            case 1:
-            case 14:
-              segments.push([left[0], left[1], bottom[0], bottom[1]]);
-              break;
-            case 2:
-            case 13:
-              segments.push([bottom[0], bottom[1], right[0], right[1]]);
-              break;
-            case 3:
-            case 12:
-              segments.push([left[0], left[1], right[0], right[1]]);
-              break;
-            case 4:
-            case 11:
-              segments.push([top[0], top[1], right[0], right[1]]);
-              break;
-            case 5:
-              segments.push([left[0], left[1], top[0], top[1]]);
-              segments.push([bottom[0], bottom[1], right[0], right[1]]);
-              break;
-            case 6:
-            case 9:
-              segments.push([top[0], top[1], bottom[0], bottom[1]]);
-              break;
-            case 7:
-            case 8:
-              segments.push([left[0], left[1], top[0], top[1]]);
-              break;
-            case 10:
-              segments.push([top[0], top[1], right[0], right[1]]);
-              segments.push([left[0], left[1], bottom[0], bottom[1]]);
-              break;
-          }
-        }
-      }
-      return segments;
-    };
-
-    const drawFrame = () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      if (w <= 0 || h <= 0) return;
-
-      const cols = Math.ceil(w / CELL) + 2;
-      const rows = Math.ceil(h / CELL) + 2;
-      const field = new Float32Array(cols * rows);
-
-      stepHill();
-
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        if ((time - ripples[i].t0) * RIPPLE_SPEED > RIPPLE_MAX_R) {
-          ripples.splice(i, 1);
-        }
-      }
-
-      for (let gy = 0; gy < rows; gy++) {
-        for (let gx = 0; gx < cols; gx++) {
-          field[gy * cols + gx] = getElevation(gx, gy, time);
-        }
-      }
-
-      ctx.clearRect(0, 0, w, h);
-
-      const minLevel = -0.75;
-      const maxLevel = 0.75;
-      let levelIndex = 0;
-      const labelCandidates = [];
-
-      for (let level = minLevel; level <= maxLevel; level += interval) {
-        const isMajor = levelIndex % 4 === 0;
-        const segments = traceContours(field, cols, rows, level);
-
-        if (segments.length > 0) {
-          ctx.beginPath();
-          // Softer editorial alpha tuning requested by user
-          ctx.strokeStyle = isMajor
-            ? 'rgba(240, 120, 60, 0.16)'
-            : 'rgba(245, 241, 232, 0.052)';
-          ctx.lineWidth = isMajor ? 1.15 : 0.65;
-          ctx.lineCap = 'round';
-
-          for (let i = 0; i < segments.length; i++) {
-            const s = segments[i];
-            ctx.moveTo(s[0], s[1]);
-            ctx.lineTo(s[2], s[3]);
-          }
-          ctx.stroke();
-
-          // Collect survey elevation label candidate for major contours
-          if (isMajor && segments.length > 20) {
-            const pickIdx = Math.floor(segments.length * 0.62);
-            const seg = segments[pickIdx];
-            if (seg) {
-              const lx = (seg[0] + seg[2]) / 2;
-              const ly = (seg[1] + seg[3]) / 2;
-              // Ensure labels stay in visible editorial bounds
-              if (lx > 40 && lx < w - 60 && ly > 60 && ly < h - 60) {
-                const elev = Math.round((level + 1) * 450);
-                labelCandidates.push({ x: lx, y: ly, text: `${elev}m` });
-              }
-            }
-          }
-        }
-        levelIndex++;
-      }
-
-      // Draw elevation labels with destination-out knockouts (KokonutUI feature)
-      if (labelCandidates.length > 0) {
-        ctx.font = '500 9px "JetBrains Mono", monospace';
-        const spaced = [];
-        for (const cand of labelCandidates) {
-          const tooClose = spaced.some(
-            (s) => Math.hypot(s.x - cand.x, s.y - cand.y) < 180
-          );
-          if (!tooClose) spaced.push(cand);
-        }
-
-        // Pass 1: Destination-out knockout to clear contour lines behind text
-        ctx.save();
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.fillStyle = '#000000';
-        for (const lbl of spaced) {
-          const metrics = ctx.measureText(lbl.text);
-          ctx.fillRect(lbl.x - 3, lbl.y - 10, metrics.width + 6, 13);
-        }
-        ctx.restore();
-
-        // Pass 2: Draw amber survey text
-        ctx.fillStyle = 'rgba(240, 120, 60, 0.32)';
-        for (const lbl of spaced) {
-          ctx.fillText(lbl.text, lbl.x, lbl.y);
-        }
-      }
-    };
-
-    if (DOMUtils.prefersReducedMotion()) {
-      drawFrame();
-      return;
-    }
-
-    const animate = (timestamp) => {
-      if (!this.isVisible) {
-        this.rafId = 0;
-        return;
-      }
-
-      // Throttling: 60 FPS when interacting or settling, ~30 FPS when idle
-      const isInteracting = (performance.now() - lastInteractionTime < 1400) || hill.strength > 0.01 || ripples.length > 0;
-      const minFrameInterval = isInteracting ? 16 : 33;
-
-      if (!lastRenderTime || (timestamp - lastRenderTime) >= minFrameInterval) {
-        lastRenderTime = timestamp;
-        time += 0.007 * speed;
-        drawFrame();
-      }
-
-      this.rafId = requestAnimationFrame(animate);
-    };
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const wasVisible = this.isVisible;
-          this.isVisible = entry.isIntersecting;
-          if (this.isVisible && !wasVisible && !this.rafId) {
-            this.rafId = requestAnimationFrame(animate);
-          }
+        const r = child.getBoundingClientRect();
+        slots.avoid.push({
+          x0: r.left - origin.left - 16,
+          y0: r.top - origin.top - 12,
+          x1: r.right - origin.left + 16,
+          y1: r.bottom - origin.top + 12,
         });
-      }, { rootMargin: '80px 0px' });
-      io.observe(container);
+      }
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      if (width <= 0 || height <= 0) return;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cols = Math.ceil(width / TOPO_CELL) + 1;
+      rows = Math.ceil(height / TOPO_CELL) + 1;
+      field = new Float32Array(cols * rows);
+      color = getComputedStyle(canvas).color || '#F5F1E8';
+      measureContent();
+    };
+
+    const sample = (now) => {
+      const z = time * 0.05;
+      const drift = time * 6;
+      const hillOn = hill.amount > 0.001;
+      const spread = 2 * TOPO_HILL_SPREAD * TOPO_HILL_SPREAD;
+      const ringWidth = 2 * TOPO_RIPPLE_WIDTH * TOPO_RIPPLE_WIDTH;
+      for (let j = 0; j < rows; j++) {
+        const y = j * TOPO_CELL;
+        for (let i = 0; i < cols; i++) {
+          const x = i * TOPO_CELL;
+          const nx = (x + drift) / TOPO_TERRAIN_SCALE;
+          const ny = y / TOPO_TERRAIN_SCALE;
+          let v =
+            noise(nx, ny, z) * 0.78 +
+            noise(nx * 2.3 + 17.1, ny * 2.3 + 4.7, z * 1.4) * 0.22;
+          if (hillOn) {
+            const dx = x - hill.x;
+            const dy = y - hill.y;
+            v +=
+              TOPO_HILL_HEIGHT *
+              hill.amount *
+              Math.exp(-(dx * dx + dy * dy) / spread);
+          }
+          for (let k = 0; k < ripples.length; k++) {
+            const ripple = ripples[k];
+            const age = now - ripple.start;
+            const reach = age * TOPO_RIPPLE_SPEED;
+            const d = Math.hypot(x - ripple.x, y - ripple.y) - reach;
+            const fadeOut = 1 - age / TOPO_RIPPLE_MS;
+            // A short train of crests and troughs, like a stone dropped in
+            // water, so the contours bunch into rings as it passes.
+            v +=
+              TOPO_RIPPLE_HEIGHT *
+              fadeOut *
+              fadeOut *
+              Math.exp(-(d * d) / ringWidth) *
+              Math.cos((d / TOPO_RIPPLE_WAVELENGTH) * Math.PI * 2);
+          }
+          field[j * cols + i] = v;
+        }
+      }
+    };
+
+    /**
+     * Knock the lines out under each label, then print the elevation, so
+     * the contour is broken where the number sits, as on a survey map.
+     */
+    const drawLabels = () => {
+      ctx.font = TOPO_LABEL_FONT;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (const label of slots.best.values()) {
+        const text = `${TOPO_LABEL_BASE + label.level * TOPO_LABEL_STEP}`;
+        const w = ctx.measureText(text).width + 8;
+        ctx.save();
+        ctx.translate(Math.round(label.x), Math.round(label.y));
+        ctx.rotate(label.angle);
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.globalAlpha = 1;
+        ctx.fillRect(-w / 2, -6, w, 12);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.5;
+        ctx.fillText(text, 0, 0.5);
+        ctx.restore();
+      }
+    };
+
+    const paint = (now) => {
+      if (width <= 0 || height <= 0) return;
+      sample(now);
+      const minor = new Path2D();
+      const major = new Path2D();
+      slots.best.clear();
+      slots.drift = time * 6;
+      slots.width = width;
+      slots.height = height;
+      topoTraceContours(
+        field,
+        cols,
+        rows,
+        interval,
+        minor,
+        major,
+        labels ? slots : null
+      );
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineCap = 'round';
+      ctx.globalAlpha = 0.16;
+      ctx.lineWidth = 0.75;
+      ctx.stroke(minor);
+      ctx.globalAlpha = 0.34;
+      ctx.lineWidth = 1.1;
+      ctx.stroke(major);
+      if (labels) {
+        drawLabels();
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const frame = (now) => {
+      raf = 0;
+      if (!visible) {
+        return;
+      }
+      const dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      last = now;
+      const hillMoving = topoStepHill(hill, dt);
+      while (ripples.length > 0 && now - ripples[0].start > TOPO_RIPPLE_MS) {
+        ripples.shift();
+      }
+      const settling = hillMoving || ripples.length > 0;
+
+      time += dt * speed;
+      // The drift alone is slow; half the frame rate looks the same and
+      // costs half as much. Anything following the hand gets every frame.
+      if (settling || now - lastPaint >= TOPO_IDLE_FRAME_MS) {
+        paint(now);
+        lastPaint = now;
+      }
+      if (speed > 0 || settling) {
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    const start = () => {
+      if (!raf && visible && !reduceMotion) {
+        last = 0;
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    // Follow light and dark mode without asking the app for a theme. The
+    // check only runs while the map is on screen.
+    let colorTimer = 0;
+    const checkColor = () => {
+      const next = getComputedStyle(canvas).color || '#F5F1E8';
+      if (next !== color) {
+        color = next;
+        if (reduceMotion || !raf) {
+          paint(performance.now());
+        }
+      }
+    };
+    const watchColor = () => {
+      if (visible && !colorTimer) {
+        checkColor();
+        colorTimer = window.setInterval(checkColor, 500);
+      } else if (!visible && colorTimer) {
+        window.clearInterval(colorTimer);
+        colorTimer = 0;
+      }
+    };
+
+    resize();
+    paint(performance.now());
+    canvas.style.opacity = '1';
+    start();
+
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+      paint(performance.now());
+    });
+    resizeObserver.observe(canvas);
+
+    // Stop drawing entirely while the map is scrolled away or the tab is
+    // in the background.
+    let onScreen = true;
+    const updateVisible = () => {
+      visible = onScreen && document.visibilityState === 'visible';
+      watchColor();
+      if (visible) {
+        start();
+      }
+    };
+    const intersection = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      updateVisible();
+    });
+    intersection.observe(root);
+    document.addEventListener('visibilitychange', updateVisible);
+    watchColor();
+
+    const local = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    };
+
+    const onMove = (event) => {
+      // Touch has no hover; a hill stuck where a finger lifted looks wrong.
+      if (event.pointerType !== 'mouse') {
+        return;
+      }
+      const point = local(event);
+      if (!hill.on) {
+        // Rise where the cursor came in rather than sliding over from the
+        // last place it left.
+        hill.x = point.x;
+        hill.y = point.y;
+      }
+      hill.targetX = point.x;
+      hill.targetY = point.y;
+      hill.on = true;
+      start();
+    };
+
+    const onLeave = () => {
+      hill.on = false;
+      start();
+    };
+
+    const onDown = (event) => {
+      // Clicks on the content (links, buttons) are not meant for the map.
+      if (event.target.closest && event.target.closest('a, button, input, textarea')) {
+        return;
+      }
+      const point = local(event);
+      ripples.push({ ...point, start: performance.now() });
+      if (ripples.length > 4) {
+        ripples.shift();
+      }
+      start();
+    };
+
+    if (interactive && !reduceMotion) {
+      root.addEventListener('pointermove', onMove);
+      root.addEventListener('pointerleave', onLeave);
+      root.addEventListener('pointerdown', onDown);
     }
 
-    this.rafId = requestAnimationFrame(animate);
+    this.cleanup = () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      intersection.disconnect();
+      document.removeEventListener('visibilitychange', updateVisible);
+      window.clearInterval(colorTimer);
+      root.removeEventListener('pointermove', onMove);
+      root.removeEventListener('pointerleave', onLeave);
+      root.removeEventListener('pointerdown', onDown);
+    };
   }
 };
 
@@ -2537,7 +2750,7 @@ const TeardownShowcase3D = {
 
     const rect = canvas.getBoundingClientRect();
     const width = Math.max(300, rect.width || viewport.clientWidth);
-    const height = Math.max(420, rect.height || 600);
+    const height = Math.max(400, rect.height || 490);
 
     const maxDpr = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
     this.renderer.setPixelRatio(maxDpr);
@@ -2546,12 +2759,12 @@ const TeardownShowcase3D = {
 
     if (isStacked) {
       this.camera.fov = 38;
-      this.camera.position.set(0, 8, 680);
-      this.camera.lookAt(0, 8, 0);
+      this.camera.position.set(0, 10, 640);
+      this.camera.lookAt(0, 10, 0);
     } else {
-      this.camera.fov = 34;
-      this.camera.position.set(15, -5, 560);
-      this.camera.lookAt(15, -25, 0);
+      this.camera.fov = 30;
+      this.camera.position.set(0, 0, 480);
+      this.camera.lookAt(0, 0, 0);
     }
     this.camera.updateProjectionMatrix();
     this.requestRender();
@@ -2581,25 +2794,56 @@ const TeardownShowcase3D = {
       lipGlowMesh
     } = this.groups;
 
+    // Derive container-aware frustum bounds so 3D hardware scales gracefully across desktop and mobile without clipping
+    const camFov = this.camera?.fov || (isStacked ? 38 : 30);
+    const camZ = this.camera?.position.z || (isStacked ? 640 : 480);
+    const aspect = this.camera?.aspect || (isStacked ? 0.62 : 2.48);
+    const halfH = Math.tan((camFov * Math.PI) / 360) * camZ;
+    const halfW = halfH * aspect;
+
+    // Desktop right-stage layout metrics (editorial header occupies ~42-43% on the left)
+    const textEndX = -halfW + halfW * 2 * 0.43;
+    const rightMinX = textEndX + 18;
+    const rightMaxX = halfW - 10;
+    const availRightW = Math.max(220, rightMaxX - rightMinX);
+
+    const desktopLaptopScale = Math.min(
+      0.76,
+      Math.max(0.48, Math.min(availRightW / 445, (halfH * 2 * 0.84) / 225))
+    );
+    const desktopPhoneScale = desktopLaptopScale * 0.96;
+    const laptopW = 306 * desktopLaptopScale;
+    const phoneW = 98 * desktopPhoneScale;
+    const pairGap = 28 * desktopLaptopScale;
+    const pairTotalW = laptopW + pairGap + phoneW;
+    const pairCenterX = (rightMinX + rightMaxX) * 0.5;
+    const desktopLaptopX = pairCenterX - pairTotalW * 0.5 + laptopW * 0.5;
+    const desktopPhoneX = pairCenterX + pairTotalW * 0.5 - phoneW * 0.5;
+
+    // Mobile/tablet stacked responsive scale metrics
+    const stackedFitW = (halfW * 2 * 0.84) / 310;
+    const stackedLaptopScale = Math.min(0.72, Math.max(0.50, stackedFitW));
+    const stackedPhoneScale = Math.min(0.74, Math.max(0.54, stackedFitW * 1.04));
+
     if (laptopRoot) {
       if (isStacked) {
-        laptopRoot.scale.setScalar(0.50);
-        laptopRoot.position.set(0, 48 + (1 - effectiveLid) * 14, 0);
+        laptopRoot.scale.setScalar(stackedLaptopScale);
+        laptopRoot.position.set(0, 58 + (1 - effectiveLid) * 14, 0);
         laptopRoot.rotation.set(
-          0.26 + this.orbitCurrent.pitch,
+          0.24 + this.orbitCurrent.pitch,
           this.orbitCurrent.yaw,
           0
         );
       } else {
-        laptopRoot.scale.setScalar(0.52);
+        laptopRoot.scale.setScalar(desktopLaptopScale);
         laptopRoot.position.set(
-          -15,
-          -142 + (1 - effectiveLid) * 16,
+          desktopLaptopX,
+          -72 * desktopLaptopScale + (1 - effectiveLid) * 14,
           0
         );
         laptopRoot.rotation.set(
-          0.20 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
-          0.05 + (1 - effectiveLid) * -0.05 + this.orbitCurrent.yaw,
+          0.19 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
+          -0.06 + (1 - effectiveLid) * -0.04 + this.orbitCurrent.yaw,
           0
         );
       }
@@ -2621,24 +2865,24 @@ const TeardownShowcase3D = {
 
     if (phoneRoot) {
       if (isStacked) {
-        phoneRoot.scale.setScalar(0.58);
-        phoneRoot.position.set(0, -96 + (1 - effectiveLid) * 16, 18);
+        phoneRoot.scale.setScalar(stackedPhoneScale);
+        phoneRoot.position.set(0, -104 + (1 - effectiveLid) * 16, 18);
         phoneRoot.rotation.set(
           -0.06 + this.orbitCurrent.pitch,
           this.orbitCurrent.yaw,
           0
         );
       } else {
-        phoneRoot.scale.setScalar(0.54);
+        phoneRoot.scale.setScalar(desktopPhoneScale);
         phoneRoot.position.set(
-          225,
-          50 + (1 - effectiveLid) * 16,
-          24
+          desktopPhoneX,
+          2 + (1 - effectiveLid) * 12,
+          18
         );
         phoneRoot.rotation.set(
-          -0.04 + (1 - effectiveLid) * 0.14 + this.orbitCurrent.pitch,
-          -0.22 + (1 - effectiveLid) * 0.18 + this.orbitCurrent.yaw,
-          0
+          -0.04 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
+          -0.20 + (1 - effectiveLid) * 0.16 + this.orbitCurrent.yaw,
+          0.02
         );
       }
     }
