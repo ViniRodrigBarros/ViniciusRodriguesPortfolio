@@ -48,10 +48,6 @@
   --container-max: 1320px;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
-
-  /* Responsive 3D Device Scale Tokens (Desktop > 1200px default) */
-  --laptop-scale: 0.95;
-  --phone-scale: 0.92;
 }
 
 /* ==========================================================================
@@ -136,6 +132,10 @@ li {
 .section-canvas {
   background-color: var(--bg-primary);
   border-top: 1px solid var(--border-hairline);
+}
+
+section[id] {
+  scroll-margin-top: 84px;
 }
 
 .section-alt {
@@ -645,16 +645,17 @@ li {
 }
 
 /* ==========================================================================
-   5. UNIFIED 3D SHOWCASE SECTION — SEAMLESS STUDIO & AMBIENT LIGHT SPILL
+   5. UNIFIED 3D SHOWCASE SECTION — SEAMLESS STUDIO & EDITORIAL SPLIT STAGE
    ========================================================================== */
 .showcase-unified-section {
-  --spill-x: 50%;
-  --spill-y: 56%;
-  --spill-alpha: 0.08;
+  --spill-x: 68%;
+  --spill-y: 44%;
+  --spill-alpha: 0.05;
+  padding-top: clamp(4.5rem, 7vw, 6.5rem);
+  padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
   background:
-    radial-gradient(circle at 78% 22%, rgba(240, 120, 60, 0.06) 0%, transparent 44%),
-    radial-gradient(circle at 50% 66%, rgba(255, 154, 92, 0.07) 0%, rgba(111, 56, 38, 0.025) 44%, transparent 70%),
-    linear-gradient(180deg, #0B0B0D 0%, #101015 32%, #111116 72%, #0B0B0D 100%);
+    radial-gradient(circle at 72% 46%, rgba(240, 120, 60, 0.045) 0%, transparent 48%),
+    linear-gradient(180deg, #0B0B0D 0%, #09090B 34%, #09090B 72%, #0B0B0D 100%);
   border-top: 1px solid var(--border-hairline);
   border-bottom: 1px solid var(--border-hairline);
 }
@@ -666,73 +667,43 @@ li {
   z-index: 1;
   background:
     radial-gradient(
-      680px circle at var(--spill-x) var(--spill-y),
+      640px circle at var(--spill-x) var(--spill-y),
       rgba(240, 120, 60, var(--spill-alpha)),
-      rgba(255, 154, 92, calc(var(--spill-alpha) * 0.35)) 38%,
+      rgba(255, 154, 92, calc(var(--spill-alpha) * 0.32)) 38%,
       transparent 70%
     );
   transition: opacity 0.35s ease;
 }
 
-.showcase-toolbar,
-.teardown-mode-btn,
-.showcase-callouts-layer,
-#showcase-hud-status {
-  display: none !important;
-}
-
-/* Unified Seamless Stage — Side-by-Side Header + 3D Pair on Desktop, Stacked on Mobile */
 .stage-3d-viewport,
 .showcase-unified-stage {
   width: 100%;
-  min-height: 490px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem 0 2.25rem;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  overflow: visible;
+  padding: 0.5rem 0 1.25rem;
 }
 
 .showcase-editorial-header {
-  pointer-events: none;
-  padding-top: 0;
-  max-width: 42%;
+  max-width: 100%;
 }
 
-.showcase-editorial-header .section-title,
-.showcase-editorial-header p {
-  pointer-events: auto;
-}
-
-@media (max-width: 1180px) and (min-width: 993px) {
-  .showcase-unified-stage {
-    min-height: 450px;
-  }
-  .showcase-editorial-header {
-    max-width: 43%;
-  }
-}
-
-.showcase-notebook-zone {
+/* Studio 3D Interactive Container — Lightweight WebGL + Seamless Fallback */
+.showcase-3d-container {
+  position: relative;
   width: 100%;
-  height: 0;
-  pointer-events: none;
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+  overflow: visible;
 }
 
-/* WebGL Physical PBR Canvas & @teardown Callout Overlay */
 .showcase-webgl-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: none;
-  z-index: 4;
   cursor: grab;
   touch-action: pan-y;
+  outline: none;
 }
 
 .showcase-webgl-canvas:active {
@@ -743,717 +714,64 @@ li {
   display: block;
 }
 
-.stage-3d-viewport.webgl-ready .laptop-stage-slot,
-.stage-3d-viewport.webgl-ready .phone-stage-slot,
-.stage-3d-viewport.webgl-ready .studio-specialty-badge {
-  display: none !important;
-}
-
-.showcase-callouts-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 6;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.stage-3d-viewport.webgl-ready .showcase-callouts-layer.active {
+.showcase-fallback-img {
   display: block;
-  opacity: 1;
-}
-
-.showcase-callouts-svg {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  object-fit: cover;
+  border-radius: 18px;
+  --showcase-edge-x: 8%;
+  --showcase-edge-y: 9%;
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, #000 var(--showcase-edge-x), #000 calc(100% - var(--showcase-edge-x)), transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 var(--showcase-edge-y), #000 calc(100% - var(--showcase-edge-y)), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 var(--showcase-edge-x), #000 calc(100% - var(--showcase-edge-x)), transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 var(--showcase-edge-y), #000 calc(100% - var(--showcase-edge-y)), transparent 100%);
+  mask-composite: intersect;
 }
 
-.teardown-callout-card {
+.stage-3d-viewport.webgl-ready .showcase-fallback-img {
+  display: none;
+}
+
+.showcase-reset-btn {
   position: absolute;
-  padding: 0.55rem 0.85rem;
-  border-radius: 10px;
-  background: rgba(17, 17, 21, 0.92);
-  border: 1px solid rgba(240, 120, 60, 0.38);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 6;
+  padding: 0.38rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  background: rgba(17, 17, 21, 0.85);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  opacity: 0;
   pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-#callout-card-fullstack {
-  bottom: 210px;
-  left: 12px;
+.showcase-reset-btn.visible {
+  opacity: 0.92;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
-#callout-card-flavors {
-  bottom: 44px;
-  left: 12px;
+.showcase-reset-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
 }
 
-#callout-card-ai {
-  top: 48px;
-  right: 12px;
-  text-align: right;
-}
-
-#callout-card-telemetry {
-  bottom: 44px;
-  right: 12px;
-  text-align: right;
-}
-
-/* Ambient Light Spill on the Two Specialty Cards below the 3D Notebook */
+/* Ambient Light Spill on the Two Specialty Cards below the Workstation Showcase */
 .showcase-pillar-card {
   background: linear-gradient(180deg, rgba(26, 26, 33, 0.88) 0%, rgba(19, 19, 24, 0.94) 100%);
   border-top: 1px solid rgba(240, 120, 60, 0.24);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-}
-
-/* Dedicated Fallback Slots */
-.laptop-stage-slot,
-.phone-stage-slot {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-}
-
-.laptop-stage-slot {
-  height: 470px;
-}
-
-.phone-stage-slot {
-  height: 500px;
-}
-
-/* Exact Center-Anchored Scale Wrappers isolated from GSAP transforms */
-.laptop-scale-wrapper {
-  position: absolute;
-  left: 50%;
-  top: 58%; /* offsets upward-opening lid so open laptop (lid + base) is vertically centered inside the slot */
-  width: 520px;
-  height: 0;
-  transform: translate(-50%, -50%) scale(var(--laptop-scale, 0.95));
-  transform-origin: center center;
-  perspective: 1600px;
-  transform-style: preserve-3d;
-}
-
-.phone-scale-wrapper {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 256px;
-  height: 510px;
-  transform: translate(-50%, -50%) scale(var(--phone-scale, 0.92));
-  transform-origin: center center;
-  perspective: 1400px;
-  transform-style: preserve-3d;
-}
-
-/* Studio Ambient Floor Shadows */
-.laptop-floor-shadow {
-  position: absolute;
-  width: 540px;
-  height: 310px;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -20%, -60px) rotateX(90deg);
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.88) 15%, rgba(240, 120, 60, 0.12) 55%, transparent 76%);
-  filter: blur(22px);
-  pointer-events: none;
-}
-
-.phone-floor-shadow {
-  position: absolute;
-  width: 220px;
-  height: 90px;
-  bottom: -26px;
-  left: 50%;
-  transform: translateX(-50%) rotateX(80deg);
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 20%, rgba(240, 120, 60, 0.14) 58%, transparent 78%);
-  filter: blur(16px);
-  pointer-events: none;
-}
-
-/* --------------------------------------------------------------------------
-   UNIFIED 3D LAPTOP ASSEMBLY
-   Origin (x = 260px, y = 0, z = 0) is the exact physical hinge axis!
-   Camera looks DOWN from above using NEGATIVE rotateX (-28deg -> -18deg).
-   -------------------------------------------------------------------------- */
-.laptop-assembly {
-  width: 520px;
-  height: 0;
-  position: relative;
-  margin: 0;
-  left: 0;
-  top: 0;
-  transform-style: preserve-3d;
-  transform-origin: 260px 0px 0px;
-  transform: rotateX(-24deg) rotateY(-12deg) rotateZ(0deg);
-  will-change: transform;
-}
-
-/* Central Physical Anodized Hinge Barrel right at (y = 0, z = 0) */
-.laptop-hinge-cylinder {
-  position: absolute;
-  top: -5px;
-  left: 60px;
-  width: 400px;
-  height: 10px;
-  transform-style: preserve-3d;
-  transform: translateZ(-2px);
-  background: linear-gradient(180deg, #0E0E11 0%, #32302E 48%, #121215 100%);
-  border-radius: 4px;
-  border: 1px solid rgba(245, 241, 232, 0.12);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-/* ---- LAPTOP BASE (Anchored at Hinge y=0, z=0, rotated +90deg forward) ----
-   Because rotateX(+90deg) maps local +Y (0..330px) to world +Z (0..+330px towards viewer),
-   and local +Z normal to world -Y (pointing UP), when viewed from above (parent rotateX < 0):
-   - y = 0 (top of .base-top-deck) sits at the back hinge.
-   - y = 330px (bottom of .base-top-deck) sits at the front lip closest to the viewer.
-   - The keyboard & trackpad are 100% right-side up and facing the user!
-*/
-.laptop-base {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 520px;
-  height: 330px;
-  transform-origin: 50% 0% 0px;
-  transform: rotateX(90deg);
-  transform-style: preserve-3d;
-}
-
-/* Top Keyboard & Trackpad Deck (z = 0 in base local coords) */
-.base-top-deck {
-  position: absolute;
-  inset: 0;
-  border-radius: 6px 6px 18px 18px;
-  background: linear-gradient(180deg, #242327 0%, #1B1A1E 60%, #161519 100%);
-  border: 1.5px solid rgba(245, 241, 232, 0.16);
-  padding: 12px 24px 12px 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  backface-visibility: hidden;
-  box-shadow: inset 0 1px 0 rgba(255, 154, 92, 0.14), inset 0 0 24px rgba(0, 0, 0, 0.45);
-}
-
-/* Bottom Plate of Laptop Base (14px chassis thickness) */
-.base-bottom-plate {
-  position: absolute;
-  inset: 0;
-  border-radius: 6px 6px 18px 18px;
-  background: #0F0E12;
-  border: 1px solid rgba(245, 241, 232, 0.08);
-  transform: translateZ(-14px) rotateX(180deg);
-  backface-visibility: hidden;
-  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.9);
-}
-
-/* Extruded Front Lip at y = 330px (closest to viewer) with machined thumb notch */
-.base-front-lip {
-  position: absolute;
-  bottom: 0;
-  left: 10px;
-  width: 500px;
-  height: 14px;
-  transform-origin: 50% 100% 0px;
-  transform: rotateX(-90deg);
-  background: linear-gradient(90deg, #141316 0%, #2A282D 25%, #333036 50%, #2A282D 75%, #141316 100%);
-  border-top: 1px solid rgba(245, 241, 232, 0.18);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  backface-visibility: hidden;
-}
-
-.base-thumb-notch {
-  width: 68px;
-  height: 5px;
-  border-radius: 0 0 6px 6px;
-  background: #0B0B0D;
-  border: 1px solid rgba(245, 241, 232, 0.12);
-  border-top: none;
-}
-
-/* Extruded Left & Right Side Walls with USB-C / MagSafe Ports */
-.base-side-left {
-  position: absolute;
-  top: 6px;
-  left: 0;
-  width: 14px;
-  height: 312px;
-  transform-origin: 0% 50% 0px;
-  transform: rotateY(-90deg);
-  background: linear-gradient(180deg, #19181C 0%, #27252A 50%, #151418 100%);
-  border-top: 1px solid rgba(245, 241, 232, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px;
-  padding-top: 36px;
-  align-items: center;
-}
-
-.base-side-right {
-  position: absolute;
-  top: 6px;
-  right: 0;
-  width: 14px;
-  height: 312px;
-  transform-origin: 100% 50% 0px;
-  transform: rotateY(90deg);
-  background: linear-gradient(180deg, #19181C 0%, #27252A 50%, #151418 100%);
-  border-top: 1px solid rgba(245, 241, 232, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 10px;
-  padding-top: 36px;
-  align-items: center;
-}
-
-.chassis-port-slot {
-  width: 4px;
-  height: 14px;
-  border-radius: 2px;
-  background: #070709;
-  border: 1px solid rgba(240, 120, 60, 0.3);
-}
-
-/* Speaker Grille & Vent Bar near Hinge (top of base deck, y near 0) */
-.base-speaker-bar {
-  width: 100%;
-  height: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 8px;
-}
-
-.speaker-dots {
-  width: 110px;
-  height: 4px;
-  background-image: radial-gradient(rgba(245, 241, 232, 0.22) 1px, transparent 1px);
-  background-size: 4px 4px;
-  opacity: 0.75;
-}
-
-.hinge-vent-slot {
-  width: 140px;
-  height: 4px;
-  border-radius: 999px;
-  background: #0D0D10;
-  border: 1px solid rgba(245, 241, 232, 0.06);
-}
-
-/* Realistic Recessed Backlit Keyboard Well (Right-Side Up!) */
-.keyboard-well {
-  width: 100%;
-  height: 192px;
-  background: #0D0D10;
-  border-radius: 8px;
-  padding: 7px 8px;
-  border: 1px solid rgba(245, 241, 232, 0.08);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.9);
-  display: grid;
-  grid-template-rows: 0.78fr 1fr 1fr 1fr 1fr 1.05fr;
-  gap: 4px;
-}
-
-.kb-row {
-  display: grid;
-  grid-template-columns: repeat(14, minmax(0, 1fr));
-  gap: 4px;
-}
-
-.kb-key {
-  background: #1B1A1F;
-  border-radius: 3px;
-  border: 1px solid rgba(245, 241, 232, 0.07);
-  border-bottom: 1.5px solid rgba(240, 120, 60, 0.18);
-  color: rgba(245, 241, 232, 0.65);
-  font-family: var(--font-mono);
-  font-size: 6.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  line-height: 1;
-}
-
-.kb-key.accent-esc {
-  background: rgba(240, 120, 60, 0.22);
-  border-color: rgba(240, 120, 60, 0.45);
-  color: #F5F1E8;
-  font-weight: 600;
-}
-
-/* Precision Glass Trackpad at the bottom of the deck (closest to viewer) */
-.trackpad-well {
-  width: 168px;
-  height: 82px;
-  margin: 0 auto;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #18171C 0%, #141317 100%);
-  border: 1px solid rgba(245, 241, 232, 0.11);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.65);
-  position: relative;
-}
-
-/* ---- LAPTOP LID (Positioned at top: -330px, hinged at 50% 100% 0px -> y=0, z=0) ----
-   Shares the exact hinge line with .laptop-base!
-   GSAP animates rotateX from -82deg (folded forward over keyboard) to +12deg (opened working angle).
-*/
-.laptop-lid {
-  position: absolute;
-  top: -330px;
-  left: 0;
-  width: 520px;
-  height: 330px;
-  transform-origin: 50% 100% 0px;
-  transform-style: preserve-3d;
-  transform: rotateX(-82deg);
-  will-change: transform;
-}
-
-/* Inner Screen Face (Facing Viewer when Open, z = +1px) */
-.lid-inner-screen {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px 16px 4px 4px;
-  background: #0D0D10;
-  border: 2px solid #2E2C30;
-  padding: 9px 10px 12px 10px;
-  display: flex;
-  flex-direction: column;
-  transform: translateZ(1px);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  box-shadow: inset 0 0 0 1px rgba(245, 241, 232, 0.06);
-}
-
-/* Outer Anodized Shell Back (Visible when Lid is Closed/Folded Forward, z = -7px) */
-.lid-outer-back {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px 16px 4px 4px;
-  background: linear-gradient(135deg, #27252A 0%, #18171B 52%, #101013 100%);
-  border: 1.5px solid rgba(245, 241, 232, 0.16);
-  transform: translateZ(-7px) rotateX(180deg);
-  backface-visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 1px 1px rgba(255, 154, 92, 0.18);
-}
-
-.lid-bevel-top {
-  position: absolute;
-  top: 0;
-  left: 14px;
-  width: 492px;
-  height: 8px;
-  transform-origin: 50% 0% 0px;
-  transform: rotateX(90deg);
-  background: linear-gradient(90deg, #1B1A1E, #353238, #1B1A1E);
-}
-
-.lid-bevel-left {
-  position: absolute;
-  top: 14px;
-  left: 0;
-  width: 8px;
-  height: 308px;
-  transform-origin: 0% 50% 0px;
-  transform: rotateY(-90deg);
-  background: #232126;
-}
-
-.lid-bevel-right {
-  position: absolute;
-  top: 14px;
-  right: 0;
-  width: 8px;
-  height: 308px;
-  transform-origin: 100% 50% 0px;
-  transform: rotateY(90deg);
-  background: #232126;
-}
-
-.notebook-emblem {
-  width: 46px;
-  height: 46px;
-  border-radius: 11px;
-  border: 1px solid rgba(240, 120, 60, 0.45);
-  background: rgba(11, 11, 13, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  letter-spacing: -0.03em;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
-}
-
-.notebook-camera-notch {
-  width: 64px;
-  height: 8px;
-  background: #060608;
-  margin: 0 auto 4px;
-  border-radius: 0 0 6px 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.notebook-camera-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--accent-primary);
-}
-
-.notebook-screen-viewport {
-  flex: 1;
-  background: #0B0B0E;
-  border-radius: 7px;
-  border: 1px solid rgba(245, 241, 232, 0.08);
-  padding: 0.875rem;
-  overflow: visible;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  transform-style: preserve-3d;
-}
-
-.lid-chin-logo {
-  height: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 7px;
-  letter-spacing: 0.18em;
-  color: var(--text-muted);
-  padding-top: 3px;
-}
-
-/* --------------------------------------------------------------------------
-   DYNAMIC 3D LIGHTING, SPECULAR SHEEN, 2.5D UI POP-OUT & STUDIO BADGES
-   -------------------------------------------------------------------------- */
-.preserve-3d-grid {
-  transform-style: preserve-3d;
-}
-
-/* 2.5D UI Pop-out Layers inside Notebook & Smartphone Screens */
-.ui-layer-25d {
-  position: relative;
-  transform-style: preserve-3d;
-  transform: translate3d(0, 0, 0px);
-  will-change: transform, filter;
-}
-
-/* Moment 1: Amber Awakening Light along Laptop Front Lip */
-.lip-awakening-glow {
-  position: absolute;
-  top: 0;
-  left: 16%;
-  right: 16%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #FF9A5C 25%, #F0783C 50%, #FF9A5C 75%, transparent 100%);
-  opacity: 0.2;
-  transform: scaleX(0.35);
-  transform-origin: center center;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-
-/* Moment 2: Screen Light Spill cast onto Keyboard & Base Deck as Lid Opens */
-.keyboard-light-spill {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(ellipse 78% 58% at 50% 8%, rgba(255, 154, 92, 0.24) 0%, rgba(240, 120, 60, 0.09) 46%, transparent 78%);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 2;
-  will-change: opacity;
-}
-
-/* Moment 2: Specular Sheen sweeping across Screen Glass with Scroll Angle */
-.screen-specular-sheen,
-.phone-specular-sheen {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 10;
-  background: linear-gradient(
-    112deg,
-    transparent 24%,
-    rgba(245, 241, 232, 0.05) 43%,
-    rgba(255, 154, 92, 0.11) 50%,
-    rgba(245, 241, 232, 0.03) 56%,
-    transparent 74%
-  );
-  background-size: 220% 100%;
-  background-position: 120% 0%;
-  opacity: 0.85;
-  will-change: background-position, opacity;
-}
-
-/* Moment 3: Floating Studio Specialty Indicators */
-.studio-specialty-badge {
-  position: absolute;
-  z-index: 15;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 9999px;
-  background: rgba(17, 17, 20, 0.88);
-  border: 1px solid rgba(240, 120, 60, 0.32);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate3d(0, 12px, 0);
-  will-change: transform, opacity;
-}
-
-.studio-badge-left {
-  top: 22px;
-  left: 24px;
-}
-
-.studio-badge-right {
-  bottom: 22px;
-  right: 24px;
-}
-
-.studio-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-primary);
-}
-
-/* --------------------------------------------------------------------------
-   COHESIVE 3D SMARTPHONE ASSEMBLY (Dedicated Right-Hand / Bottom Studio Slot)
-   -------------------------------------------------------------------------- */
-.phone-assembly {
-  width: 256px;
-  height: 510px;
-  position: relative;
-  margin: 0;
-  left: 0;
-  top: 0;
-  transform-style: preserve-3d;
-  transform-origin: center center;
-  transform: rotateX(-16deg) rotateY(-14deg) rotateZ(0deg);
-  will-change: transform;
-}
-
-.phone-chassis {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 38px;
-  background: linear-gradient(145deg, #27252A 0%, #141317 100%);
-  border: 2px solid #3A373E;
-  padding: 9px;
-  box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 1px rgba(245, 241, 232, 0.1);
-  display: flex;
-  flex-direction: column;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-}
-
-/* Back Plate of Smartphone (12px physical depth) */
-.phone-back-plate {
-  position: absolute;
-  inset: 0;
-  border-radius: 38px;
-  background: linear-gradient(145deg, #1E1C21 0%, #111014 100%);
-  border: 1.5px solid rgba(245, 241, 232, 0.12);
-  transform: translateZ(-12px) rotateY(180deg);
-  backface-visibility: hidden;
-}
-
-/* 12px Titanium Side Rails */
-.phone-rail-left {
-  position: absolute;
-  top: 28px;
-  left: 0;
-  width: 12px;
-  height: 454px;
-  transform-origin: 0% 50% 0px;
-  transform: rotateY(-90deg);
-  background: linear-gradient(180deg, #1B1A1E 0%, #343138 50%, #1B1A1E 100%);
-}
-
-.phone-rail-right {
-  position: absolute;
-  top: 28px;
-  right: 0;
-  width: 12px;
-  height: 454px;
-  transform-origin: 100% 50% 0px;
-  transform: rotateY(90deg);
-  background: linear-gradient(180deg, #1B1A1E 0%, #343138 50%, #1B1A1E 100%);
-}
-
-.phone-oled {
-  flex: 1;
-  background: #0B0B0D;
-  border-radius: 28px;
-  border: 1px solid rgba(245, 241, 232, 0.08);
-  overflow: visible;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px 12px;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.phone-pill-cutout {
-  width: 62px;
-  height: 15px;
-  background: #030304;
-  border-radius: 999px;
-  margin: 2px auto 6px;
-  border: 1px solid rgba(245, 241, 232, 0.06);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 6px;
-}
-
-.phone-sensor-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #F0783C 0%, #19191E 80%);
 }
 
 /* ==========================================================================
@@ -1670,112 +988,26 @@ li {
 /* ==========================================================================
    6. RESPONSIVE STYLES & REDUCED MOTION
    ========================================================================== */
-/* Small Desktop (993px – 1200px) */
-@media (max-width: 1200px) and (min-width: 993px) {
-  :root {
-    --laptop-scale: 0.80;
-    --phone-scale: 0.82;
-  }
-  .laptop-stage-slot {
-    height: 420px;
-  }
-  .phone-stage-slot {
-    height: 440px;
-  }
-}
-
-/* Tablet & Mobile (<= 992px, Stacked One Below the Other — Perfectly Centered) */
 @media (max-width: 992px) {
-  :root {
-    --laptop-scale: 0.72;
-    --phone-scale: 0.76;
-  }
-  .showcase-toolbar {
-    border-radius: 16px;
-    padding: 0.35rem;
-  }
   .stage-3d-viewport,
   .showcase-unified-stage {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    width: 100%;
-    min-height: auto;
-    overflow: visible;
-    padding: 0 0 16px;
-    gap: 16px;
+    padding: 0 0 0.75rem;
   }
-  .showcase-editorial-header {
-    max-width: 100%;
+  .showcase-3d-container {
+    aspect-ratio: 4 / 3;
+    min-height: 290px;
   }
-  .stage-3d-viewport.webgl-ready .showcase-webgl-canvas {
-    position: absolute;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 640px;
-  }
-  .showcase-notebook-zone {
-    height: 640px;
-  }
-  .showcase-callouts-layer,
-  .showcase-callouts-layer.active {
-    display: none !important;
-  }
-  .laptop-stage-slot,
-  .phone-stage-slot {
-    width: 100%;
-    max-width: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-  }
-  .laptop-stage-slot {
-    height: 300px;
-  }
-  .phone-stage-slot {
-    height: 380px;
+  .showcase-fallback-img {
+    border-radius: 14px;
+    --showcase-edge-x: 6%;
+    --showcase-edge-y: 8%;
   }
 }
 
-/* Mobile (421px – 640px, Stacked) */
-@media (max-width: 640px) {
-  :root {
-    --laptop-scale: 0.54;
-    --phone-scale: 0.66;
-  }
-  .stage-3d-viewport.webgl-ready .showcase-webgl-canvas {
-    height: 590px;
-  }
-  .showcase-notebook-zone {
-    height: 590px;
-  }
-  .showcase-callouts-layer {
-    display: none;
-  }
-  .laptop-stage-slot {
-    height: 240px;
-  }
-  .phone-stage-slot {
-    height: 340px;
-  }
-}
-
-/* Small Mobile (<= 420px, Stacked) */
-@media (max-width: 420px) {
-  :root {
-    --laptop-scale: 0.46;
-    --phone-scale: 0.60;
-  }
-  .laptop-stage-slot {
-    height: 210px;
-  }
-  .phone-stage-slot {
-    height: 310px;
+@media (max-width: 520px) {
+  .showcase-3d-container {
+    aspect-ratio: 4 / 3;
+    min-height: 260px;
   }
 }
 
@@ -1788,30 +1020,12 @@ li {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .laptop-assembly {
-    transform: rotateX(-18deg) rotateY(0deg) rotateZ(0deg) !important;
-  }
-  .laptop-lid {
-    transform: rotateX(12deg) !important;
-  }
-  .phone-assembly {
-    transform: rotateX(-10deg) rotateY(0deg) rotateZ(0deg) !important;
-  }
   .arch-draw-line-x {
     transform: scaleX(1) !important;
   }
   .timeline-vertical-fill,
   .stack-vertical-axis {
     transform: scaleY(1) !important;
-  }
-  .studio-specialty-badge {
-    opacity: 1 !important;
-    transform: translate3d(0, 0, 0) !important;
-  }
-  .keyboard-light-spill,
-  .lip-awakening-glow {
-    opacity: 0.85 !important;
-    transform: scaleX(1) !important;
   }
   .depth-transition-shell,
   .kinetic-word,

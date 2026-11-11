@@ -269,20 +269,16 @@
     </section>
 
     <!-- ==========================================================================
-         SEÇÃO 02 — SHOWCASE 3D UNIFICADO (SEM CAIXA ISOLADA • BACKGROUND INTEGRADO)
+         SEÇÃO 02 — SHOWCASE 3D INTERATIVO LEVE (IDE + EMULADOR DOCADO + ÍCONES 3D)
          ========================================================================== -->
-    <section id="showcase" class="showcase-unified-section py-24 md:py-32 relative overflow-hidden">
+    <section id="showcase" class="showcase-unified-section py-20 md:py-28 relative overflow-hidden">
       <!-- Ambient Reactive Studio Light Spill uniting Header, 3D Hardware & Specialty Cards -->
       <div id="showcase-ambient-spill" class="showcase-ambient-spill" aria-hidden="true"></div>
 
       <div class="container-editorial depth-transition-shell relative z-10" data-depth-section="showcase">
-        <!-- UNIFIED ORGANIC 3D STAGE (Header + Top-Right Smartphone + Centered Lower Notebook) -->
-        <div id="showcase-viewport" class="stage-3d-viewport showcase-unified-stage" aria-label="Composição 3D integrada de Smartphone e Notebook com visão explodida e corte técnico">
-          <!-- Full-Section Seamless WebGL Physical PBR Canvas -->
-          <canvas id="showcase-webgl-canvas" class="showcase-webgl-canvas" aria-hidden="true"></canvas>
-
-          <!-- Top Asymmetric Editorial Row: Left Typography & Controls (Notebook + Smartphone sit side-by-side on the right!) -->
-          <div class="showcase-editorial-header relative z-10">
+        <!-- Asymmetric Split Stage: Editorial Typography on Left, Lightweight Interactive 3D Workstation on Right -->
+        <div id="showcase-viewport" class="stage-3d-viewport showcase-unified-stage grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center" aria-label="Modelo 3D interativo de notebook com IDE Dart/Flutter, emulador mobile integrado e ícones 3D flutuantes">
+          <div class="showcase-editorial-header lg:col-span-5 relative z-10">
             <div class="eyebrow-label mb-3">
               <span class="eyebrow-line"></span>
               <span>01 / Domínio Multiplataforma &amp; Full Stack</span>
@@ -290,256 +286,32 @@
             <h2 class="section-title kinetic-heading">
               Engenharia integrada entre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">sistemas web</span> e <span class="font-serif-editorial italic font-normal text-[#F5F1E8]">aplicações nativas</span>.
             </h2>
-            <!-- Subtitle and ambient description -->
             <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-xl">
               Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: arquiteturas web/APIs escaláveis e aplicativos móveis de alta precisão.
             </p>
           </div>
 
-          <!-- Dedicated Spatial Anchor Space for the Centered 3D Workstation Notebook -->
-          <div class="showcase-notebook-zone" aria-hidden="true"></div>
-
-          <!-- SLOT 1: COHESIVE 3D WORKSTATION LAPTOP (Unified Hinge Axis y=0, z=0) -->
-          <div class="laptop-stage-slot">
-            <div class="laptop-scale-wrapper">
-              <div id="notebook-assembly" class="laptop-assembly">
-                <div class="laptop-floor-shadow" aria-hidden="true"></div>
-
-                <!-- Physical Hinge Cylinder at y=0, z=0 -->
-                <div class="laptop-hinge-cylinder" aria-hidden="true"></div>
-
-                <!-- LAPTOP LID (top: -330px, transform-origin: 50% 100% 0px -> pivots at y=0, z=0) -->
-                <div id="notebook-lid" class="laptop-lid">
-                  <div class="lid-outer-back" aria-hidden="true">
-                    <div class="notebook-emblem">VR<span class="text-[#F0783C]">.</span></div>
-                  </div>
-                  <div class="lid-bevel-top" aria-hidden="true"></div>
-                  <div class="lid-bevel-left" aria-hidden="true"></div>
-                  <div class="lid-bevel-right" aria-hidden="true"></div>
-
-                  <div class="lid-inner-screen">
-                    <!-- Dynamic Specular Glass Sheen reactive to scroll rotation -->
-                    <div id="laptop-specular-sheen" class="screen-specular-sheen" aria-hidden="true"></div>
-
-                    <div class="notebook-camera-notch" aria-hidden="true">
-                      <span class="notebook-camera-dot"></span>
-                    </div>
-
-                    <!-- Notebook Screen Content: Full Stack & Mobility Architecture (with 2.5D Z-axis Layers) -->
-                    <div id="notebook-screen-ui" class="notebook-screen-viewport p-3.5 select-none">
-                      <div class="ui-layer-25d flex items-center justify-between pb-2 mb-2.5 border-b border-[#F5F1E8]/10" data-depth="12">
-                        <div class="flex items-center gap-1.5">
-                          <span class="w-2.5 h-2.5 rounded-full bg-[#6F3826]"></span>
-                          <span class="w-2.5 h-2.5 rounded-full bg-[#AAA6A0]/40"></span>
-                          <span class="w-2.5 h-2.5 rounded-full bg-[#F0783C]"></span>
-                          <span class="ml-2 font-mono-meta text-[9px] text-[#AAA6A0]">architecture // fullstack-mobility-engine.ts</span>
-                        </div>
-                        <span class="font-mono-meta text-[9px] text-[#FF9A5C]">CI/CD • ACTIVE</span>
-                      </div>
-
-                      <div class="grid grid-cols-12 gap-3 flex-1 preserve-3d-grid">
-                        <!-- Left Panel: Clean Architecture & NestJS / REST (2.5D Layer z=20px) -->
-                        <div class="ui-layer-25d col-span-5 pr-2.5 border-r border-[#F5F1E8]/10 flex flex-col justify-between" data-depth="20">
-                          <div>
-                            <div class="font-mono-meta text-[8.5px] text-[#FF9A5C] mb-1">React + NestJS Telemetry</div>
-                            <pre class="font-mono-meta text-[8.5px] leading-relaxed text-[#F5F1E8] overflow-hidden"><span class="text-[#F0783C]">class</span> MobilityGateway {
-  <span class="text-[#8E8A84]">// WebSocket Live Stream</span>
-  async streamETA(
-    payload: TelemetryDto
-  ): Promise&lt;Ack&gt; {
-    return this.busService
-      .broadcast(payload);
-  }
-}</pre>
-                          </div>
-                          <div class="pt-1.5 border-t border-[#F5F1E8]/10 flex items-center justify-between text-[8.5px] font-mono-meta text-[#AAA6A0]">
-                            <span>Flavors: Dev • Stg • Prod</span>
-                            <span class="text-[#FF9A5C]">WS ● LIVE</span>
-                          </div>
-                        </div>
-
-                        <!-- Right Panel: Telemetry & Multi-Flavor Release Pipeline (2.5D Layers z=24px and z=16px) -->
-                        <div class="col-span-7 flex flex-col justify-between preserve-3d-grid">
-                          <div class="ui-layer-25d pb-2.5 border-b border-[#F5F1E8]/10 flex-1 flex flex-col justify-between" data-depth="24">
-                            <div class="flex items-center justify-between">
-                              <span class="font-mono-meta text-[8.5px] text-[#F5F1E8]">Unified Codebase • Flavors</span>
-                              <span class="font-mono-meta text-[8.5px] text-[#FF9A5C]">-75% Overhead</span>
-                            </div>
-                            <div class="grid grid-cols-3 divide-x divide-[#F5F1E8]/10 my-1.5">
-                              <div class="pr-2">
-                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">DEV / STG</div>
-                                <div class="text-[10px] font-semibold text-[#F5F1E8] mt-0.5">Automated</div>
-                              </div>
-                              <div class="px-2">
-                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">PRODUCTION</div>
-                                <div class="text-[10px] font-semibold text-[#FF9A5C] mt-0.5">Multi-Store</div>
-                              </div>
-                              <div class="pl-2">
-                                <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">COVERAGE</div>
-                                <div class="text-[10px] font-semibold text-[#F5F1E8] mt-0.5">80%+ Tests</div>
-                              </div>
-                            </div>
-                            <div class="w-full bg-[#222228] h-1.5 rounded-full overflow-hidden">
-                              <div class="bg-[#F0783C] h-full w-4/5 rounded-full"></div>
-                            </div>
-                          </div>
-
-                          <div class="ui-layer-25d grid grid-cols-2 divide-x divide-[#F5F1E8]/10 pt-2" data-depth="16">
-                            <div class="pr-2">
-                              <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">WEB &amp; BACKEND</div>
-                              <div class="text-[10px] font-medium text-[#F5F1E8] mt-0.5">React • TypeScript • NestJS</div>
-                            </div>
-                            <div class="pl-2">
-                              <div class="font-mono-meta text-[7.5px] text-[#AAA6A0]">DEVOPS</div>
-                              <div class="text-[10px] font-medium text-[#F5F1E8] mt-0.5">GitHub Actions &amp; Jenkins</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="lid-chin-logo" aria-hidden="true">REACT • NESTJS • FLUTTER ARCHITECTURE</div>
-                  </div>
-                </div>
-
-                <!-- LAPTOP BASE (top: 0, transform-origin: 50% 0% 0px, rotateX(90deg) -> 100% right-side up!) -->
-                <div class="laptop-base" aria-hidden="true">
-                  <div class="base-top-deck">
-                    <!-- Dynamic Screen Light Spill cast onto Keyboard & Base Deck as Lid Opens -->
-                    <div id="keyboard-light-spill" class="keyboard-light-spill"></div>
-
-                    <!-- Top near Hinge (y=0): Speaker Grilles & Vent -->
-                    <div class="base-speaker-bar">
-                      <div class="speaker-dots"></div>
-                      <div class="hinge-vent-slot"></div>
-                      <div class="speaker-dots"></div>
-                    </div>
-
-                    <!-- Middle: Right-Side Up QWERTY Keyboard (ESC & F1-F12 near Hinge, Spacebar near Trackpad) -->
-                    <div class="keyboard-well">
-                      <!-- Row 1: Function Row near Hinge -->
-                      <div class="kb-row">
-                        <span class="kb-key accent-esc">ESC</span>
-                        <span class="kb-key">F1</span><span class="kb-key">F2</span><span class="kb-key">F3</span><span class="kb-key">F4</span>
-                        <span class="kb-key">F5</span><span class="kb-key">F6</span><span class="kb-key">F7</span><span class="kb-key">F8</span>
-                        <span class="kb-key">F9</span><span class="kb-key">F10</span><span class="kb-key">F11</span><span class="kb-key">F12</span>
-                        <span class="kb-key">⏻</span>
-                      </div>
-                      <!-- Row 2: Numbers -->
-                      <div class="kb-row">
-                        <span class="kb-key">~</span><span class="kb-key">1</span><span class="kb-key">2</span><span class="kb-key">3</span><span class="kb-key">4</span>
-                        <span class="kb-key">5</span><span class="kb-key">6</span><span class="kb-key">7</span><span class="kb-key">8</span><span class="kb-key">9</span>
-                        <span class="kb-key">0</span><span class="kb-key">-</span><span class="kb-key">=</span><span class="kb-key">⌫</span>
-                      </div>
-                      <!-- Row 3: QWERTY -->
-                      <div class="kb-row">
-                        <span class="kb-key">⇥</span><span class="kb-key">Q</span><span class="kb-key">W</span><span class="kb-key">E</span><span class="kb-key">R</span>
-                        <span class="kb-key">T</span><span class="kb-key">Y</span><span class="kb-key">U</span><span class="kb-key">I</span><span class="kb-key">O</span>
-                        <span class="kb-key">P</span><span class="kb-key">[</span><span class="kb-key">]</span><span class="kb-key">\</span>
-                      </div>
-                      <!-- Row 4: ASDF -->
-                      <div class="kb-row">
-                        <span class="kb-key">⇪</span><span class="kb-key">A</span><span class="kb-key">S</span><span class="kb-key">D</span><span class="kb-key">F</span>
-                        <span class="kb-key">G</span><span class="kb-key">H</span><span class="kb-key">J</span><span class="kb-key">K</span><span class="kb-key">L</span>
-                        <span class="kb-key">;</span><span class="kb-key">'</span><span class="kb-key col-span-2">⏎</span>
-                      </div>
-                      <!-- Row 5: ZXCV -->
-                      <div class="kb-row">
-                        <span class="kb-key col-span-2">⇧</span><span class="kb-key">Z</span><span class="kb-key">X</span><span class="kb-key">C</span><span class="kb-key">V</span>
-                        <span class="kb-key">B</span><span class="kb-key">N</span><span class="kb-key">M</span><span class="kb-key">,</span><span class="kb-key">.</span>
-                        <span class="kb-key">/</span><span class="kb-key col-span-2">⇧</span>
-                      </div>
-                      <!-- Row 6: Modifiers & Spacebar closest to Trackpad -->
-                      <div class="kb-row">
-                        <span class="kb-key">fn</span><span class="kb-key">⌃</span><span class="kb-key">⌥</span><span class="kb-key">⌘</span>
-                        <span class="kb-key col-span-6"></span>
-                        <span class="kb-key">⌘</span><span class="kb-key">⌥</span><span class="kb-key">◀</span><span class="kb-key">▶</span>
-                      </div>
-                    </div>
-
-                    <!-- Bottom closest to viewer (y=330px): Precision Glass Trackpad -->
-                    <div class="trackpad-well"></div>
-                  </div>
-
-                  <!-- Physical 14px Base Thickness & Ports -->
-                  <div class="base-bottom-plate"></div>
-                  <div class="base-front-lip">
-                    <!-- Moment 1 Awakening Amber Light Line along the Front Lip -->
-                    <div id="lip-awakening-glow" class="lip-awakening-glow"></div>
-                    <div class="base-thumb-notch"></div>
-                  </div>
-                  <div class="base-side-left">
-                    <span class="chassis-port-slot"></span>
-                    <span class="chassis-port-slot"></span>
-                  </div>
-                  <div class="base-side-right">
-                    <span class="chassis-port-slot"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLOT 2: COHESIVE 3D SMARTPHONE (Dedicated Right-Hand Studio Lane — Zero Overlap) -->
-          <div class="phone-stage-slot">
-            <div class="phone-scale-wrapper">
-              <div id="phone-assembly" class="phone-assembly">
-                <div class="phone-floor-shadow" aria-hidden="true"></div>
-
-                <div class="phone-chassis">
-                  <div class="phone-back-plate" aria-hidden="true"></div>
-                  <div class="phone-rail-left" aria-hidden="true"></div>
-                  <div class="phone-rail-right" aria-hidden="true"></div>
-
-                  <div id="phone-screen-ui" class="phone-oled select-none">
-                    <!-- Dynamic Specular Glass Sheen on Smartphone OLED -->
-                    <div id="phone-specular-sheen" class="phone-specular-sheen" aria-hidden="true"></div>
-
-                    <div class="preserve-3d-grid">
-                      <div class="phone-pill-cutout">
-                        <span class="phone-sensor-dot"></span>
-                      </div>
-                      <div class="ui-layer-25d flex items-center justify-between text-[9px] font-mono-meta text-[#AAA6A0] mt-1" data-depth="12">
-                        <span>FLUTTER • BLoC</span>
-                        <span class="text-[#FF9A5C]">ANDROID &amp; iOS</span>
-                      </div>
-
-                      <!-- App Block 1: LocalSpeak On-Device AI (2.5D Layer z=22px) -->
-                      <div class="ui-layer-25d mt-3 pt-2.5 border-t border-[#F5F1E8]/10" data-depth="22">
-                        <div class="flex items-center justify-between">
-                          <span class="font-mono-meta text-[9px] text-[#FF9A5C]">LocalSpeak AI</span>
-                          <span class="text-[8px] font-mono-meta px-1.5 py-0.5 rounded bg-[#F0783C]/15 text-[#FF9A5C]">Offline LLM</span>
-                        </div>
-                        <div class="text-xs font-semibold text-[#F5F1E8] mt-1">Conversação Local</div>
-                        <p class="text-[10px] text-[#AAA6A0] mt-1 leading-snug">
-                          Pipeline neural offline: STT/TTS (sherpa_onnx) e LLM (flutter_gemma) sem rede.
-                        </p>
-                      </div>
-
-                      <!-- App Block 2: Real-Time Geolocation & WebSocket (2.5D Layer z=18px) -->
-                      <div class="ui-layer-25d mt-2.5 pt-2.5 border-t border-[#F5F1E8]/10" data-depth="18">
-                        <div class="flex items-center justify-between">
-                          <span class="font-mono-meta text-[9px] text-[#F5F1E8]">Mobilidade Urbana</span>
-                          <span class="text-[8px] font-mono-meta text-[#FF9A5C]">WebSocket</span>
-                        </div>
-                        <div class="text-xs font-semibold text-[#F5F1E8] mt-1">AppBus2 v5 &amp; NEAT</div>
-                        <div class="mt-1.5 flex items-center justify-between text-[9px] font-mono-meta text-[#AAA6A0]">
-                          <span>Google Maps API</span>
-                          <span class="text-[#F0783C]">● Live ETA</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="ui-layer-25d space-y-1.5 pt-2 border-t border-[#F5F1E8]/10" data-depth="14">
-                      <div class="flex items-center justify-between text-[9px] font-mono-meta">
-                        <span class="text-[#F5F1E8]">Dart Isolates &amp; Native</span>
-                        <span class="text-[#FF9A5C]">-40% Startup</span>
-                      </div>
-                      <div class="w-14 h-1 bg-[#F5F1E8]/25 rounded-full mx-auto mt-1"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="lg:col-span-7 relative z-10">
+            <div id="showcase-3d-container" class="showcase-3d-container">
+              <canvas id="showcase-webgl-canvas" class="showcase-webgl-canvas" aria-hidden="true"></canvas>
+              <img
+                id="showcase-fallback-img"
+                src="assets/showcase-workstation.jpg"
+                alt="Estação de trabalho 3D com IDE exibindo código Dart/Flutter, emulador mobile integrado e ícones tridimensionais"
+                width="1376"
+                height="768"
+                loading="lazy"
+                decoding="async"
+                class="showcase-fallback-img"
+              />
+              <button
+                id="showcase-reset-orbit"
+                type="button"
+                class="showcase-reset-btn font-mono-meta"
+                aria-label="Centralizar visualização 3D"
+              >
+                Resetar ângulo
+              </button>
             </div>
           </div>
         </div>

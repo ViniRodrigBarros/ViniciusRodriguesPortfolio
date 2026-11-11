@@ -12,11 +12,6 @@ const PORTFOLIO_CONFIG = Object.freeze({
     mobileNavLinks: '.mobile-nav-link',
     menuIconOpen: '#menu-icon-open',
     menuIconClose: '#menu-icon-close',
-    notebookAssembly: '#notebook-assembly',
-    notebookLid: '#notebook-lid',
-    notebookScreenUI: '#notebook-screen-ui',
-    phoneAssembly: '#phone-assembly',
-    phoneScreenUI: '#phone-screen-ui',
     experienceContainer: '#experience-timeline',
     carouselViewport: '#carousel-viewport',
     carouselTrack: '#carousel-track',
@@ -1633,50 +1628,63 @@ const UIComponents = {
 
 /**
  * ==========================================================================
- * 10B. TEARDOWN 3D PHYSICAL SHOWCASE CONTROLLER (THREE.JS PBR + GSAP)
+ * 10B. LIGHTWEIGHT INTERACTIVE 3D WORKSTATION SHOWCASE (THREE.JS PBR)
  * ==========================================================================
- * Combines @teardown (interactive 3D hardware simulator, exploded view,
- * X-ray cutaway, spinning thermal fans, NPU silicon die & SVG callout leaders)
- * with @impeccable (Dark Charcoal + Burnt Orange + Ivory studio direction,
- * 3-moment scroll choreography, 60fps IntersectionObserver lifecycle).
+ * Single centered sleek anodized laptop with IDE + docked mobile emulator inside
+ * the display and 4 sculpted 3D programming icons ({ }, Dart, </>, Python).
+ * Engineered for low footprint: lazy IntersectionObserver init, no PMREM shader
+ * stall, no shadow maps, DPR clamped <= 1.25, and paused offscreen lifecycle.
  */
-const TeardownShowcase3D = {
+const WorkstationShowcase3D = {
   renderer: null,
   scene: null,
   camera: null,
-  pmremGenerator: null,
+  raycaster: null,
   rafId: null,
-  renderRequested: false,
-  isVisible: true,
-  isInitialized: false,
-  isDragging: false,
-  pointerStart: { x: 0, y: 0 },
-  orbitTarget: { yaw: 0, pitch: 0 },
-  orbitCurrent: { yaw: 0, pitch: 0 },
-  hoverParallax: { yaw: 0, pitch: 0 },
   clock: null,
-  cachedViewportRect: null,
-  cachedCalloutRects: [],
-  calloutsWereActive: false,
+  isVisible: false,
+  isInitialized: false,
+  isInitializing: false,
+  isDragging: false,
+  lastTickMs: 0,
+  hoveredIconName: null,
+
+  pointerStart: { x: 0, y: 0 },
+  orbitTarget: { yaw: -0.14, pitch: 0.03 },
+  orbitCurrent: { yaw: -0.14, pitch: 0.03 },
+  hoverParallax: { yaw: 0, pitch: 0 },
+  defaultOrbit: { yaw: -0.14, pitch: 0.03 },
 
   state: {
-    mode: 'studio',
-    scrollProgress: 0,
-    lidOpen: 0,
-    lipGlow: 0.25,
-    spill: 0,
-    popout: 0,
-    explode: 0,
-    cutaway: 0,
-    mobileFocus: 0,
-    manualOverride: false
+    lidOpen: 0.58
   },
 
   groups: {},
   materials: {},
-  lights: {},
-  anchors: {},
+  interactiveIcons: [],
 
+  /** Observes section proximity and lazily boots WebGL without slowing hero paint. */
+  scheduleInit() {
+    if (this.isInitialized || this.isInitializing) return;
+    const section = DOMUtils.qs('#showcase');
+    const container = DOMUtils.qs('#showcase-3d-container');
+    if (!section || !container) return;
+
+    if (!('IntersectionObserver' in window)) {
+      this.init();
+      return;
+    }
+
+    const bootObserver = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        bootObserver.disconnect();
+        this.init();
+      }
+    }, { rootMargin: '500px 0px' });
+    bootObserver.observe(section);
+  },
+
+  /** Initializes Three.js WebGL renderer, lighting, laptop, and 3D icons. */
   init() {
     if (this.isInitialized) {
       this.onResize();
@@ -1684,11 +1692,13 @@ const TeardownShowcase3D = {
     }
 
     const viewport = DOMUtils.qs('#showcase-viewport');
+    const container = DOMUtils.qs('#showcase-3d-container');
     const canvas = DOMUtils.qs('#showcase-webgl-canvas');
-    if (!viewport || !canvas || typeof window.THREE === 'undefined') {
+    if (!viewport || !container || !canvas || typeof window.THREE === 'undefined') {
       return false;
     }
 
+    this.isInitializing = true;
     try {
       const THREE = window.THREE;
       const isMobile = window.innerWidth <= 768;
@@ -1699,10 +1709,9 @@ const TeardownShowcase3D = {
         powerPreference: 'default'
       });
 
-      const maxDpr = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
-      renderer.setPixelRatio(maxDpr);
+      renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.16;
+      renderer.toneMappingExposure = 1.15;
       if ('outputEncoding' in renderer && THREE.sRGBEncoding) {
         renderer.outputEncoding = THREE.sRGBEncoding;
       }
@@ -1710,174 +1719,66 @@ const TeardownShowcase3D = {
       this.renderer = renderer;
       this.scene = new THREE.Scene();
       this.clock = new THREE.Clock();
+      this.raycaster = new THREE.Raycaster();
+      this.camera = new THREE.PerspectiveCamera(32, 16 / 10, 10, 2200);
 
-      this.camera = new THREE.PerspectiveCamera(34, 16 / 10, 10, 2000);
-      this.buildStudioEnvironment();
       this.buildLighting();
       this.buildMaterials();
+      this.buildWorkstationRoot();
       this.buildLaptopAssembly();
-      this.buildPhoneAssembly();
-      this.bindToolbarAndPointer(viewport, canvas);
-      this.bindVisibilityObserver(viewport);
+      this.buildFloatingIcons();
+      this.bindInteractions(container, canvas);
+      this.bindVisibilityObserver(container);
 
       viewport.classList.add('webgl-ready');
       this.isInitialized = true;
-      this.onResize();
+      this.isInitializing = false;
 
       if (DOMUtils.prefersReducedMotion()) {
-        this.state.scrollProgress = 1;
         this.state.lidOpen = 1;
-        this.state.lipGlow = 1;
-        this.state.spill = 1;
-        this.state.popout = 1;
       }
-      this.requestRender();
 
+      this.onResize();
+      this.renderFrame();
+      this.startLoop();
       return true;
     } catch (err) {
-      console.warn('Fallback para CSS 3D ativado:', err);
+      this.isInitializing = false;
+      console.warn('Fallback visual ativo:', err);
       return false;
-    }
-  },
-
-  buildStudioEnvironment() {
-    const THREE = window.THREE;
-    try {
-      const pmrem = new THREE.PMREMGenerator(this.renderer);
-      pmrem.compileEquirectangularShader();
-      const envScene = new THREE.Scene();
-      envScene.background = new THREE.Color(0x0B0B0D);
-
-      const topSoftbox = new THREE.Mesh(
-        new THREE.PlaneGeometry(540, 340),
-        new THREE.MeshBasicMaterial({ color: 0xF5F1E8, side: THREE.DoubleSide })
-      );
-      topSoftbox.position.set(-40, 250, 130);
-      topSoftbox.rotation.x = Math.PI / 2.3;
-      envScene.add(topSoftbox);
-
-      const rimPanel = new THREE.Mesh(
-        new THREE.PlaneGeometry(380, 280),
-        new THREE.MeshBasicMaterial({ color: 0xF0783C, side: THREE.DoubleSide })
-      );
-      rimPanel.position.set(250, 80, -140);
-      rimPanel.lookAt(0, 0, 0);
-      envScene.add(rimPanel);
-
-      const fillStrip = new THREE.Mesh(
-        new THREE.PlaneGeometry(320, 240),
-        new THREE.MeshBasicMaterial({ color: 0x64748B, side: THREE.DoubleSide })
-      );
-      fillStrip.position.set(-260, 40, 90);
-      fillStrip.lookAt(0, 0, 0);
-      envScene.add(fillStrip);
-
-      const envRT = pmrem.fromScene(envScene, 0.045);
-      this.scene.environment = envRT.texture;
-      pmrem.dispose();
-      topSoftbox.geometry.dispose();
-      topSoftbox.material.dispose();
-      rimPanel.geometry.dispose();
-      rimPanel.material.dispose();
-      fillStrip.geometry.dispose();
-      fillStrip.material.dispose();
-    } catch (_) {
-      // Fallback to direct lights if PMREM fails
     }
   },
 
   buildLighting() {
     const THREE = window.THREE;
+    this.scene.add(new THREE.HemisphereLight(0xF5F1E8, 0x16161C, 0.92));
 
-    const hemi = new THREE.HemisphereLight(0xF5F1E8, 0x0B0B0D, 0.58);
-    this.scene.add(hemi);
-
-    // Key Light (Warm Studio Ivory)
-    const keyLight = new THREE.DirectionalLight(0xF5F1E8, 1.42);
-    keyLight.position.set(-180, 260, 240);
+    const keyLight = new THREE.DirectionalLight(0xF5F1E8, 1.08);
+    keyLight.position.set(-180, 260, 290);
     this.scene.add(keyLight);
 
-    // Rim Light (Warm Burnt Orange Accent)
-    const rimLight = new THREE.PointLight(0xF0783C, 1.95, 760, 1.6);
-    rimLight.position.set(220, 110, -130);
+    const rimLight = new THREE.PointLight(0xF0783C, 1.35, 920, 1.5);
+    rimLight.position.set(240, 130, -140);
     this.scene.add(rimLight);
 
-    // Cool Slate Fill Light
-    const fillLight = new THREE.DirectionalLight(0x94A3B8, 0.65);
-    fillLight.position.set(160, -80, 220);
+    const fillLight = new THREE.DirectionalLight(0xCBD5E1, 0.68);
+    fillLight.position.set(210, -40, 240);
     this.scene.add(fillLight);
-
-    // Dynamic Screen Light Spill onto Keyboard Deck
-    const screenSpill = new THREE.PointLight(0xF0783C, 0, 260, 1.65);
-    screenSpill.position.set(0, 48, -12);
-    this.lights.screenSpill = screenSpill;
   },
 
   buildMaterials() {
     const THREE = window.THREE;
-
-    this.materials.anodizedDark = new THREE.MeshStandardMaterial({
-      color: 0x1A1A22,
-      roughness: 0.45,
-      metalness: 0.86
-    });
-
-    this.materials.anodizedChamfer = new THREE.MeshStandardMaterial({
-      color: 0x2E2E3A,
-      roughness: 0.36,
-      metalness: 0.89
-    });
-
-    this.materials.titaniumShell = new THREE.MeshStandardMaterial({
-      color: 0x23232D,
-      roughness: 0.42,
-      metalness: 0.88
-    });
-
-    this.materials.deckAluminum = new THREE.MeshStandardMaterial({
-      color: 0x1E1E27,
-      roughness: 0.46,
-      metalness: 0.84,
-      transparent: true,
-      opacity: 1
-    });
-
-    this.materials.deckWireframe = new THREE.MeshBasicMaterial({
-      color: 0xF0783C,
-      wireframe: true,
-      transparent: true,
-      opacity: 0
-    });
-
-    this.materials.copperPipe = new THREE.MeshStandardMaterial({
-      color: 0xE07238,
-      emissive: 0x3A1405,
-      emissiveIntensity: 0.28,
-      roughness: 0.32,
-      metalness: 0.92
-    });
-
-    this.materials.keycapAccent = new THREE.MeshStandardMaterial({
-      color: 0xF0783C,
-      emissive: 0xF0783C,
-      emissiveIntensity: 0.25,
-      roughness: 0.42,
-      metalness: 0.38
-    });
-
-    this.materials.lipGlow = new THREE.MeshBasicMaterial({
-      color: 0xFF9A5C,
-      transparent: true,
-      opacity: 0.25
-    });
-
-    this.materials.screenGlass = new THREE.MeshStandardMaterial({
-      color: 0xFFFFFF,
-      roughness: 0.1,
-      metalness: 0.14,
-      transparent: true,
-      opacity: 0.14
-    });
+    this.materials = {
+      chassisBody: new THREE.MeshStandardMaterial({ color: 0x262630, roughness: 0.54, metalness: 0.72 }),
+      chassisChamfer: new THREE.MeshStandardMaterial({ color: 0x424250, roughness: 0.44, metalness: 0.80 }),
+      titaniumIcon: new THREE.MeshStandardMaterial({ color: 0x8A878F, roughness: 0.44, metalness: 0.76 }),
+      dartLight: new THREE.MeshStandardMaterial({ color: 0xFF8F4E, emissive: 0x4A1B08, roughness: 0.58, metalness: 0.14 }),
+      dartMid: new THREE.MeshStandardMaterial({ color: 0xE66428, emissive: 0x3A1204, roughness: 0.62, metalness: 0.16 }),
+      dartDeep: new THREE.MeshStandardMaterial({ color: 0x9C3D18, emissive: 0x240A02, roughness: 0.66, metalness: 0.18 }),
+      pythonLight: new THREE.MeshStandardMaterial({ color: 0xC6C0B6, roughness: 0.50, metalness: 0.58 }),
+      pythonWarm: new THREE.MeshStandardMaterial({ color: 0xE26A2E, emissive: 0x3D1606, roughness: 0.56, metalness: 0.20 }),
+      accentStrip: new THREE.MeshBasicMaterial({ color: 0xF0783C, transparent: true, opacity: 0.62 })
+    };
   },
 
   makeCanvasTexture(width, height, drawFn) {
@@ -1891,7 +1792,7 @@ const TeardownShowcase3D = {
     if ('encoding' in tex && THREE.sRGBEncoding) {
       tex.encoding = THREE.sRGBEncoding;
     }
-    tex.anisotropy = 4;
+    tex.anisotropy = 2;
     tex.needsUpdate = true;
     return tex;
   },
@@ -1910,1008 +1811,690 @@ const TeardownShowcase3D = {
     ctx.closePath();
   },
 
-  /**
-   * Optimized Procedural MacBook Pro Keyboard & Trackpad Texture
-   */
   createKeyboardDeckTexture() {
-    const origW = 1024;
-    const origH = 680;
-    const targetW = 768;
-    const targetH = 510;
-    const scale = targetW / origW;
-
-    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
-      ctx.scale(scale, scale);
-      const w = origW;
-      const h = origH;
-
-      ctx.fillStyle = '#1B1B23';
+    const w = 640;
+    const h = 420;
+    return this.makeCanvasTexture(w, h, (ctx) => {
+      ctx.fillStyle = '#202028';
       ctx.fillRect(0, 0, w, h);
 
-      // Speaker grilles on left and right
-      ctx.fillStyle = 'rgba(8, 8, 12, 0.65)';
-      for (let sy = 56; sy < 370; sy += 7) {
-        for (let sx = 24; sx < 58; sx += 7) {
-          ctx.fillRect(sx, sy, 2.5, 2.5);
-          ctx.fillRect(w - sx - 3, sy, 2.5, 2.5);
-        }
-      }
-
-      // Recessed dark anodized keyboard well
-      this.drawRoundedRect(ctx, 72, 38, w - 144, 356, 14);
-      ctx.fillStyle = '#0A0A0E';
+      // Recessed keyboard well
+      this.drawRoundedRect(ctx, 44, 24, w - 88, 224, 10);
+      ctx.fillStyle = '#0D0D12';
       ctx.fill();
       ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // 6 rows of backlit keys with crisp legends
       const rows = [
-        ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '◉'],
-        ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '⌫'],
-        ['TAB', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
-        ['CAPS', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'RETURN'],
-        ['SHIFT', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'SHIFT'],
-        ['fn', 'ctrl', 'opt', 'cmd', 'SPACE', 'cmd', 'opt', '◀', '▲▼', '▶']
+        ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'],
+        ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '⌫'],
+        ['TAB', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']'],
+        ['CAPS', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", '⏎'],
+        ['⇧', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '⇧'],
+        ['fn', '⌃', '⌥', '⌘', 'SPACE', '⌘', '⌥', '◀', '▶']
       ];
 
-      const wellX = 84;
-      const wellW = w - 168;
-      let curY = 48;
-
+      let curY = 32;
       rows.forEach((row, rIdx) => {
-        const rowH = rIdx === 0 ? 38 : 52;
-        const weights = row.map((label) => {
-          if (label === 'SPACE') return 4.8;
-          if (label === 'SHIFT') return 2.1;
-          if (label === 'RETURN' || label === 'CAPS') return 1.75;
-          if (label === 'TAB' || label === '⌫') return 1.45;
-          if (label === 'cmd') return 1.25;
-          return 1;
-        });
-        const totalWeight = weights.reduce((a, b) => a + b, 0);
-        const gap = 7;
-        const availW = wellW - gap * (row.length - 1);
-        let curX = wellX;
+        const rowH = rIdx === 0 ? 22 : 32;
+        const weights = row.map((lbl) => (
+          lbl === 'SPACE' ? 4.6 : (lbl === '⇧' || lbl === '⏎' || lbl === 'CAPS' ? 1.7 : 1)
+        ));
+        const total = weights.reduce((a, b) => a + b, 0);
+        const gap = 5;
+        const availW = (w - 108) - gap * (row.length - 1);
+        let curX = 54;
 
-        row.forEach((label, cIdx) => {
-          const kw = (weights[cIdx] / totalWeight) * availW;
+        row.forEach((lbl, cIdx) => {
+          const kw = (weights[cIdx] / total) * availW;
           const isEsc = rIdx === 0 && cIdx === 0;
-
-          this.drawRoundedRect(ctx, curX, curY, kw, rowH, 6);
-          ctx.fillStyle = isEsc ? '#D9642A' : '#13131A';
+          this.drawRoundedRect(ctx, curX, curY, kw, rowH, 4);
+          ctx.fillStyle = isEsc ? '#D9642A' : '#16161E';
           ctx.fill();
-
-          ctx.strokeStyle = isEsc ? '#FF9A5C' : 'rgba(245, 241, 232, 0.16)';
-          ctx.lineWidth = 1.4;
+          ctx.strokeStyle = isEsc ? '#FF9A5C' : 'rgba(245, 241, 232, 0.14)';
+          ctx.lineWidth = 1;
           ctx.stroke();
-
-          ctx.fillStyle = isEsc ? '#0B0B0D' : 'rgba(245, 241, 232, 0.78)';
-          ctx.font = rIdx === 0 || label.length > 1
-            ? '600 12px "JetBrains Mono", monospace'
-            : '600 15px "Plus Jakarta Sans", sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          if (label !== 'SPACE') {
-            ctx.fillText(label, curX + kw / 2, curY + rowH / 2 + 1);
-          }
-
           curX += kw + gap;
         });
-
-        curY += rowH + 7;
+        curY += rowH + 5;
       });
 
-      // Force Touch Glass Trackpad
-      const tpW = 340;
-      const tpH = 210;
-      const tpX = (w - tpW) / 2;
-      const tpY = 426;
-      this.drawRoundedRect(ctx, tpX, tpY, tpW, tpH, 16);
-      const tpGrad = ctx.createLinearGradient(tpX, tpY, tpX + tpW, tpY + tpH);
-      tpGrad.addColorStop(0, '#16161E');
-      tpGrad.addColorStop(1, '#121218');
-      ctx.fillStyle = tpGrad;
+      // Glass trackpad
+      this.drawRoundedRect(ctx, (w - 220) / 2, 266, 220, 128, 12);
+      ctx.fillStyle = '#181820';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.12)';
-      ctx.lineWidth = 1.8;
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.13)';
+      ctx.lineWidth = 1.4;
       ctx.stroke();
     });
   },
 
   /**
-   * Optimized macOS Sequoia Dark Engineering Workspace & Live Telemetry Canvas
+   * Builds crisp VS Code / Android Studio IDE screen texture:
+   * Left Explorer + Center Dart/Flutter Code + Bottom Terminal + Docked Mobile Emulator.
    */
-  createLaptopScreenTexture() {
-    const origW = 1600;
-    const origH = 1020;
-    const targetW = 1200;
-    const targetH = 765;
-    const scale = targetW / origW;
-
-    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
-      ctx.scale(scale, scale);
-      const w = origW;
-      const h = origH;
-
-      // Deep studio wallpaper gradient
-      const bg = ctx.createLinearGradient(0, 0, w, h);
-      bg.addColorStop(0, '#0C0C11');
-      bg.addColorStop(0.55, '#101017');
-      bg.addColorStop(1, '#09090D');
-      ctx.fillStyle = bg;
+  createIdeScreenTexture() {
+    const w = 1024;
+    const h = 640;
+    return this.makeCanvasTexture(w, h, (ctx) => {
+      ctx.fillStyle = '#0D0D12';
       ctx.fillRect(0, 0, w, h);
 
-      // Ambient warm radial glow inside screen
-      const glow = ctx.createRadialGradient(w * 0.72, h * 0.36, 40, w * 0.72, h * 0.36, 620);
-      glow.addColorStop(0, 'rgba(240, 120, 60, 0.16)');
-      glow.addColorStop(1, 'rgba(240, 120, 60, 0)');
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, w, h);
-
-      // macOS Top Menu Bar
-      ctx.fillStyle = 'rgba(18, 18, 24, 0.94)';
-      ctx.fillRect(0, 0, w, 54);
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(0, 54);
-      ctx.lineTo(w, 54);
-      ctx.stroke();
-
-      // Traffic lights
-      const dots = ['#FF5F56', '#FFBD2E', '#27C93F'];
-      dots.forEach((c, i) => {
-        ctx.fillStyle = c;
+      // Top IDE title bar
+      ctx.fillStyle = '#14141B';
+      ctx.fillRect(0, 0, w, 36);
+      ['#FF5F56', '#FFBD2E', '#27C93F'].forEach((col, i) => {
+        ctx.fillStyle = col;
         ctx.beginPath();
-        ctx.arc(36 + i * 24, 27, 7, 0, Math.PI * 2);
+        ctx.arc(22 + i * 16, 18, 4.5, 0, Math.PI * 2);
         ctx.fill();
       });
-
       ctx.fillStyle = '#F5F1E8';
-      ctx.font = '600 18px "Plus Jakarta Sans", sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('vinicius-rodrigues — mobility-platform-v5', 124, 33);
+      ctx.font = '600 13px "JetBrains Mono", monospace';
+      ctx.fillText('vinicius_rodrigues — lib/main.dart  [Flutter • Prod]', 84, 22);
 
-      // Right status pill in menu bar
-      this.drawRoundedRect(ctx, w - 370, 11, 340, 32, 16);
-      ctx.fillStyle = 'rgba(240, 120, 60, 0.15)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.45)';
-      ctx.stroke();
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 15px "JetBrains Mono", monospace';
-      ctx.fillText('● CI/CD GREEN • 40+ FLAVORS • 60FPS', w - 350, 32);
-
-      // 1. Left Sidebar (Project Explorer)
-      this.drawRoundedRect(ctx, 24, 76, 280, h - 100, 16);
-      ctx.fillStyle = 'rgba(20, 20, 27, 0.9)';
+      // Left Explorer sidebar
+      this.drawRoundedRect(ctx, 12, 48, 178, h - 60, 10);
+      ctx.fillStyle = '#13131A';
       ctx.fill();
       ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
       ctx.stroke();
 
       ctx.fillStyle = '#8E8A84';
-      ctx.font = '600 14px "JetBrains Mono", monospace';
-      ctx.fillText('WORKSPACE // MONOREPO', 48, 116);
+      ctx.font = '600 11px "JetBrains Mono", monospace';
+      ctx.fillText('EXPLORER', 26, 74);
 
-      const files = [
-        ['▾ packages/core_mobility', '#F5F1E8', false],
-        ['  ▸ isolates_worker.dart', '#6EE7B7', false],
-        ['  ▸ flavor_config.dart', '#FF9A5C', true],
-        ['  ▸ offline_sync_sqlite.dart', '#B8B2A6', false],
-        ['▾ services/telemetry-api', '#F5F1E8', false],
-        ['  ▸ fleet.gateway.ts', '#FF9A5C', false],
-        ['  ▸ redis.stream.ts', '#B8B2A6', false],
-        ['▾ apps/local_speak_ai', '#F5F1E8', false],
-        ['  ▸ sherpa_stt_engine.dart', '#6EE7B7', false],
-        ['  ▸ gemma_local_llm.dart', '#B8B2A6', false]
+      const tree = [
+        ['▾ lib/', '#F5F1E8', false],
+        ['  ▾ features/', '#AAA6A0', false],
+        ['    ▸ mobility_bloc.dart', '#AAA6A0', false],
+        ['    ● main.dart', '#FF9A5C', true],
+        ['    ▸ localspeak_ai.dart', '#6EE7B7', false],
+        ['  ▾ data/', '#F5F1E8', false],
+        ['    ▸ ws_gateway.ts', '#AAA6A0', false],
+        ['    ▸ sqlite_sync.dart', '#AAA6A0', false]
       ];
-
-      files.forEach(([name, col, active], idx) => {
-        const fy = 160 + idx * 46;
+      tree.forEach(([txt, col, active], idx) => {
+        const y = 106 + idx * 32;
         if (active) {
-          this.drawRoundedRect(ctx, 36, fy - 24, 256, 36, 8);
+          this.drawRoundedRect(ctx, 20, y - 16, 162, 24, 5);
           ctx.fillStyle = 'rgba(240, 120, 60, 0.16)';
           ctx.fill();
         }
         ctx.fillStyle = col;
-        ctx.font = active ? '600 16px "JetBrains Mono", monospace' : '500 15px "JetBrains Mono", monospace';
-        ctx.fillText(name, 48, fy);
+        ctx.font = active ? '600 12px "JetBrains Mono", monospace' : '500 11.5px "JetBrains Mono", monospace';
+        ctx.fillText(txt, 26, y);
       });
 
-      // Lower sidebar architecture summary card
-      this.drawRoundedRect(ctx, 40, h - 240, 248, 190, 12);
-      ctx.fillStyle = 'rgba(14, 14, 19, 0.95)';
+      // Center Dart/Flutter code editor
+      this.drawRoundedRect(ctx, 202, 48, 480, 412, 10);
+      ctx.fillStyle = '#111117';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.3)';
-      ctx.stroke();
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 14px "JetBrains Mono", monospace';
-      ctx.fillText('RELEASE HEALTH', 60, h - 202);
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 36px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('-75%', 60, h - 150);
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 16px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Redução de overhead', 60, h - 118);
-      ctx.fillStyle = '#6EE7B7';
-      ctx.font = '600 15px "JetBrains Mono", monospace';
-      ctx.fillText('✓ 80%+ Test Coverage', 60, h - 82);
-
-      // 2. Center Code & Architecture Panel
-      this.drawRoundedRect(ctx, 324, 76, 690, 560, 16);
-      ctx.fillStyle = 'rgba(18, 18, 25, 0.92)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
       ctx.stroke();
 
-      // Editor Tab Bar
-      ctx.fillStyle = 'rgba(240, 120, 60, 0.12)';
-      this.drawRoundedRect(ctx, 342, 92, 260, 36, 8);
+      this.drawRoundedRect(ctx, 214, 58, 146, 26, 6);
+      ctx.fillStyle = 'rgba(240, 120, 60, 0.14)';
       ctx.fill();
       ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 15px "JetBrains Mono", monospace';
-      ctx.fillText('fleet.gateway.ts', 364, 115);
-      ctx.fillStyle = '#8E8A84';
-      ctx.fillText('isolates_worker.dart', 630, 115);
+      ctx.font = '600 12px "JetBrains Mono", monospace';
+      ctx.fillText('main.dart', 236, 75);
 
-      const codeLines = [
-        ['01', '#FF9A5C', '@WebSocketGateway({ namespace: "/fleet-live" })'],
-        ['02', '#F5F1E8', 'export class MobilityTelemetryGateway {'],
-        ['03', '#8E8A84', '  // Real-time vehicle stream & dynamic ETA engine'],
-        ['04', '#F0783C', '  @SubscribeMessage("telemetry.frame")'],
-        ['05', '#F5F1E8', '  async handleFrame(frame: VehicleGpsFrame) {'],
-        ['06', '#6EE7B7', '    const route = await this.isolatePool.computeEta(frame);'],
-        ['07', '#F5F1E8', '    return this.broker.broadcastToConsortium(route);'],
-        ['08', '#F5F1E8', '  }'],
-        ['09', '#FF9A5C', '  public getMultiFlavorMatrix(): FlavorRelease {'],
-        ['10', '#6EE7B7', '    return { flavors: 42, startupDelta: "-40%" };'],
-        ['11', '#F5F1E8', '  }'],
-        ['12', '#F5F1E8', '}']
+      const code = [
+        ['01', '#FF9A5C', "import 'package:flutter/material.dart';"],
+        ['02', '#8E8A84', '// Clean Architecture + BLoC Telemetry'],
+        ['03', '#FF9A5C', 'class TelemetryApp extends StatelessWidget {'],
+        ['04', '#F5F1E8', '  const TelemetryApp({super.key});'],
+        ['05', '#F0783C', '  @override'],
+        ['06', '#F5F1E8', '  Widget build(BuildContext context) {'],
+        ['07', '#6EE7B7', '    return BlocBuilder<FleetBloc, State>('],
+        ['08', '#F5F1E8', '      builder: (ctx, state) => LiveFrame('],
+        ['09', '#FF9A5C', '        fpsLock: 60,'],
+        ['10', '#F5F1E8', '        offlineAi: true,'],
+        ['11', '#F5F1E8', '        throughput: state.eventsPerSec,'],
+        ['12', '#F5F1E8', '      ),'],
+        ['13', '#F5F1E8', '    );'],
+        ['14', '#F5F1E8', '  }']
       ];
-
-      codeLines.forEach(([ln, col, code], i) => {
-        const y = 172 + i * 36;
+      code.forEach(([ln, col, line], i) => {
+        const y = 114 + i * 24;
         ctx.fillStyle = 'rgba(142, 138, 132, 0.5)';
-        ctx.font = '500 17px "JetBrains Mono", monospace';
-        ctx.fillText(ln, 352, y);
+        ctx.font = '500 12px "JetBrains Mono", monospace';
+        ctx.fillText(ln, 216, y);
         ctx.fillStyle = col;
-        ctx.font = '500 18px "JetBrains Mono", monospace';
-        ctx.fillText(code, 398, y);
+        ctx.fillText(line, 244, y);
       });
 
-      // 3. Bottom-Center Live Telemetry Waveform Graph
-      this.drawRoundedRect(ctx, 324, 656, 690, h - 680, 16);
-      ctx.fillStyle = 'rgba(18, 18, 25, 0.92)';
+      // Bottom integrated terminal inside IDE
+      this.drawRoundedRect(ctx, 202, 472, 480, 156, 10);
+      ctx.fillStyle = '#0F0F14';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
-      ctx.stroke();
-
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '600 15px "JetBrains Mono", monospace';
-      ctx.fillText('DART ISOLATES // FRAME TIME & THROUGHPUT (60 FPS LOCK)', 352, 696);
-
-      // Smooth Bezier area chart
-      ctx.beginPath();
-      ctx.moveTo(352, 930);
-      const pts = [
-        [352, 860], [450, 810], [540, 845], [640, 770],
-        [740, 795], [850, 740], [976, 760]
-      ];
-      pts.forEach(([px, py]) => ctx.lineTo(px, py));
-      ctx.lineTo(976, 930);
-      ctx.closePath();
-      const areaGrad = ctx.createLinearGradient(0, 730, 0, 930);
-      areaGrad.addColorStop(0, 'rgba(240, 120, 60, 0.34)');
-      areaGrad.addColorStop(1, 'rgba(240, 120, 60, 0.0)');
-      ctx.fillStyle = areaGrad;
-      ctx.fill();
-
-      ctx.beginPath();
-      pts.forEach(([px, py], idx) => {
-        if (idx === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      });
-      ctx.strokeStyle = '#FF9A5C';
-      ctx.lineWidth = 3.5;
-      ctx.stroke();
-
-      pts.forEach(([px, py]) => {
-        ctx.fillStyle = '#F5F1E8';
-        ctx.beginPath();
-        ctx.arc(px, py, 5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // 4. Right Column: Geospatial Fleet Radar & Circular Gauges
-      this.drawRoundedRect(ctx, 1034, 76, w - 1058, h - 100, 16);
-      ctx.fillStyle = 'rgba(20, 20, 28, 0.94)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.28)';
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
       ctx.stroke();
 
       ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 15px "JetBrains Mono", monospace';
-      ctx.fillText('LIVE FLEET GEOSPATIAL MESH', 1066, 118);
+      ctx.font = '600 11px "JetBrains Mono", monospace';
+      ctx.fillText('TERMINAL // FLUTTER RUN', 218, 496);
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '500 12px "JetBrains Mono", monospace';
+      ctx.fillText('> flutter run --flavor prod -t lib/main.dart', 218, 526);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.fillText('✓ Built build/app-prod.apk in 1.8s (0 errors)', 218, 554);
+      ctx.fillStyle = '#AAA6A0';
+      ctx.fillText('DevTools active • Dart Isolates: 4 workers • 60 FPS', 218, 582);
 
-      // Radar circle
-      const rx = 1304;
-      const ry = 310;
-      [145, 100, 55].forEach((rad) => {
-        ctx.beginPath();
-        ctx.arc(rx, ry, rad, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      });
-
-      // Route vector inside radar
-      ctx.beginPath();
-      ctx.moveTo(rx - 95, ry + 70);
-      ctx.quadraticCurveTo(rx - 20, ry - 80, rx + 105, ry - 45);
-      ctx.strokeStyle = '#F0783C';
-      ctx.lineWidth = 4;
+      // Right pane: Docked Mobile Emulator INSIDE the IDE screen
+      this.drawRoundedRect(ctx, 694, 48, 318, h - 60, 10);
+      ctx.fillStyle = '#13131A';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.25)';
       ctx.stroke();
 
-      // Active vehicle nodes
-      [[-95, 70], [-18, -12], [52, -32], [105, -45]].forEach(([dx, dy]) => {
-        ctx.fillStyle = '#6EE7B7';
-        ctx.beginPath();
-        ctx.arc(rx + dx, ry + dy, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#AAA6A0';
+      ctx.font = '600 11px "JetBrains Mono", monospace';
+      ctx.fillText('DEVICE PREVIEW • 60 FPS', 712, 72);
+
+      // Phone bezel docked inside IDE right panel
+      this.drawRoundedRect(ctx, 738, 88, 230, 524, 28);
+      ctx.fillStyle = '#09090D';
+      ctx.fill();
+      ctx.strokeStyle = '#383846';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Dynamic Island inside docked emulator
+      this.drawRoundedRect(ctx, 822, 102, 62, 12, 6);
+      ctx.fillStyle = '#181820';
+      ctx.fill();
+
+      ctx.fillStyle = '#FF9A5C';
+      ctx.font = '700 11px "JetBrains Mono", monospace';
+      ctx.fillText('TELEMETRY // LIVE', 760, 146);
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '700 28px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('15,308', 760, 182);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.font = '600 11px "JetBrains Mono", monospace';
+      ctx.fillText('+35% Sync', 892, 178);
+
+      // Emulator curve graph
+      this.drawRoundedRect(ctx, 758, 204, 190, 146, 12);
+      ctx.fillStyle = '#15151E';
+      ctx.fill();
+      ctx.beginPath();
+      const curvePts = [[770, 315], [798, 272], [832, 290], [866, 240], [900, 258], [934, 224]];
+      curvePts.forEach(([px, py], i) => (i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py)));
+      ctx.strokeStyle = '#FF9A5C';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // LocalSpeak waveform card inside docked emulator
+      this.drawRoundedRect(ctx, 758, 368, 190, 168, 12);
+      ctx.fillStyle = '#15151E';
+      ctx.fill();
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '600 13px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('LocalSpeak Offline AI', 774, 398);
+      ctx.fillStyle = '#AAA6A0';
+      ctx.font = '500 11px "JetBrains Mono", monospace';
+      ctx.fillText('sherpa_onnx • Zero Cloud', 774, 418);
+
+      for (let i = 0; i < 14; i++) {
+        const bh = 16 + Math.round(Math.sin(i * 0.65) * 14 + 14);
+        this.drawRoundedRect(ctx, 774 + i * 11, 474 - bh / 2, 6, bh, 3);
+        ctx.fillStyle = i % 3 === 0 ? '#F5F1E8' : '#F0783C';
         ctx.fill();
-      });
-
-      // Architecture Pillar Bars in Right Column
-      const pillars = [
-        ['AppBus2 v5 • Multi-Flavor', '40+ Apps', 0.94],
-        ['STTP • NEAT & Mobilidade', '5+ Apps', 0.88],
-        ['Bus2Driver • WebSocket GPS', '+35% Sync', 0.91],
-        ['LocalSpeak • On-Device AI', '100% Offline', 0.96]
-      ];
-
-      pillars.forEach(([title, badge, ratio], i) => {
-        const py = 530 + i * 102;
-        ctx.fillStyle = '#F5F1E8';
-        ctx.font = '600 19px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(title, 1066, py);
-
-        ctx.fillStyle = '#FF9A5C';
-        ctx.font = '600 16px "JetBrains Mono", monospace';
-        ctx.textAlign = 'right';
-        ctx.fillText(badge, w - 58, py);
-        ctx.textAlign = 'left';
-
-        this.drawRoundedRect(ctx, 1066, py + 16, 476, 12, 6);
-        ctx.fillStyle = 'rgba(245, 241, 232, 0.08)';
-        ctx.fill();
-
-        this.drawRoundedRect(ctx, 1066, py + 16, Math.round(476 * ratio), 12, 6);
-        ctx.fillStyle = i === 3 ? '#6EE7B7' : '#F0783C';
-        ctx.fill();
-      });
+      }
     });
   },
 
-  /**
-   * Optimized iOS 18 / Flutter Flagship Mobile Screen
-   */
-  createPhoneScreenTexture() {
-    const origW = 900;
-    const origH = 1840;
-    const targetW = 540;
-    const targetH = 1104;
-    const scale = targetW / origW;
-
-    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
-      ctx.scale(scale, scale);
-      const w = origW;
-      const h = origH;
-
-      const bg = ctx.createLinearGradient(0, 0, 0, h);
-      bg.addColorStop(0, '#101118');
-      bg.addColorStop(0.5, '#0C0D13');
-      bg.addColorStop(1, '#08080C');
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, w, h);
-
-      // iOS Status Bar
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 28px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('9:41', 72, 82);
-      ctx.fillStyle = '#6EE7B7';
-      ctx.font = '600 22px "JetBrains Mono", monospace';
-      ctx.fillText('5G ● 100%', w - 210, 80);
-
-      // Live Activity Pill below Dynamic Island
-      this.drawRoundedRect(ctx, 48, 138, w - 96, 132, 36);
-      ctx.fillStyle = 'rgba(24, 24, 34, 0.95)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.5)';
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 20px "JetBrains Mono", monospace';
-      ctx.fillText('APPBUS2 V5 // LIVE TELEMETRY', 92, 186);
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 34px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Linha 092 • ETA 3 min', 92, 236);
-      ctx.fillStyle = '#6EE7B7';
-      ctx.font = '700 24px "JetBrains Mono", monospace';
-      ctx.fillText('60 FPS', w - 180, 234);
-
-      // Dark Vector Route Map Canvas
-      this.drawRoundedRect(ctx, 48, 304, w - 96, 680, 40);
-      ctx.fillStyle = '#13151F';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.1)';
-      ctx.stroke();
-
-      // Subtle street grid inside map card
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.04)';
-      ctx.lineWidth = 2;
-      for (let gx = 90; gx < w - 90; gx += 75) {
-        ctx.beginPath();
-        ctx.moveTo(gx, 320);
-        ctx.lineTo(gx, 960);
-        ctx.stroke();
-      }
-      for (let gy = 360; gy < 950; gy += 75) {
-        ctx.beginPath();
-        ctx.moveTo(64, gy);
-        ctx.lineTo(w - 64, gy);
-        ctx.stroke();
-      }
-
-      // Glowing burnt-orange transit route curve
-      ctx.beginPath();
-      ctx.moveTo(130, 860);
-      ctx.bezierCurveTo(260, 780, 310, 520, 520, 540);
-      ctx.bezierCurveTo(650, 550, 690, 420, 740, 390);
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.3)';
-      ctx.lineWidth = 18;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(130, 860);
-      ctx.bezierCurveTo(260, 780, 310, 520, 520, 540);
-      ctx.bezierCurveTo(650, 550, 690, 420, 740, 390);
-      ctx.strokeStyle = '#FF9A5C';
-      ctx.lineWidth = 7;
-      ctx.stroke();
-
-      // Waypoint pins
-      [[130, 860, '#F5F1E8'], [450, 555, '#FF9A5C'], [740, 390, '#6EE7B7']].forEach(([px, py, col]) => {
-        ctx.fillStyle = col;
-        ctx.beginPath();
-        ctx.arc(px, py, 14, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Floating map telemetry badge
-      this.drawRoundedRect(ctx, 84, 868, w - 168, 84, 22);
-      ctx.fillStyle = 'rgba(15, 15, 22, 0.92)';
-      ctx.fill();
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Dart Isolates • -40% Startup', 118, 920);
-
-      // Bottom Sheet: LocalSpeak On-Device AI Voice Assistant
-      this.drawRoundedRect(ctx, 48, 1020, w - 96, 710, 44);
-      ctx.fillStyle = 'rgba(22, 22, 31, 0.96)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.42)';
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 22px "JetBrains Mono", monospace';
-      ctx.fillText('LOCALSPEAK // ON-DEVICE AI', 96, 1092);
-
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 42px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('LLM & Voz 100% Offline', 96, 1156);
-
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 25px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('sherpa_onnx + flutter_gemma • Zero Nuvem', 96, 1208);
-
-      // Voice spectrum waveform bars
-      for (let i = 0; i < 24; i++) {
-        const bh = 36 + Math.round(Math.sin(i * 0.62) * 34 + 38);
-        this.drawRoundedRect(ctx, 96 + i * 29, 1345 - bh / 2, 16, bh, 8);
-        ctx.fillStyle = i % 3 === 0 ? '#6EE7B7' : '#FF9A5C';
-        ctx.fill();
-      }
-
-      // Architecture chips at bottom of sheet
-      this.drawRoundedRect(ctx, 96, 1480, w - 192, 92, 20);
-      ctx.fillStyle = 'rgba(240, 120, 60, 0.14)';
-      ctx.fill();
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '600 23px "JetBrains Mono", monospace';
-      ctx.fillText('CLEAN ARCH • BLOC • SQLITE SYNC', 132, 1536);
-
-      ctx.fillStyle = '#6EE7B7';
-      ctx.font = '600 22px "JetBrains Mono", monospace';
-      ctx.fillText('● STTP • BUS2 • ACCENTURE', 96, 1656);
-
-      // iOS Home Indicator
-      this.drawRoundedRect(ctx, w / 2 - 130, h - 46, 260, 12, 6);
-      ctx.fillStyle = 'rgba(245, 241, 232, 0.42)';
-      ctx.fill();
-    });
+  buildWorkstationRoot() {
+    const THREE = window.THREE;
+    const stageRoot = new THREE.Group();
+    this.scene.add(stageRoot);
+    this.groups.stageRoot = stageRoot;
   },
 
   buildLaptopAssembly() {
     const THREE = window.THREE;
     const laptopRoot = new THREE.Group();
-    this.scene.add(laptopRoot);
+    this.groups.stageRoot.add(laptopRoot);
     this.groups.laptopRoot = laptopRoot;
 
-    // 0. Studio Floor Contact Shadow Catcher (Lightweight 128x128 radial canvas)
-    const shadowCanvas = document.createElement('canvas');
-    shadowCanvas.width = 128;
-    shadowCanvas.height = 128;
-    const sctx = shadowCanvas.getContext('2d');
-    const grad = sctx.createRadialGradient(64, 64, 10, 64, 64, 60);
-    grad.addColorStop(0, 'rgba(0, 0, 0, 0.82)');
-    grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.34)');
-    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    sctx.fillStyle = grad;
-    sctx.fillRect(0, 0, 128, 128);
-
+    // Baked soft studio contact shadow plane (0 shadow map cost)
+    const shadowTex = this.makeCanvasTexture(128, 128, (ctx) => {
+      const grad = ctx.createRadialGradient(64, 64, 12, 64, 64, 60);
+      grad.addColorStop(0, 'rgba(0, 0, 0, 0.85)');
+      grad.addColorStop(0.55, 'rgba(0, 0, 0, 0.35)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+    });
     const shadowPlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(410, 280),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.CanvasTexture(shadowCanvas),
-        transparent: true,
-        depthWrite: false
-      })
+      new THREE.PlaneGeometry(420, 290),
+      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
     );
     shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.set(0, -18, 8);
+    shadowPlane.position.set(0, -14, 10);
     laptopRoot.add(shadowPlane);
-    this.groups.laptopShadow = shadowPlane;
 
-    // 1. Lower Unibody Chassis Group
-    const chassisBottomGroup = new THREE.Group();
-    laptopRoot.add(chassisBottomGroup);
-    this.groups.chassisBottomGroup = chassisBottomGroup;
+    // Lower unibody base + chamfer trim
+    const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(304, 11, 202), this.materials.chassisBody);
+    baseMesh.position.set(0, -6, 6);
+    laptopRoot.add(baseMesh);
 
-    const baseGeom = new THREE.BoxGeometry(304, 11, 204);
-    const baseMesh = new THREE.Mesh(baseGeom, this.materials.anodizedDark);
-    baseMesh.position.set(0, -8, 5);
-    chassisBottomGroup.add(baseMesh);
+    const chamfer = new THREE.Mesh(new THREE.BoxGeometry(306, 2.2, 204), this.materials.chassisChamfer);
+    chamfer.position.set(0, -1.2, 6);
+    laptopRoot.add(chamfer);
 
-    const chamferFrame = new THREE.Mesh(
-      new THREE.BoxGeometry(306, 2.2, 206),
-      this.materials.anodizedChamfer
-    );
-    chamferFrame.position.set(0, -3.2, 5);
-    chassisBottomGroup.add(chamferFrame);
+    const accentLip = new THREE.Mesh(new THREE.BoxGeometry(84, 2, 2.5), this.materials.accentStrip);
+    accentLip.position.set(0, -2.5, 107.2);
+    laptopRoot.add(accentLip);
 
-    // Awakening Front Lip Amber Light Bar
-    const lipGlowMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(132, 2.4, 3.2),
-      this.materials.lipGlow
-    );
-    lipGlowMesh.position.set(0, -4.2, 107.2);
-    chassisBottomGroup.add(lipGlowMesh);
-    this.groups.lipGlowMesh = lipGlowMesh;
-
-    // 2. Top Keyboard Deck (Baked High-DPI Backlit Keyboard & Trackpad)
-    const keyboardDeckGroup = new THREE.Group();
-    keyboardDeckGroup.position.set(0, 0, 5);
-    laptopRoot.add(keyboardDeckGroup);
-    this.groups.keyboardDeckGroup = keyboardDeckGroup;
-
-    const topDeckMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(302, 2.2, 202),
-      this.materials.deckAluminum
-    );
-    keyboardDeckGroup.add(topDeckMesh);
-
+    // Top keyboard deck surface
     const deckTex = this.createKeyboardDeckTexture();
-    const deckSurfaceMat = new THREE.MeshStandardMaterial({
-      map: deckTex,
-      roughness: 0.42,
-      metalness: 0.35
-    });
-    this.materials.deckSurface = deckSurfaceMat;
-
-    const deckSurfacePlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(298, 198),
-      deckSurfaceMat
+    const deckPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(298, 196),
+      new THREE.MeshStandardMaterial({ map: deckTex, roughness: 0.48, metalness: 0.32 })
     );
-    deckSurfacePlane.rotation.x = -Math.PI / 2;
-    deckSurfacePlane.position.set(0, 1.25, 0);
-    keyboardDeckGroup.add(deckSurfacePlane);
+    deckPlane.rotation.x = -Math.PI / 2;
+    deckPlane.position.set(0, 0.2, 6);
+    laptopRoot.add(deckPlane);
 
-    laptopRoot.add(this.lights.screenSpill);
-
-    // 3. Unified Hinge Barrel & Articulated Lid at (y=1.2, z=-95)
+    // Unified hinge + lid
     const hingePivot = new THREE.Group();
-    hingePivot.position.set(0, 1.2, -95);
+    hingePivot.position.set(0, 1.2, -94);
     laptopRoot.add(hingePivot);
     this.groups.hingePivot = hingePivot;
 
     const hingeBarrel = new THREE.Mesh(
-      new THREE.CylinderGeometry(4.2, 4.2, 230, 14),
-      this.materials.anodizedChamfer
+      new THREE.CylinderGeometry(4, 4, 224, 12),
+      this.materials.chassisChamfer
     );
     hingeBarrel.rotation.z = Math.PI / 2;
     hingePivot.add(hingeBarrel);
 
-    const lidBackGroup = new THREE.Group();
-    hingePivot.add(lidBackGroup);
-    this.groups.lidBackGroup = lidBackGroup;
+    const lidOuter = new THREE.Mesh(new THREE.BoxGeometry(304, 196, 5), this.materials.chassisBody);
+    lidOuter.position.set(0, 98, -2.6);
+    hingePivot.add(lidOuter);
 
-    const lidOuterMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(304, 196, 5.5),
-      this.materials.anodizedDark
+    const ideTex = this.createIdeScreenTexture();
+    const screenPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(292, 184),
+      new THREE.MeshStandardMaterial({
+        map: ideTex,
+        emissiveMap: ideTex,
+        emissive: 0xFFFFFF,
+        emissiveIntensity: 0.56,
+        roughness: 0.25,
+        metalness: 0.06
+      })
     );
-    lidOuterMesh.position.set(0, 98, -2.8);
-    lidBackGroup.add(lidOuterMesh);
-
-    const screenTex = this.createLaptopScreenTexture();
-    const screenMat = new THREE.MeshStandardMaterial({
-      map: screenTex,
-      emissiveMap: screenTex,
-      emissive: 0xFFFFFF,
-      emissiveIntensity: 0.46,
-      roughness: 0.2,
-      metalness: 0.08
-    });
-    this.materials.laptopScreen = screenMat;
-
-    const screenMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(290, 184),
-      screenMat
-    );
-    screenMesh.position.set(0, 98, 0.5);
-    hingePivot.add(screenMesh);
-
-    const glassMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(292, 186),
-      this.materials.screenGlass
-    );
-    glassMesh.position.set(0, 98, 1.5);
-    hingePivot.add(glassMesh);
-    this.groups.laptopGlass = glassMesh;
+    screenPlane.position.set(0, 98, 0.4);
+    hingePivot.add(screenPlane);
   },
 
-  buildPhoneAssembly() {
+  /** Builds sculpted 3D { }, Dart, </>, and Python floating programming icons. */
+  buildFloatingIcons() {
     const THREE = window.THREE;
-    const phoneRoot = new THREE.Group();
-    this.scene.add(phoneRoot);
-    this.groups.phoneRoot = phoneRoot;
-
-    const phoneChassisGroup = new THREE.Group();
-    phoneRoot.add(phoneChassisGroup);
-    this.groups.phoneChassisGroup = phoneChassisGroup;
-
-    const frameMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(96, 194, 10.5),
-      this.materials.titaniumShell
-    );
-    phoneChassisGroup.add(frameMesh);
-
-    // Rear camera bump
-    const camBump = new THREE.Mesh(
-      new THREE.BoxGeometry(42, 42, 3.6),
-      this.materials.anodizedChamfer
-    );
-    camBump.position.set(-20, 64, -6.2);
-    phoneChassisGroup.add(camBump);
-
-    const lensGeom = new THREE.CylinderGeometry(6.5, 6.5, 2.2, 12);
-    const lensMat = new THREE.MeshStandardMaterial({ color: 0x050508, roughness: 0.2, metalness: 0.9 });
-    const lens1 = new THREE.Mesh(lensGeom, lensMat);
-    lens1.rotation.x = Math.PI / 2;
-    lens1.position.set(-28, 72, -7.8);
-    phoneChassisGroup.add(lens1);
-
-    const lens2 = new THREE.Mesh(lensGeom, lensMat);
-    lens2.rotation.x = Math.PI / 2;
-    lens2.position.set(-12, 56, -7.8);
-    phoneChassisGroup.add(lens2);
-
-    const bezelTrim = new THREE.Mesh(
-      new THREE.BoxGeometry(98, 196, 8.2),
-      this.materials.anodizedChamfer
-    );
-    phoneChassisGroup.add(bezelTrim);
-
-    const btnAction = new THREE.Mesh(
-      new THREE.BoxGeometry(2.2, 16, 3.6),
-      this.materials.keycapAccent
-    );
-    btnAction.position.set(-49.2, 42, 0);
-    phoneChassisGroup.add(btnAction);
-
-    const btnPower = new THREE.Mesh(
-      new THREE.BoxGeometry(2.2, 26, 3.6),
-      this.materials.anodizedChamfer
-    );
-    btnPower.position.set(49.2, 28, 0);
-    phoneChassisGroup.add(btnPower);
-
-    const phoneScreenGroup = new THREE.Group();
-    phoneScreenGroup.position.set(0, 0, 5.6);
-    phoneRoot.add(phoneScreenGroup);
-    this.groups.phoneScreenGroup = phoneScreenGroup;
-
-    const phoneTex = this.createPhoneScreenTexture();
-    const phoneScreenMat = new THREE.MeshStandardMaterial({
-      map: phoneTex,
-      emissiveMap: phoneTex,
-      emissive: 0xFFFFFF,
-      emissiveIntensity: 0.48,
-      roughness: 0.18,
-      metalness: 0.08
-    });
-    this.materials.phoneScreen = phoneScreenMat;
-
-    const oledMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(88, 184),
-      phoneScreenMat
-    );
-    phoneScreenGroup.add(oledMesh);
-
-    const islandMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(28, 7.5, 1.4),
-      new THREE.MeshBasicMaterial({ color: 0x050507 })
-    );
-    islandMesh.position.set(0, 80, 0.8);
-    phoneScreenGroup.add(islandMesh);
-
-    const cameraDot = new THREE.Mesh(
-      new THREE.CircleGeometry(2.2, 12),
-      new THREE.MeshBasicMaterial({ color: 0xFF9A5C })
-    );
-    cameraDot.position.set(9, 80, 1.6);
-    phoneScreenGroup.add(cameraDot);
-  },
-
-  bindToolbarAndPointer(viewport, canvas) {
-    const section = DOMUtils.qs('#showcase');
-
-    const onDown = (clientX, clientY) => {
-      this.isDragging = true;
-      this.pointerStart.x = clientX;
-      this.pointerStart.y = clientY;
+    const extrudeOpts = {
+      depth: 4,
+      bevelEnabled: true,
+      bevelThickness: 0.9,
+      bevelSize: 0.7,
+      bevelSegments: 2,
+      curveSegments: 8
     };
 
-    const onMove = (clientX, clientY) => {
-      if (this.isDragging) {
-        const dx = clientX - this.pointerStart.x;
-        const dy = clientY - this.pointerStart.y;
-        this.pointerStart.x = clientX;
-        this.pointerStart.y = clientY;
+    const registerIcon = (name, group, basePos) => {
+      group.position.set(basePos.x, basePos.y, basePos.z);
+      group.userData = { name, basePos: { ...basePos }, currentScale: 1, phase: basePos.phase || 0 };
+      this.groups.stageRoot.add(group);
+      this.interactiveIcons.push(group);
+    };
 
-        this.orbitTarget.yaw = Math.max(-0.45, Math.min(0.45, this.orbitTarget.yaw + dx * 0.0035));
-        this.orbitTarget.pitch = Math.max(-0.25, Math.min(0.25, this.orbitTarget.pitch + dy * 0.0025));
-        this.orbitCurrent.yaw = this.orbitTarget.yaw;
-        this.orbitCurrent.pitch = this.orbitTarget.pitch;
-        this.requestRender();
+    // 1. Left Top: { } Curly Braces
+    const bracesGroup = new THREE.Group();
+    const braceShape = new THREE.Shape();
+    braceShape.moveTo(-4, 15);
+    braceShape.lineTo(-8, 15);
+    braceShape.lineTo(-11, 12);
+    braceShape.lineTo(-11, 3);
+    braceShape.lineTo(-14.5, 0);
+    braceShape.lineTo(-11, -3);
+    braceShape.lineTo(-11, -12);
+    braceShape.lineTo(-8, -15);
+    braceShape.lineTo(-4, -15);
+    braceShape.lineTo(-4, -11.8);
+    braceShape.lineTo(-7, -11.8);
+    braceShape.lineTo(-7.6, -11.2);
+    braceShape.lineTo(-7.6, -2.2);
+    braceShape.lineTo(-10.6, 0);
+    braceShape.lineTo(-7.6, 2.2);
+    braceShape.lineTo(-7.6, 11.2);
+    braceShape.lineTo(-7, 11.8);
+    braceShape.lineTo(-4, 11.8);
+    braceShape.closePath();
+
+    const braceGeo = new THREE.ExtrudeGeometry(braceShape, extrudeOpts);
+    braceGeo.center();
+    const leftBrace = new THREE.Mesh(braceGeo, this.materials.titaniumIcon);
+    leftBrace.position.x = -8;
+    const rightBrace = new THREE.Mesh(braceGeo, this.materials.titaniumIcon);
+    rightBrace.rotation.y = Math.PI;
+    rightBrace.position.x = 8;
+    bracesGroup.add(leftBrace, rightBrace);
+    bracesGroup.rotation.set(0.08, 0.22, -0.05);
+    registerIcon('braces', bracesGroup, { x: -214, y: 94, z: 22, phase: 0.4 });
+
+    // 2. Left Lower: Dart Origami Emblem (Crisp 3-Face Geometric Fold)
+    const dartGroup = new THREE.Group();
+    const foldNose = new THREE.Shape();
+    foldNose.moveTo(-13, 3);
+    foldNose.lineTo(-4, 12);
+    foldNose.lineTo(-1, -1);
+    foldNose.lineTo(-10, -10);
+    foldNose.closePath();
+    const foldNoseMesh = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(foldNose, extrudeOpts),
+      this.materials.dartLight
+    );
+    foldNoseMesh.position.z = -1.5;
+
+    const foldWingTop = new THREE.Shape();
+    foldWingTop.moveTo(-4, 12);
+    foldWingTop.lineTo(10, 12);
+    foldWingTop.lineTo(13, 2);
+    foldWingTop.lineTo(1, -1);
+    foldWingTop.closePath();
+    const foldWingTopMesh = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(foldWingTop, extrudeOpts),
+      this.materials.dartMid
+    );
+    foldWingTopMesh.position.z = -1.9;
+
+    const foldWingBottom = new THREE.Shape();
+    foldWingBottom.moveTo(-1, -1);
+    foldWingBottom.lineTo(13, 2);
+    foldWingBottom.lineTo(13, -12);
+    foldWingBottom.lineTo(0, -12);
+    foldWingBottom.lineTo(-10, -10);
+    foldWingBottom.closePath();
+    const foldWingBottomMesh = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(foldWingBottom, extrudeOpts),
+      this.materials.dartDeep
+    );
+    foldWingBottomMesh.position.z = -2.2;
+
+    dartGroup.add(foldNoseMesh, foldWingTopMesh, foldWingBottomMesh);
+    dartGroup.rotation.set(-0.08, 0.28, 0.08);
+    registerIcon('dart', dartGroup, { x: -208, y: 8, z: 36, phase: 1.9 });
+
+    // 3. Right Top: </> Code Tags
+    const tagsGroup = new THREE.Group();
+    const chevShape = new THREE.Shape();
+    chevShape.moveTo(4, 9.5);
+    chevShape.lineTo(1.5, 12);
+    chevShape.lineTo(-8.5, 0);
+    chevShape.lineTo(1.5, -12);
+    chevShape.lineTo(4, -9.5);
+    chevShape.lineTo(-4.2, 0);
+    chevShape.closePath();
+    const chevGeo = new THREE.ExtrudeGeometry(chevShape, extrudeOpts);
+    chevGeo.center();
+
+    const leftChev = new THREE.Mesh(chevGeo, this.materials.titaniumIcon);
+    leftChev.position.x = -12;
+    const slashMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(2.8, 23, 4.4),
+      this.materials.dartLight
+    );
+    slashMesh.rotation.z = -0.32;
+    const rightChev = new THREE.Mesh(chevGeo, this.materials.titaniumIcon);
+    rightChev.rotation.y = Math.PI;
+    rightChev.position.x = 12;
+
+    tagsGroup.add(leftChev, slashMesh, rightChev);
+    tagsGroup.rotation.set(0.06, -0.24, 0.04);
+    registerIcon('tags', tagsGroup, { x: 214, y: 98, z: 24, phase: 3.1 });
+
+    // 4. Right Bottom: Python Interlocking Dual-Snake Emblem
+    const pyGroup = new THREE.Group();
+    const pyShape = new THREE.Shape();
+    pyShape.moveTo(-5.4, 7.0);
+    pyShape.lineTo(-5.4, 10.4);
+    pyShape.quadraticCurveTo(-5.4, 13.2, -2.4, 13.2);
+    pyShape.lineTo(3.4, 13.2);
+    pyShape.quadraticCurveTo(6.4, 13.2, 6.4, 10.2);
+    pyShape.lineTo(6.4, 3.8);
+    pyShape.quadraticCurveTo(6.4, 0.9, 3.4, 0.9);
+    pyShape.lineTo(-6.2, 0.9);
+    pyShape.quadraticCurveTo(-7.6, 0.9, -7.6, -0.5);
+    pyShape.lineTo(-7.6, -3.4);
+    pyShape.quadraticCurveTo(-7.6, -5.6, -9.8, -5.6);
+    pyShape.lineTo(-10.6, -5.6);
+    pyShape.quadraticCurveTo(-13.0, -5.6, -13.0, -3.2);
+    pyShape.lineTo(-13.0, 4.0);
+    pyShape.quadraticCurveTo(-13.0, 6.6, -9.8, 6.6);
+    pyShape.lineTo(-5.4, 6.6);
+    pyShape.closePath();
+
+    const eyeHole = new THREE.Path();
+    eyeHole.absarc(-2.5, 10.2, 1.15, 0, Math.PI * 2, true);
+    pyShape.holes.push(eyeHole);
+
+    const pyGeo = new THREE.ExtrudeGeometry(pyShape, extrudeOpts);
+    const pyTop = new THREE.Mesh(pyGeo, this.materials.pythonLight);
+    pyTop.position.z = -1.8;
+    const pyBottom = new THREE.Mesh(pyGeo, this.materials.pythonWarm);
+    pyBottom.rotation.z = Math.PI;
+    pyBottom.position.z = -1.8;
+
+    pyGroup.add(pyTop, pyBottom);
+    pyGroup.scale.setScalar(1.1);
+    pyGroup.rotation.set(-0.06, -0.26, -0.05);
+    registerIcon('python', pyGroup, { x: 212, y: 12, z: 36, phase: 4.7 });
+  },
+
+  bindInteractions(container, canvas) {
+    const section = DOMUtils.qs('#showcase');
+    const resetBtn = DOMUtils.qs('#showcase-reset-orbit');
+    const pointerNDC = new window.THREE.Vector2(99, 99);
+
+    const updateResetVisibility = () => {
+      if (!resetBtn) return;
+      const moved = (
+        Math.abs(this.orbitTarget.yaw - this.defaultOrbit.yaw) > 0.08 ||
+        Math.abs(this.orbitTarget.pitch - this.defaultOrbit.pitch) > 0.06
+      );
+      resetBtn.classList.toggle('visible', moved);
+    };
+
+    const resetOrbit = () => {
+      this.orbitTarget.yaw = this.defaultOrbit.yaw;
+      this.orbitTarget.pitch = this.defaultOrbit.pitch;
+      updateResetVisibility();
+    };
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', resetOrbit);
+    }
+    canvas.addEventListener('dblclick', resetOrbit);
+
+    canvas.addEventListener('pointerdown', (e) => {
+      this.isDragging = true;
+      this.pointerStart.x = e.clientX;
+      this.pointerStart.y = e.clientY;
+    });
+
+    container.addEventListener('pointermove', (e) => {
+      if (this.isDragging) {
+        const dx = e.clientX - this.pointerStart.x;
+        const dy = e.clientY - this.pointerStart.y;
+        this.pointerStart.x = e.clientX;
+        this.pointerStart.y = e.clientY;
+        this.orbitTarget.yaw = Math.max(-0.72, Math.min(0.72, this.orbitTarget.yaw + dx * 0.0055));
+        this.orbitTarget.pitch = Math.max(-0.28, Math.min(0.32, this.orbitTarget.pitch + dy * 0.0038));
+        updateResetVisibility();
         return;
       }
 
-      // Subtle hover parallax & ambient light spill when moving pointer inside #showcase
-      if (section && this.isVisible && window.innerWidth > 992) {
-        const rect = this.cachedViewportRect || viewport.getBoundingClientRect();
-        if (clientY >= rect.top - 100 && clientY <= rect.bottom + 100) {
-          const nx = ((clientX - rect.left) / Math.max(1, rect.width)) - 0.5;
-          const ny = ((clientY - rect.top) / Math.max(1, rect.height)) - 0.5;
-          this.hoverParallax.yaw = Math.max(-0.05, Math.min(0.05, nx * 0.09));
-          this.hoverParallax.pitch = Math.max(-0.03, Math.min(0.03, ny * 0.06));
-          section.style.setProperty('--spill-x', `${Math.round(50 + nx * 24)}%`);
-          section.style.setProperty('--spill-y', `${Math.round(52 + ny * 18)}%`);
-          this.requestRender();
-        }
+      if (!this.isVisible || window.innerWidth <= 992) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const nx = ((e.clientX - rect.left) / rect.width) - 0.5;
+      const ny = ((e.clientY - rect.top) / rect.height) - 0.5;
+      this.hoverParallax.yaw = nx * 0.14;
+      this.hoverParallax.pitch = ny * 0.08;
+
+      if (section) {
+        section.style.setProperty('--spill-x', `${(68 + nx * 16).toFixed(1)}%`);
+        section.style.setProperty('--spill-y', `${(44 + ny * 14).toFixed(1)}%`);
       }
-    };
 
-    const onUp = () => {
-      this.isDragging = false;
-    };
-
-    canvas.addEventListener('pointerdown', (e) => {
-      onDown(e.clientX, e.clientY);
-    });
-    window.addEventListener('pointermove', (e) => {
-      onMove(e.clientX, e.clientY);
+      pointerNDC.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointerNDC.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      this.raycaster.setFromCamera(pointerNDC, this.camera);
+      const hits = this.raycaster.intersectObjects(this.interactiveIcons, true);
+      if (hits.length > 0) {
+        let obj = hits[0].object;
+        while (obj.parent && obj.parent !== this.groups.stageRoot) {
+          obj = obj.parent;
+        }
+        this.hoveredIconName = obj.userData?.name || null;
+        canvas.style.cursor = 'pointer';
+      } else {
+        this.hoveredIconName = null;
+        canvas.style.cursor = 'grab';
+      }
     }, { passive: true });
-    window.addEventListener('pointerup', onUp, { passive: true });
+
+    container.addEventListener('pointerleave', () => {
+      this.hoverParallax.yaw = 0;
+      this.hoverParallax.pitch = 0;
+      this.hoveredIconName = null;
+      canvas.style.cursor = 'grab';
+    }, { passive: true });
+
+    window.addEventListener('pointerup', () => {
+      this.isDragging = false;
+      canvas.style.cursor = this.hoveredIconName ? 'pointer' : 'grab';
+    }, { passive: true });
   },
 
-  bindVisibilityObserver(viewport) {
-    if (!('IntersectionObserver' in window)) return;
+  bindVisibilityObserver(container) {
+    if (!('IntersectionObserver' in window)) {
+      this.isVisible = true;
+      return;
+    }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         this.isVisible = entry.isIntersecting;
         if (this.isVisible) {
-          this.requestRender();
+          this.startLoop();
         }
       });
-    }, { rootMargin: '80px 0px' });
-    observer.observe(viewport);
+    }, { rootMargin: '120px 0px' });
+    observer.observe(container);
   },
 
   onResize() {
-    const viewport = DOMUtils.qs('#showcase-viewport');
+    const container = DOMUtils.qs('#showcase-3d-container');
     const canvas = DOMUtils.qs('#showcase-webgl-canvas');
-    if (!viewport || !canvas || !this.renderer || !this.camera) return;
+    if (!container || !canvas || !this.renderer || !this.camera) return;
 
-    const isStacked = window.innerWidth <= 992;
     const isMobile = window.innerWidth <= 768;
+    const rect = container.getBoundingClientRect();
+    const width = Math.max(280, Math.round(rect.width));
+    const height = Math.max(260, Math.round(rect.height));
 
-    const rect = canvas.getBoundingClientRect();
-    const width = Math.max(300, rect.width || viewport.clientWidth);
-    const height = Math.max(400, rect.height || 490);
-
-    const maxDpr = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
-    this.renderer.setPixelRatio(maxDpr);
+    this.renderer.setPixelRatio(isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25));
     this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / height;
 
-    if (isStacked) {
-      this.camera.fov = 38;
-      this.camera.position.set(0, 10, 640);
-      this.camera.lookAt(0, 10, 0);
-    } else {
-      this.camera.fov = 30;
-      this.camera.position.set(0, 0, 480);
-      this.camera.lookAt(0, 0, 0);
-    }
-    this.camera.updateProjectionMatrix();
-    this.requestRender();
-  },
+    const aspect = width / height;
+    this.camera.aspect = aspect;
 
-  applyStateToScene(elapsed) {
-    const isStacked = window.innerWidth <= 992;
-    const s = this.state;
+    // Auto-fit laptop + floating icons without shrinking icon spread into the chassis
+    const fovRad = (this.camera.fov * Math.PI) / 180;
+    const tanHalfFov = Math.tan(fovRad / 2);
 
-    const targetYaw = this.orbitTarget.yaw + (isStacked ? 0 : this.hoverParallax.yaw);
-    const targetPitch = this.orbitTarget.pitch + (isStacked ? 0 : this.hoverParallax.pitch);
-    this.orbitCurrent.yaw += (targetYaw - this.orbitCurrent.yaw) * 0.22;
-    this.orbitCurrent.pitch += (targetPitch - this.orbitCurrent.pitch) * 0.22;
-
-    const effectiveLid = s.manualOverride ? 1 : s.lidOpen;
-    const effectiveSpill = s.manualOverride ? 1 : s.spill;
-
-    const section = DOMUtils.qs('#showcase');
-    if (section) {
-      section.style.setProperty('--spill-alpha', (0.04 + effectiveSpill * 0.08).toFixed(3));
-    }
-
-    const {
-      laptopRoot,
-      phoneRoot,
-      hingePivot,
-      lipGlowMesh
-    } = this.groups;
-
-    // Derive container-aware frustum bounds so 3D hardware scales gracefully across desktop and mobile without clipping
-    const camFov = this.camera?.fov || (isStacked ? 38 : 30);
-    const camZ = this.camera?.position.z || (isStacked ? 640 : 480);
-    const aspect = this.camera?.aspect || (isStacked ? 0.62 : 2.48);
-    const halfH = Math.tan((camFov * Math.PI) / 360) * camZ;
-    const halfW = halfH * aspect;
-
-    // Desktop right-stage layout metrics (editorial header occupies ~42-43% on the left)
-    const textEndX = -halfW + halfW * 2 * 0.43;
-    const rightMinX = textEndX + 18;
-    const rightMaxX = halfW - 10;
-    const availRightW = Math.max(220, rightMaxX - rightMinX);
-
-    const desktopLaptopScale = Math.min(
-      0.76,
-      Math.max(0.48, Math.min(availRightW / 445, (halfH * 2 * 0.84) / 225))
-    );
-    const desktopPhoneScale = desktopLaptopScale * 0.96;
-    const laptopW = 306 * desktopLaptopScale;
-    const phoneW = 98 * desktopPhoneScale;
-    const pairGap = 28 * desktopLaptopScale;
-    const pairTotalW = laptopW + pairGap + phoneW;
-    const pairCenterX = (rightMinX + rightMaxX) * 0.5;
-    const desktopLaptopX = pairCenterX - pairTotalW * 0.5 + laptopW * 0.5;
-    const desktopPhoneX = pairCenterX + pairTotalW * 0.5 - phoneW * 0.5;
-
-    // Mobile/tablet stacked responsive scale metrics
-    const stackedFitW = (halfW * 2 * 0.84) / 310;
-    const stackedLaptopScale = Math.min(0.72, Math.max(0.50, stackedFitW));
-    const stackedPhoneScale = Math.min(0.74, Math.max(0.54, stackedFitW * 1.04));
-
-    if (laptopRoot) {
-      if (isStacked) {
-        laptopRoot.scale.setScalar(stackedLaptopScale);
-        laptopRoot.position.set(0, 58 + (1 - effectiveLid) * 14, 0);
-        laptopRoot.rotation.set(
-          0.24 + this.orbitCurrent.pitch,
-          this.orbitCurrent.yaw,
-          0
-        );
-      } else {
-        laptopRoot.scale.setScalar(desktopLaptopScale);
-        laptopRoot.position.set(
-          desktopLaptopX,
-          -72 * desktopLaptopScale + (1 - effectiveLid) * 14,
-          0
-        );
-        laptopRoot.rotation.set(
-          0.19 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
-          -0.06 + (1 - effectiveLid) * -0.04 + this.orbitCurrent.yaw,
-          0
-        );
-      }
-    }
-
-    if (hingePivot) {
-      const closedAngle = 1.54;
-      const openAngle = -0.18;
-      hingePivot.rotation.x = closedAngle + (openAngle - closedAngle) * effectiveLid;
-    }
-
-    if (lipGlowMesh) {
-      this.materials.lipGlow.opacity = 0.22 + s.lipGlow * 0.78;
-      lipGlowMesh.scale.x = 0.38 + s.lipGlow * 0.62;
-    }
-    if (this.lights.screenSpill) {
-      this.lights.screenSpill.intensity = effectiveSpill * 1.8;
-    }
-
-    if (phoneRoot) {
-      if (isStacked) {
-        phoneRoot.scale.setScalar(stackedPhoneScale);
-        phoneRoot.position.set(0, -104 + (1 - effectiveLid) * 16, 18);
-        phoneRoot.rotation.set(
-          -0.06 + this.orbitCurrent.pitch,
-          this.orbitCurrent.yaw,
-          0
-        );
-      } else {
-        phoneRoot.scale.setScalar(desktopPhoneScale);
-        phoneRoot.position.set(
-          desktopPhoneX,
-          2 + (1 - effectiveLid) * 12,
-          18
-        );
-        phoneRoot.rotation.set(
-          -0.04 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
-          -0.20 + (1 - effectiveLid) * 0.16 + this.orbitCurrent.yaw,
-          0.02
-        );
-      }
-    }
-  },
-
-  updateCalloutLines() {},
-
-  requestRender() {
-    if (!this.isVisible || !this.renderer) return;
-    if (this.renderRequested) return;
-    this.renderRequested = true;
-    requestAnimationFrame(() => {
-      this.renderRequested = false;
-      this.renderFrame();
+    this.interactiveIcons.forEach((icon) => {
+      icon.userData.spreadX = 1.0;
     });
+
+    const halfSceneW = 246;
+    const halfSceneH = 140;
+    const distV = (halfSceneH * 1.04) / tanHalfFov;
+    const distH = (halfSceneW * 1.04) / (tanHalfFov * Math.max(0.62, aspect));
+    const camZ = Math.max(distV, distH);
+
+    this.camera.position.set(0, 118, camZ);
+    this.camera.lookAt(0, 54, 0);
+    this.camera.updateProjectionMatrix();
+    this.renderFrame();
   },
 
   renderFrame() {
     if (!this.renderer || !this.scene || !this.camera) return;
+
     const elapsed = this.clock ? this.clock.getElapsedTime() : 0;
-    this.applyStateToScene(elapsed);
+    const reduced = DOMUtils.prefersReducedMotion();
+
+    const targetYaw = this.orbitTarget.yaw + this.hoverParallax.yaw;
+    const targetPitch = this.orbitTarget.pitch + this.hoverParallax.pitch;
+    this.orbitCurrent.yaw += (targetYaw - this.orbitCurrent.yaw) * 0.14;
+    this.orbitCurrent.pitch += (targetPitch - this.orbitCurrent.pitch) * 0.14;
+
+    if (this.groups.stageRoot) {
+      this.groups.stageRoot.rotation.set(this.orbitCurrent.pitch, this.orbitCurrent.yaw, 0);
+    }
+
+    if (this.groups.hingePivot) {
+      const closedAngle = 1.48;
+      const openAngle = -0.16;
+      this.groups.hingePivot.rotation.x = closedAngle + (openAngle - closedAngle) * this.state.lidOpen;
+    }
+
+    // Subtle living idle levitation + hover scale on sculpted 3D icons
+    this.interactiveIcons.forEach((icon) => {
+      const { name, basePos, phase } = icon.userData;
+      const spread = icon.userData.spreadX || 1.0;
+      const bobY = reduced ? 0 : Math.sin(elapsed * 1.55 + phase) * 4.5;
+      icon.position.set(basePos.x * spread, basePos.y + bobY, basePos.z);
+
+      const isHovered = this.hoveredIconName === name;
+      const targetScale = (name === 'python' ? 1.12 : 1.0) * (isHovered ? 1.16 : 1.0);
+      icon.userData.currentScale += (targetScale - icon.userData.currentScale) * 0.18;
+      icon.scale.setScalar(icon.userData.currentScale);
+    });
+
     this.renderer.render(this.scene, this.camera);
+  },
+
+  startLoop() {
+    if (this.rafId || !this.isVisible || DOMUtils.prefersReducedMotion()) return;
+    const tick = (now) => {
+      if (!this.isVisible) {
+        this.rafId = null;
+        return;
+      }
+      // Cap lightweight continuous frame rate ~40fps to save GPU/battery while staying fluid
+      if (now - this.lastTickMs >= 24) {
+        this.lastTickMs = now;
+        this.renderFrame();
+      }
+      this.rafId = requestAnimationFrame(tick);
+    };
+    this.rafId = requestAnimationFrame(tick);
   }
 };
-window.TeardownShowcase3D = TeardownShowcase3D;
+window.WorkstationShowcase3D = WorkstationShowcase3D;
 
 /**
  * ==========================================================================
- * 11. ANIMATION CONTROLLERS (GSAP + 100% SCROLL-DRIVEN UNIFIED 3D SHOWCASE)
+ * 11. ANIMATION CONTROLLERS (GSAP + LIGHTWEIGHT 3D LID REVEAL)
  * ==========================================================================
  */
 const AnimationController = {
@@ -2919,38 +2502,18 @@ const AnimationController = {
   kineticInitialized: false,
 
   init() {
-    const notebook = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookAssembly);
-    const lid = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookLid);
-    const phone = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.phoneAssembly);
-
     this.initSpotlightCards();
-    const webglReady = TeardownShowcase3D.init();
+    WorkstationShowcase3D.scheduleInit();
 
     if (DOMUtils.prefersReducedMotion() || typeof window.gsap === 'undefined') {
-      const isStacked = window.innerWidth <= 992;
-      if (notebook && !webglReady) {
-        notebook.style.transform = isStacked
-          ? 'translate3d(0px, 0px, 0px) rotateX(-18deg) rotateY(0deg) rotateZ(0deg)'
-          : 'translate3d(0px, 0px, 0px) rotateX(-18deg) rotateY(-8deg) rotateZ(0deg)';
-      }
-      if (lid && !webglReady) lid.style.transform = 'rotateX(12deg)';
-      if (phone && !webglReady) {
-        phone.style.transform = isStacked
-          ? 'translate3d(0px, 0px, 0px) rotateX(-10deg) rotateY(0deg) rotateZ(0deg)'
-          : 'translate3d(0px, 0px, 0px) rotateX(-10deg) rotateY(-14deg) rotateZ(0deg)';
-      }
       DOMUtils.qsa('.arch-draw-line-x').forEach(el => { el.style.transform = 'scaleX(1)'; });
       DOMUtils.qsa('.timeline-vertical-fill, .stack-vertical-axis').forEach(el => { el.style.transform = 'scaleY(1)'; });
-      DOMUtils.qsa('.studio-specialty-badge').forEach(el => {
-        el.style.opacity = '1';
-        el.style.transform = 'translate3d(0, 0, 0)';
-      });
       return;
     }
 
     gsap.registerPlugin(ScrollTrigger);
     this.animateHero();
-    this.initShowcase3D();
+    this.initShowcaseReveal();
     this.initSectionDepthTransitions();
     this.initArchitecturalLines();
     this.initKineticTypography();
@@ -2961,8 +2524,7 @@ const AnimationController = {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        TeardownShowcase3D.onResize();
-        this.initShowcase3D();
+        WorkstationShowcase3D.onResize();
         ScrollTrigger.refresh();
       }, 180);
     }, { passive: true });
@@ -2975,28 +2537,7 @@ const AnimationController = {
     );
   },
 
-  /**
-   * 3-Moment Studio 3D Choreography (100% Scroll-Synchronized, Unified Hinge y=0, z=0)
-   * - Moment 1 (0.00 -> 0.22): Awakening amber lip glow & initial chassis settle
-   * - Moment 2 (0.16 -> 0.78): Smooth lid opening, reactive screen light spill on keyboard,
-   *   specular glass sheen sweep, and independent smartphone parallax trajectory
-   * - Moment 3 (0.68 -> 1.00): 2.5D UI Pop-out (translateZ 12px..24px) & Studio Specialty Badges
-   */
-  initShowcase3D() {
-    const webglActive = TeardownShowcase3D.init();
-    const notebook = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookAssembly);
-    const lid = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookLid);
-    const notebookUI = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.notebookScreenUI);
-    const phone = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.phoneAssembly);
-    const phoneUI = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.phoneScreenUI);
-    const lipGlow = DOMUtils.qs('#lip-awakening-glow');
-    const keyboardSpill = DOMUtils.qs('#keyboard-light-spill');
-    const laptopSheen = DOMUtils.qs('#laptop-specular-sheen');
-    const phoneSheen = DOMUtils.qs('#phone-specular-sheen');
-    const badgeFullstack = DOMUtils.qs('#studio-badge-fullstack');
-    const badgeMobile = DOMUtils.qs('#studio-badge-mobile');
-    const layers25d = DOMUtils.qsa('#showcase-viewport .ui-layer-25d');
-
+  initShowcaseReveal() {
     if (this.showcaseTimeline) {
       if (this.showcaseTimeline.scrollTrigger) {
         this.showcaseTimeline.scrollTrigger.kill();
@@ -3005,158 +2546,23 @@ const AnimationController = {
       this.showcaseTimeline = null;
     }
 
-    const isStacked = window.innerWidth <= 992;
-
-    if (webglActive) {
-      const tlWebgl = gsap.timeline({
-        onUpdate: () => TeardownShowcase3D.requestRender(),
-        scrollTrigger: {
-          trigger: '#showcase-viewport',
-          start: 'top 84%',
-          end: isStacked ? 'bottom 66%' : 'center 42%',
-          scrub: 0.85,
-          invalidateOnRefresh: true,
-          onUpdate: () => TeardownShowcase3D.requestRender()
-        }
-      });
-
-      // Momento 1 (0.00 -> 0.22): Front-lip amber light bar awakens
-      tlWebgl.fromTo(TeardownShowcase3D.state,
-        { lipGlow: 0.22 },
-        { lipGlow: 1, duration: 0.22, ease: 'power2.out' },
-        0
-      );
-
-      // Momento 2 (0.14 -> 0.78): Articulated lid opens + screen light spill onto 3D keyboard
-      tlWebgl.fromTo(TeardownShowcase3D.state,
-        { lidOpen: 0, spill: 0 },
-        { lidOpen: 1, spill: 1, duration: 0.64, ease: 'power2.inOut' },
-        0.14
-      );
-
-      // Momento 3 (0.64 -> 1.00): 2.5D UI Cards pop out & SVG callouts activate
-      tlWebgl.fromTo(TeardownShowcase3D.state,
-        { popout: 0, scrollProgress: 0 },
-        { popout: 1, scrollProgress: 1, duration: 0.36, ease: 'power3.out' },
-        0.64
-      );
-
-      this.showcaseTimeline = tlWebgl;
-      TeardownShowcase3D.requestRender();
-      return;
-    }
-
-    if (!notebook || !lid || !phone) return;
-
-    if (notebookUI) gsap.set(notebookUI, { opacity: 1 });
-    if (phoneUI) gsap.set(phoneUI, { opacity: 1 });
-
     const tl = gsap.timeline({
+      onUpdate: () => WorkstationShowcase3D.renderFrame(),
       scrollTrigger: {
         trigger: '#showcase-viewport',
-        start: 'top 84%',
-        end: isStacked ? 'bottom 66%' : 'center 40%',
-        scrub: 1,
-        invalidateOnRefresh: true
+        start: 'top 90%',
+        end: 'top 22%',
+        scrub: 0.75,
+        invalidateOnRefresh: true,
+        onEnter: () => WorkstationShowcase3D.init(),
+        onUpdate: () => WorkstationShowcase3D.renderFrame()
       }
     });
 
-    // MOMENTO 1 (0.00 -> 0.22): Awakening front-lip amber light line before lid opens
-    if (lipGlow) {
-      tl.fromTo(lipGlow,
-        { opacity: 0.2, scaleX: 0.32 },
-        { opacity: 1, scaleX: 1, duration: 0.22, ease: 'power2.out' },
-        0
-      );
-    }
-
-    // MOMENTO 1 -> 2: Chassis orientation & Coordinated Lid + Smartphone Parallax
-    if (isStacked) {
-      // Stacked Viewports (<= 992px): Strict x: 0 and symmetric centered rotateY -> 0deg
-      tl.fromTo(notebook,
-        { x: 0, y: 14, rotateX: -26, rotateY: -6, rotateZ: 0 },
-        { x: 0, y: 0, rotateX: -18, rotateY: 0, rotateZ: 0, ease: 'power3.out', duration: 0.82 },
-        0
-      );
-
-      tl.fromTo(lid,
-        { rotateX: -82 },
-        { rotateX: 12, ease: 'power2.inOut', duration: 0.64 },
-        0.16
-      );
-
-      tl.fromTo(phone,
-        { x: 0, y: 24, rotateX: -18, rotateY: 6, rotateZ: 0 },
-        { x: 0, y: 0, rotateX: -8, rotateY: 0, rotateZ: 0, ease: 'power3.out', duration: 0.78 },
-        0.14
-      );
-    } else {
-      // Desktop Viewports (> 992px): Studio presentation angles with x: 0 inside dedicated slots
-      tl.fromTo(notebook,
-        { x: 0, y: 20, rotateX: -28, rotateY: -16, rotateZ: -1 },
-        { x: 0, y: 0, rotateX: -18, rotateY: -8, rotateZ: 0, ease: 'power3.out', duration: 0.82 },
-        0
-      );
-
-      tl.fromTo(lid,
-        { rotateX: -82 },
-        { rotateX: 12, ease: 'power2.inOut', duration: 0.64 },
-        0.16
-      );
-
-      tl.fromTo(phone,
-        { x: 0, y: 36, rotateX: -22, rotateY: 22, rotateZ: -3 },
-        { x: 0, y: 0, rotateX: -10, rotateY: -14, rotateZ: 0, ease: 'power3.out', duration: 0.78 },
-        0.14
-      );
-    }
-
-    // MOMENTO 2 (0.20 -> 0.80): Dynamic Screen Light Spill on Keyboard & Specular Glass Sheen
-    if (keyboardSpill) {
-      tl.fromTo(keyboardSpill,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.58, ease: 'power2.out' },
-        0.22
-      );
-    }
-
-    if (laptopSheen) {
-      tl.fromTo(laptopSheen,
-        { backgroundPosition: '130% 0%' },
-        { backgroundPosition: '-30% 0%', duration: 0.68, ease: 'none' },
-        0.18
-      );
-    }
-
-    if (phoneSheen) {
-      tl.fromTo(phoneSheen,
-        { backgroundPosition: '130% 0%' },
-        { backgroundPosition: '-25% 0%', duration: 0.68, ease: 'none' },
-        0.24
-      );
-    }
-
-    // MOMENTO 3 (0.68 -> 1.00): 2.5D UI Pop-out (translateZ 12px..24px) & Studio Specialty Badges
-    layers25d.forEach((layer, idx) => {
-      const targetZ = Number(layer.getAttribute('data-depth') || 16);
-      tl.fromTo(layer,
-        { z: 0 },
-        {
-          z: targetZ,
-          duration: 0.32,
-          ease: 'power3.out'
-        },
-        0.66 + (idx * 0.015)
-      );
-    });
-
-    if (badgeFullstack && badgeMobile) {
-      tl.fromTo([badgeFullstack, badgeMobile],
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.28, stagger: 0.06, ease: 'power3.out' },
-        0.72
-      );
-    }
+    tl.fromTo(WorkstationShowcase3D.state,
+      { lidOpen: 0.58 },
+      { lidOpen: 1, ease: 'power2.out', duration: 1 }
+    );
 
     this.showcaseTimeline = tl;
   },
