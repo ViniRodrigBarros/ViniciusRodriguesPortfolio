@@ -2740,6 +2740,22 @@ const AnimationController = {
         }
       );
     });
+
+    const aiCards = DOMUtils.qsa('#stack-ai-grid .ai-special-card');
+    if (aiCards.length) {
+      gsap.from(aiCards, {
+        y: 16,
+        duration: 0.65,
+        stagger: 0.08,
+        ease: 'expo.out',
+        clearProps: 'transform',
+        scrollTrigger: {
+          trigger: '#stack-ai-grid',
+          start: 'top 94%',
+          once: true
+        }
+      });
+    }
   },
 
   /**

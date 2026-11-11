@@ -837,6 +837,77 @@ section[id] {
   will-change: transform;
 }
 
+/* ==========================================================================
+   5B. AI & AUGMENTED ENGINEERING SUBSECTION (REFINED MATTE FROSTED SURFACE)
+   ========================================================================== */
+.ai-accent-rule {
+  width: 48px;
+  height: 2px;
+  border-radius: 999px;
+  background-color: var(--accent-primary);
+}
+
+.ai-subsection-title {
+  font-size: clamp(1.5rem, 2.2vw + 0.5rem, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.ai-card-title {
+  font-size: clamp(1.125rem, 1.15vw + 0.5rem, 1.3rem);
+  line-height: 1.3;
+}
+
+.ai-special-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    linear-gradient(155deg, rgba(30, 30, 38, 0.72) 0%, rgba(18, 18, 24, 0.88) 100%) padding-box,
+    linear-gradient(135deg, rgba(240, 120, 60, 0.36) 0%, rgba(245, 241, 232, 0.14) 52%, rgba(245, 241, 232, 0.05) 100%) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
+  transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.ai-special-card:hover {
+  transform: translateY(-2px);
+  background:
+    linear-gradient(155deg, rgba(35, 35, 44, 0.78) 0%, rgba(21, 21, 28, 0.92) 100%) padding-box,
+    linear-gradient(135deg, rgba(255, 154, 92, 0.52) 0%, rgba(245, 241, 232, 0.2) 55%, rgba(245, 241, 232, 0.08) 100%) border-box;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.56);
+}
+
+.ai-tool-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.68rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-primary);
+  background-color: rgba(16, 16, 21, 0.72);
+  border: 1px solid rgba(245, 241, 232, 0.14);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.ai-tool-pill:hover {
+  border-color: rgba(240, 120, 60, 0.5);
+  color: var(--accent-secondary);
+}
+
+.ai-tool-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
 /* Masked Kinetic Text Reveal for Section Headings */
 .kinetic-mask {
   display: inline-block;
