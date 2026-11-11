@@ -109,10 +109,15 @@
 
   <main>
     <!-- ==========================================================================
-         SEÇÃO 01 — HERO (EDITORIAL, MATURE & HIGH-CRAFT)
+         SEÇÃO 01 — HERO (EDITORIAL, MATURE & HIGH-CRAFT + TOPO BACKGROUND)
          ========================================================================== -->
-    <section id="hero" class="relative lg:min-h-[92vh] flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-10">
-      <div class="container-editorial my-auto">
+    <section id="hero" class="relative lg:min-h-[92vh] flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-10 overflow-hidden">
+      <!-- @kokonutui/topo-background Interactive Contour Map Canvas (Soft Editorial Tuning) -->
+      <div id="hero-topo-root" class="hero-topo-backdrop" aria-hidden="true">
+        <canvas id="hero-topo-canvas" class="hero-topo-canvas"></canvas>
+      </div>
+
+      <div class="container-editorial my-auto relative z-10">
         <!-- Editorial Eyebrow -->
         <div class="hero-reveal flex flex-wrap items-center justify-between gap-2.5 sm:gap-4 pb-4 mb-5 md:pb-5 md:mb-6 border-b border-[#F5F1E8]/10">
           <div class="eyebrow-label">
@@ -120,7 +125,7 @@
             <span>Engenharia de Software Mobile &amp; Full Stack</span>
           </div>
           <div class="font-mono-meta text-xs text-[#AAA6A0]">
-            3+ anos de experiência • 5+ aplicações em produção
+            <span data-exp-years="plus">4+</span> anos de experiência • 5+ aplicações em produção
           </div>
         </div>
 
@@ -134,9 +139,9 @@
           </h1>
         </div>
 
-        <!-- Asymmetric Editorial Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mt-6 md:mt-10 items-end">
-          <div class="lg:col-span-7 hero-reveal">
+        <!-- Asymmetric Editorial Grid: Headline/Bio & Editorial Portrait -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mt-6 md:mt-10 items-center">
+          <div class="lg:col-span-8 hero-reveal">
             <p class="text-[#AAA6A0] text-base sm:text-lg md:text-xl leading-relaxed font-normal max-w-2xl">
               Engenheiro de software especializado em <strong class="text-[#F5F1E8] font-medium">Flutter, Dart e Kotlin</strong> para Android e iOS, com atuação sólida em <strong class="text-[#F5F1E8] font-medium">React e NestJS</strong>. Experiência comprovada liderando decisões de arquitetura, unificando codebases complexos e construindo sistemas de missão crítica na <strong class="text-[#F5F1E8] font-medium">STTP, Bus2 e Accenture</strong>.
             </p>
@@ -162,44 +167,125 @@
             </div>
           </div>
 
-          <!-- Key Impact Metrics from Real Trajectory -->
-          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 hero-reveal">
-            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
-              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#FF9A5C] min-w-[4.25rem] sm:min-w-0 shrink-0">-75%</div>
-              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
-                Overhead de repositórios com unificação em Flutter Flavors na Bus2.
-              </p>
-            </div>
-            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
-              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#F5F1E8] min-w-[4.25rem] sm:min-w-0 shrink-0">5+</div>
-              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
-                Apps em produção liderados tecnicamente para mobilidade urbana.
-              </p>
-            </div>
-            <div class="editorial-panel flex items-center gap-4 sm:block p-3.5 sm:p-4 md:p-5">
-              <div class="font-serif-editorial italic text-3xl md:text-4xl text-[#FF9A5C] min-w-[4.25rem] sm:min-w-0 shrink-0">-50%</div>
-              <p class="text-xs text-[#AAA6A0] sm:mt-1.5 leading-snug">
-                Tempo de deploy com automação CI/CD para Google Play &amp; App Store.
-              </p>
+          <!-- Editorial Portrait (@impeccable + @design-taste-frontend) -->
+          <div class="lg:col-span-4 hero-reveal flex justify-center lg:justify-end">
+            <div class="hero-portrait-card">
+              <div class="hero-portrait-glow" aria-hidden="true"></div>
+              <div class="hero-portrait-frame">
+                <div class="hero-portrait-inner-bg" aria-hidden="true"></div>
+                <img
+                  src="assets/foto1.png"
+                  alt="Fotografia de perfil profissional de Vinícius Rodrigues"
+                  width="1096"
+                  height="1436"
+                  class="hero-portrait-img"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <div class="hero-portrait-contact-fade" aria-hidden="true"></div>
+                <div class="hero-portrait-corner top-left" aria-hidden="true"></div>
+                <div class="hero-portrait-corner top-right" aria-hidden="true"></div>
+
+                <!-- Editorial Status Pill -->
+                <div class="hero-portrait-badge">
+                  <div class="flex items-center gap-2">
+                    <span class="hero-portrait-status-dot"></span>
+                    <span class="font-mono-meta text-[11px] text-[#F5F1E8] font-medium tracking-wide">VINÍCIUS RODRIGUES</span>
+                  </div>
+                  <span class="font-mono-meta text-[10px] text-[#AAA6A0]">Mobile &amp; Full Stack</span>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- 3 Interactive Trajectory Company Cards (Opens Detailed Engineering Modal) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 md:mt-12 pt-6 border-t border-[#F5F1E8]/10 hero-reveal" role="group" aria-label="Empresas da trajetória profissional">
+          <!-- Card 1: STTP -->
+          <button type="button" data-company-id="sttp" class="hero-company-card editorial-panel spotlight-card text-left p-4 md:p-5 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="company-logo-wrap">
+                  <img src="assets/logos/sttp.png" alt="Logo STTP" class="company-logo-img" loading="eager" />
+                </div>
+                <span class="font-mono-meta text-[10px] text-[#FF9A5C] px-2 py-0.5 rounded bg-[#F0783C]/10 border border-[#F0783C]/25">LEAD</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">STTP</div>
+              <p class="text-xs text-[#AAA6A0] mt-1 leading-snug">
+                Mobile Development Lead &amp; Engenharia de Tráfego
+              </p>
+            </div>
+            <div class="mt-4 pt-2.5 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">
+              <span>Ver atuação</span>
+              <span class="transform group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+            </div>
+          </button>
+
+          <!-- Card 2: Bus2 -->
+          <button type="button" data-company-id="bus2" class="hero-company-card editorial-panel spotlight-card text-left p-4 md:p-5 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="company-logo-wrap">
+                  <img src="assets/logos/bus2.png" alt="Logo Bus2" class="company-logo-img" loading="eager" />
+                </div>
+                <span class="font-mono-meta text-[10px] text-[#AAA6A0] px-2 py-0.5 rounded bg-[#F5F1E8]/5 border border-[#F5F1E8]/10">SCALE</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">Bus2</div>
+              <p class="text-xs text-[#AAA6A0] mt-1 leading-snug">
+                Flutter Mobile Developer • Unificação &amp; Flavors
+              </p>
+            </div>
+            <div class="mt-4 pt-2.5 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">
+              <span>Ver atuação</span>
+              <span class="transform group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+            </div>
+          </button>
+
+          <!-- Card 3: Accenture -->
+          <button type="button" data-company-id="accenture" class="hero-company-card editorial-panel spotlight-card text-left p-4 md:p-5 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="company-logo-wrap">
+                  <img src="assets/logos/accenture.png" alt="Logo Accenture" class="company-logo-img company-logo-accenture" loading="eager" />
+                </div>
+                <span class="font-mono-meta text-[10px] text-[#AAA6A0] px-2 py-0.5 rounded bg-[#F5F1E8]/5 border border-[#F5F1E8]/10">CORP</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">Accenture</div>
+              <p class="text-xs text-[#AAA6A0] mt-1 leading-snug">
+                Software Developer • Full Stack &amp; Mobile
+              </p>
+            </div>
+            <div class="mt-4 pt-2.5 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">
+              <span>Ver atuação</span>
+              <span class="transform group-hover:translate-x-1 transition-transform" aria-hidden="true">→</span>
+            </div>
+          </button>
         </div>
       </div>
 
       <!-- Subtle Scroll Cue -->
-      <div class="container-editorial mt-6 md:mt-8 pt-4 md:pt-5 border-t border-[#F5F1E8]/10 flex items-center justify-between text-xs text-[#AAA6A0]">
+      <div class="container-editorial relative z-10 mt-6 md:mt-8 pt-4 md:pt-5 border-t border-[#F5F1E8]/10 flex items-center justify-between text-xs text-[#AAA6A0]">
         <span>Role naturalmente para acompanhar a composição 3D</span>
         <span class="font-mono-meta text-[#F0783C]">SCROLL ↓</span>
       </div>
     </section>
 
     <!-- ==========================================================================
-         SEÇÃO 02 — SHOWCASE 3D (GEOMETRIA UNIFICADA y=0, z=0 • 100% SCROLL)
+         SEÇÃO 02 — SHOWCASE 3D UNIFICADO (SEM CAIXA ISOLADA • BACKGROUND INTEGRADO)
          ========================================================================== -->
-    <section id="showcase" class="section-alt py-24 md:py-32 relative">
-      <div class="container-editorial depth-transition-shell" data-depth-section="showcase">
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
-          <div class="max-w-3xl">
+    <section id="showcase" class="showcase-unified-section py-24 md:py-32 relative overflow-hidden">
+      <!-- Ambient Reactive Studio Light Spill uniting Header, 3D Hardware & Specialty Cards -->
+      <div id="showcase-ambient-spill" class="showcase-ambient-spill" aria-hidden="true"></div>
+
+      <div class="container-editorial depth-transition-shell relative z-10" data-depth-section="showcase">
+        <!-- UNIFIED ORGANIC 3D STAGE (Header + Top-Right Smartphone + Centered Lower Notebook) -->
+        <div id="showcase-viewport" class="stage-3d-viewport showcase-unified-stage" aria-label="Composição 3D integrada de Smartphone e Notebook com visão explodida e corte técnico">
+          <!-- Full-Section Seamless WebGL Physical PBR Canvas -->
+          <canvas id="showcase-webgl-canvas" class="showcase-webgl-canvas" aria-hidden="true"></canvas>
+
+          <!-- Top Asymmetric Editorial Row: Left Typography & Controls (Smartphone floats in the right 3D space!) -->
+          <div class="showcase-editorial-header relative z-10 max-w-2xl">
             <div class="eyebrow-label mb-3">
               <span class="eyebrow-line"></span>
               <span>01 / Domínio Multiplataforma &amp; Full Stack</span>
@@ -207,88 +293,14 @@
             <h2 class="section-title kinetic-heading">
               Engenharia integrada entre <span class="font-serif-editorial italic font-normal text-[#FF9A5C]">sistemas web</span> e <span class="font-serif-editorial italic font-normal text-[#F5F1E8]">aplicações nativas</span>.
             </h2>
-            <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-2xl">
-              Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: a construção de arquiteturas web/APIs escaláveis e o desenvolvimento de aplicativos móveis de alta precisão.
+            <!-- Subtitle and ambient description -->
+            <p class="text-[#AAA6A0] text-base md:text-lg mt-4 leading-relaxed max-w-xl">
+              Conforme você avança na leitura, a composição tridimensional apresenta os dois pilares da minha atuação: arquiteturas web/APIs escaláveis e aplicativos móveis de alta precisão.
             </p>
           </div>
 
-          <!-- @teardown Interactive Camera & Hardware Inspection Controls -->
-          <div id="showcase-toolbar" class="showcase-toolbar flex flex-wrap items-center gap-2" role="toolbar" aria-label="Modos de inspeção 3D e corte técnico">
-            <button type="button" class="teardown-mode-btn active" data-teardown-mode="studio" aria-pressed="true">
-              <span class="teardown-btn-dot"></span>
-              <span>Estúdio</span>
-            </button>
-            <button type="button" class="teardown-mode-btn" data-teardown-mode="exploded" aria-pressed="false">
-              <span>Explodido</span>
-            </button>
-            <button type="button" class="teardown-mode-btn" data-teardown-mode="cutaway" aria-pressed="false">
-              <span>Cutaway</span>
-            </button>
-            <button type="button" class="teardown-mode-btn" data-teardown-mode="mobile" aria-pressed="false">
-              <span>Foco Mobile</span>
-            </button>
-            <button type="button" class="teardown-mode-btn teardown-reset-btn" data-teardown-mode="reset" aria-label="Restaurar câmera e sincronização com a rolagem">
-              <span>Reset</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 3D STUDIO VIEWPORT (Three.js PBR Hardware + Exploded/Cutaway + CSS3D Progressive Fallback) -->
-        <div id="showcase-viewport" class="stage-3d-viewport showcase-stage spotlight-card" aria-label="Composição 3D interativa de Notebook e Smartphone com visão explodida e corte técnico">
-          <!-- WebGL Physical PBR Canvas -->
-          <canvas id="showcase-webgl-canvas" class="showcase-webgl-canvas" aria-hidden="true"></canvas>
-
-          <!-- Live 3D-Projected SVG Callout Leaders & Architectural Readouts (@teardown console pattern) -->
-          <div id="showcase-callouts-layer" class="showcase-callouts-layer" aria-hidden="true">
-            <svg id="showcase-callouts-svg" class="showcase-callouts-svg" preserveAspectRatio="none"></svg>
-
-            <div id="callout-card-fullstack" class="teardown-callout-card">
-              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 // FULL STACK ENGINE</div>
-              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">React • TypeScript • NestJS</div>
-              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">GitHub Actions &amp; Jenkins CI/CD</div>
-            </div>
-
-            <div id="callout-card-flavors" class="teardown-callout-card">
-              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 // UNIFIED FLAVORS V5</div>
-              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">AppBus2 v5 • Codebase Único</div>
-              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">-75% Overhead • 80%+ Cobertura</div>
-            </div>
-
-            <div id="callout-card-ai" class="teardown-callout-card">
-              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 // ON-DEVICE AI NPU</div>
-              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">LocalSpeak • 100% Offline</div>
-              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">sherpa_onnx + flutter_gemma</div>
-            </div>
-
-            <div id="callout-card-telemetry" class="teardown-callout-card">
-              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">04 // REAL-TIME TELEMETRY</div>
-              <div class="text-xs font-semibold text-[#F5F1E8] mt-0.5">NEAT &amp; Bus2Driver • WebSocket</div>
-              <div class="font-mono-meta text-[10px] text-[#AAA6A0] mt-0.5">Dart Isolates • -40% Startup</div>
-            </div>
-          </div>
-
-          <!-- Interactive Stage Status Bar -->
-          <div class="showcase-hud-footer" aria-hidden="true">
-            <span id="showcase-hud-status" class="font-mono-meta text-[10px] text-[#AAA6A0]">
-              MODO: ESTÚDIO PBR • SINCRONIZADO AO SCROLL
-            </span>
-            <span class="font-mono-meta text-[10px] text-[#8E8A84] hidden sm:inline">
-              ARRASTE PARA ORBITAR 3D • SELECIONE EXPLODIDO OU CUTAWAY PARA INSPECIONAR CAMADAS
-            </span>
-          </div>
-          <!-- Moment 3 Floating Studio Indicator: Full Stack Architecture -->
-          <div id="studio-badge-fullstack" class="studio-specialty-badge studio-badge-left" aria-hidden="true">
-            <span class="studio-badge-dot"></span>
-            <span class="font-mono-meta text-[10px] tracking-wider text-[#F5F1E8]">FULL STACK ARCHITECTURE</span>
-            <span class="font-mono-meta text-[9px] text-[#FF9A5C]">REACT • NESTJS • CI/CD</span>
-          </div>
-
-          <!-- Moment 3 Floating Studio Indicator: Mobile Engineering -->
-          <div id="studio-badge-mobile" class="studio-specialty-badge studio-badge-right" aria-hidden="true">
-            <span class="studio-badge-dot"></span>
-            <span class="font-mono-meta text-[10px] tracking-wider text-[#F5F1E8]">MOBILE ENGINEERING</span>
-            <span class="font-mono-meta text-[9px] text-[#FF9A5C]">FLUTTER • KOTLIN • ON-DEVICE AI</span>
-          </div>
+          <!-- Dedicated Spatial Anchor Space for the Centered 3D Workstation Notebook -->
+          <div class="showcase-notebook-zone" aria-hidden="true"></div>
 
           <!-- SLOT 1: COHESIVE 3D WORKSTATION LAPTOP (Unified Hinge Axis y=0, z=0) -->
           <div class="laptop-stage-slot">
@@ -535,19 +547,19 @@
           </div>
         </div>
 
-        <!-- Two Core Engineering Pillars -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <div class="editorial-panel spotlight-card p-7 md:p-9">
+        <!-- Two Core Engineering Pillars (Unified into the Ambient Studio Stage) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 relative z-10">
+          <div class="editorial-panel showcase-pillar-card spotlight-card p-7 md:p-9">
             <div class="font-mono-meta text-xs text-[#FF9A5C] mb-2">01 / Mobile Engineering &amp; Technical Leadership</div>
             <h3 class="text-xl md:text-2xl font-semibold text-[#F5F1E8]">
               Flutter, Dart &amp; Kotlin em Escala de Produção
             </h3>
             <p class="text-[#AAA6A0] text-sm md:text-base mt-3 leading-relaxed max-w-[65ch]">
-              Mais de 3 anos projetando e publicando aplicativos Android e iOS desde a concepção até a Google Play e App Store. Domínio de <strong class="text-[#F5F1E8] font-medium">Clean Architecture, MVVM, BLoC/Cubit, Flutter Modular e Flavors</strong>, com experiência prática em geolocalização em tempo real via WebSocket, persistência offline com SQLite, Method Channels nativos e processamento paralelo com Dart Isolates.
+              Mais de <span data-exp-years="number">4</span> anos projetando e publicando aplicativos Android e iOS desde a concepção até a Google Play e App Store. Domínio de <strong class="text-[#F5F1E8] font-medium">Clean Architecture, MVVM, BLoC/Cubit, Flutter Modular e Flavors</strong>, com experiência prática em geolocalização em tempo real via WebSocket, persistência offline com SQLite, Method Channels nativos e processamento paralelo com Dart Isolates.
             </p>
           </div>
 
-          <div class="editorial-panel spotlight-card p-7 md:p-9">
+          <div class="editorial-panel showcase-pillar-card spotlight-card p-7 md:p-9">
             <div class="font-mono-meta text-xs text-[#FF9A5C] mb-2">02 / Full Stack &amp; Software Architecture</div>
             <h3 class="text-xl md:text-2xl font-semibold text-[#F5F1E8]">
               Ecossistema Web, APIs &amp; Automação CI/CD
@@ -583,7 +595,7 @@
                   <div class="font-mono-meta text-xs text-[#AAA6A0] mt-0.5">Engenheiro de Computação (IFPB)</div>
                 </div>
                 <span class="px-2.5 py-1 rounded text-xs font-mono-meta bg-[#F0783C]/15 text-[#FF9A5C] border border-[#F0783C]/30">
-                  3+ Anos Exp.
+                  <span data-exp-years="plus">4+</span> Anos Exp.
                 </span>
               </div>
 

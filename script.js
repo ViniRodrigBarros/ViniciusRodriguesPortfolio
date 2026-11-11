@@ -40,7 +40,8 @@ const PORTFOLIO_CONFIG = Object.freeze({
     phone: '+55 83 99832-6890',
     github: 'https://github.com/ViniRodrigBarros',
     linkedin: 'https://www.linkedin.com/in/vinicius-rodrigues-948656225/'
-  }
+  },
+  careerStartDate: '2022-01-01'
 });
 
 /**
@@ -49,6 +50,106 @@ const PORTFOLIO_CONFIG = Object.freeze({
  * ==========================================================================
  */
 const PORTFOLIO_DATA = Object.freeze({
+  companies: [
+    {
+      id: 'sttp',
+      name: 'STTP — Superintendência de Trânsito e Transportes Públicos',
+      shortName: 'STTP',
+      logoPath: 'assets/logos/sttp.png',
+      categoryLabel: 'Setor Público • Mobilidade Urbana & Engenharia de Tráfego',
+      roleSummary: 'Mobile Development Lead | Flutter Developer (Pleno)',
+      period: 'Jan 2022 – Presente (Estágio / Júnior → Mobile Development Lead)',
+      location: 'Campina Grande, PB',
+      metrics: [
+        '+25% Velocidade de Sprint',
+        '-30% Defeitos em Produção',
+        '5+ Apps Públicos em Operação',
+        '+20% Eficiência em Campo'
+      ],
+      scopeOverview: 'Trajetória completa desde o primeiro estágio em engenharia de software (Jan 2022) até a liderança técnica da frente mobile municipal, coordenando arquitetura, Code Review, padronização em BLoC/Clean Architecture e sustentação de mais de 5 aplicativos oficiais utilizados diariamente por agentes de trânsito e cidadãos.',
+      progression: [
+        {
+          role: 'Mobile Development Lead | Flutter Developer (Mid-Level)',
+          period: 'Dez 2024 – Presente',
+          highlight: 'Liderança técnica da equipe mobile, definição de arquitetura padrão (Clean Architecture + BLoC/Cubit), revisão de código e mentoria direta de desenvolvedores juniores.'
+        },
+        {
+          role: 'Mobile Developer (Intern / Junior)',
+          period: 'Jan 2022 – Nov 2024',
+          highlight: 'Desenvolvimento do app NEAT e digitalização dos fluxos de vistoria e sinistros em campo, reduzindo em 50% o retrabalho com formulários físicos.'
+        }
+      ],
+      keyDecisions: [
+        'Padronização da arquitetura mobile em camadas desacopladas (Presentation, Domain, Data) com BLoC/Cubit, elevando em 25% a velocidade de entrega nas sprints e reduzindo em 30% os defeitos em produção.',
+        'Engenharia de motores Offline-First resilientes com SQLite e sincronização automática via REST/Firebase para operação ininterrupta de agentes em zonas sem cobertura de rede.',
+        'Integração avançada de geolocalização e Google Maps SDK para mapeamento estatístico de pontos críticos e prevenção de acidentes viários.'
+      ],
+      technologies: ['Flutter', 'Dart', 'Clean Architecture', 'BLoC / Cubit', 'SQLite', 'Firebase', 'REST APIs', 'Google Maps API', 'Technical Leadership']
+    },
+    {
+      id: 'bus2',
+      name: 'Bus2 — Mobilidade Urbana & Telemetria em Escala',
+      shortName: 'Bus2',
+      logoPath: 'assets/logos/bus2.png',
+      categoryLabel: 'Escala Internacional • 40+ Apps White-Label & Milhões de Usuários',
+      roleSummary: 'Flutter Mobile Developer • Arquitetura Multi-Flavor & Performance',
+      period: 'Fev 2023 – Out 2025',
+      location: 'Remoto / Escala Internacional (América Latina)',
+      metrics: [
+        '-75% Overhead de Repositórios',
+        '-40% Tempo de Startup (Isolates)',
+        '+60% Velocidade de Features',
+        '+35% Coordenação de Frota',
+        '80%+ Cobertura de Testes'
+      ],
+      scopeOverview: 'Atuação estratégica no núcleo de engenharia mobile de uma plataforma de mobilidade urbana utilizada por milhões de passageiros em dezenas de cidades e consórcios de transporte público.',
+      progression: [
+        {
+          role: 'Flutter Mobile Developer (AppBus2 v5 & Bus2Driver)',
+          period: 'Fev 2023 – Out 2025',
+          highlight: 'Unificação da arquitetura multi-repositório em um codebase único com Flutter Flavors (Dev, Stg, Prod) para mais de 40 variantes white-label.'
+        }
+      ],
+      keyDecisions: [
+        'Consolidação de dezenas de repositórios regionais em uma arquitetura unificada baseada em Flutter Flavors, reduzindo em 75% o esforço de manutenção e acelerando em 60% a entrega de novas funcionalidades.',
+        'Processamento pesado de rotas, polylines e JSONs de horários em background via Dart Isolates, eliminando travamentos de UI e reduzindo o tempo de inicialização em 40%.',
+        'Implementação de streaming bidirecional via WebSocket no Bus2Driver para telemetria veicular contínua, elevando em 35% a precisão de coordenação entre motoristas e central.',
+        'Automação de pipelines CI/CD multi-loja com GitHub Actions e cobertura de testes automatizados (Unit, Widget e Integration) superior a 80%, reduzindo regressões em 45%.'
+      ],
+      technologies: ['Flutter', 'Dart Isolates', 'Multi-Flavor Architecture', 'BLoC & Cubit', 'WebSocket', 'Google Maps SDK', 'GitHub Actions CI/CD', 'Unit & Widget Testing']
+    },
+    {
+      id: 'accenture',
+      name: 'Accenture — Engenharia Corporativa & Sistemas Distribuídos',
+      shortName: 'Accenture',
+      logoPath: 'assets/logos/accenture.png',
+      categoryLabel: 'Consultoria Global • Full Stack & Mobile Enterprise Engineering',
+      roleSummary: 'Software Developer • Full Stack & Mobile (Flutter, React, NestJS)',
+      period: '2026 – Presente • Projetos Corporativos',
+      location: 'Campina Grande, PB / Híbrido',
+      metrics: [
+        'Clean Architecture & SOLID',
+        'Microsserviços Distribuídos',
+        'Full Stack & Mobile (Flutter / React / NestJS)',
+        'Governança & Escala Global'
+      ],
+      scopeOverview: 'Desenvolvimento e arquitetura de sistemas corporativos de missão crítica, conectando aplicações móveis e front-ends reativos a backends distribuídos orientados a microsserviços.',
+      progression: [
+        {
+          role: 'Software Developer (Full Stack & Mobile Engineering)',
+          period: '2026 – Presente',
+          highlight: 'Construção ponta a ponta de módulos escaláveis em Flutter, Kotlin, React/TypeScript e APIs distribuídas em NestJS e Java (Spring Boot).'
+        }
+      ],
+      keyDecisions: [
+        'Aplicação estrita de Clean Architecture, princípios SOLID e padrões de projeto corporativos para garantir testabilidade, isolamento de domínio e baixa acoplagem entre equipes.',
+        'Integração de front-ends modernos (Flutter e React/TypeScript) com gateways e microsserviços em NestJS e Spring Boot sob governança ágil Scrum e pipelines de revisão contínua.',
+        'Otimização de contratos de dados, resiliência de integração e observabilidade em ambientes corporativos de alta disponibilidade.'
+      ],
+      technologies: ['Flutter', 'React', 'NestJS', 'TypeScript', 'Kotlin', 'Java (Spring Boot)', 'Clean Architecture', 'Microsserviços', 'Scrum']
+    }
+  ],
+
   experiences: [
     {
       id: 'accenture',
@@ -321,6 +422,431 @@ const DOMUtils = {
   },
   prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  },
+  getExperienceYears() {
+    const start = new Date(PORTFOLIO_CONFIG.careerStartDate + 'T00:00:00');
+    const now = new Date();
+    const diffYears = (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 365.2425);
+    return Math.max(4, Math.floor(diffYears));
+  }
+};
+
+/**
+ * ==========================================================================
+ * 9B. TOPOGRAPHICAL HERO BACKGROUND (@kokonutui/topo-background v1.1.0 PORT)
+ * ==========================================================================
+ * Soft editorial contour map with 3D Perlin noise, marching-squares contour
+ * tracing, destination-out knockout elevation labels, interactive cursor hill,
+ * click wave ripples, and idle frame rate throttling.
+ */
+function createTopoNoise(seed = 42) {
+  const p = new Uint8Array(256);
+  for (let i = 0; i < 256; i++) p[i] = i;
+  let s = seed;
+  for (let i = 255; i > 0; i--) {
+    s = (s * 16807) % 2147483647;
+    const j = s % (i + 1);
+    const tmp = p[i];
+    p[i] = p[j];
+    p[j] = tmp;
+  }
+  const perm = new Uint8Array(512);
+  for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
+
+  const fade = (t) => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a, b, t) => a + t * (b - a);
+  const grad = (hash, x, y, z) => {
+    const h = hash & 15;
+    const u = h < 8 ? x : y;
+    const v = h < 4 ? y : (h === 12 || h === 14 ? x : z);
+    return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+  };
+
+  return function noise3D(x, y, z = 0) {
+    const X = Math.floor(x) & 255;
+    const Y = Math.floor(y) & 255;
+    const Z = Math.floor(z) & 255;
+    const xf = x - Math.floor(x);
+    const yf = y - Math.floor(y);
+    const zf = z - Math.floor(z);
+    const u = fade(xf);
+    const v = fade(yf);
+    const w = fade(zf);
+
+    const A = perm[X] + Y;
+    const AA = perm[A] + Z;
+    const AB = perm[A + 1] + Z;
+    const B = perm[X + 1] + Y;
+    const BA = perm[B] + Z;
+    const BB = perm[B + 1] + Z;
+
+    return lerp(
+      lerp(
+        lerp(grad(perm[AA], xf, yf, zf), grad(perm[BA], xf - 1, yf, zf), u),
+        lerp(grad(perm[AB], xf, yf - 1, zf), grad(perm[BB], xf - 1, yf - 1, zf), u),
+        v
+      ),
+      lerp(
+        lerp(grad(perm[AA + 1], xf, yf, zf - 1), grad(perm[BA + 1], xf - 1, yf, zf - 1), u),
+        lerp(grad(perm[AB + 1], xf, yf - 1, zf - 1), grad(perm[BB + 1], xf - 1, yf - 1, zf - 1), u),
+        v
+      ),
+      w
+    );
+  };
+}
+
+const TopoHeroBackground = {
+  rafId: 0,
+  isVisible: true,
+
+  init() {
+    const container = DOMUtils.qs('#hero');
+    const canvas = DOMUtils.qs('#hero-topo-canvas');
+    if (!container || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const noise = createTopoNoise(42);
+    const CELL = 22;
+    const interval = 0.085;
+    const speed = 0.45;
+    const HILL_RADIUS = 220;
+    const HILL_STRENGTH = 0.32;
+    const RIPPLE_SPEED = 160;
+    const RIPPLE_MAX_R = 260;
+    const RIPPLE_WAVELENGTH = 54;
+    const RIPPLE_STRENGTH = 0.12;
+    const SPRING = 0.035;
+    const DAMPING = 0.85;
+
+    const hill = {
+      x: -9999,
+      y: -9999,
+      vx: 0,
+      vy: 0,
+      targetX: -9999,
+      targetY: -9999,
+      active: false,
+      strength: 0
+    };
+    const ripples = [];
+    let time = 0;
+    let lastRenderTime = 0;
+    let lastInteractionTime = performance.now();
+
+    const syncSize = () => {
+      const isMobile = window.innerWidth <= 768;
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.25);
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    syncSize();
+
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(syncSize);
+      ro.observe(container);
+    }
+
+    const noteInteraction = () => {
+      lastInteractionTime = performance.now();
+    };
+
+    container.addEventListener('pointermove', (e) => {
+      noteInteraction();
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (!hill.active) {
+        hill.x = x;
+        hill.y = y;
+        hill.vx = 0;
+        hill.vy = 0;
+      }
+      hill.targetX = x;
+      hill.targetY = y;
+      hill.active = true;
+    }, { passive: true });
+
+    container.addEventListener('pointerleave', () => {
+      noteInteraction();
+      hill.active = false;
+    }, { passive: true });
+
+    container.addEventListener('click', (e) => {
+      if (e.target.closest('button, a')) return;
+      noteInteraction();
+      const rect = canvas.getBoundingClientRect();
+      ripples.push({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        t0: time
+      });
+    }, { passive: true });
+
+    const stepHill = () => {
+      const target = hill.active ? 1 : 0;
+      hill.strength += (target - hill.strength) * 0.055;
+      if (hill.strength < 0.002 && !hill.active) {
+        hill.strength = 0;
+        return;
+      }
+      const ax = (hill.targetX - hill.x) * SPRING;
+      const ay = (hill.targetY - hill.y) * SPRING;
+      hill.vx = (hill.vx + ax) * DAMPING;
+      hill.vy = (hill.vy + ay) * DAMPING;
+      hill.x += hill.vx;
+      hill.y += hill.vy;
+    };
+
+    const getElevation = (gx, gy, t) => {
+      const scale = 0.0024;
+      const px = gx * CELL;
+      const py = gy * CELL;
+      const x = px * scale;
+      const y = py * scale;
+
+      let val =
+        noise(x + t * 0.09, y + t * 0.07, t * 0.05) * 0.62 +
+        noise(x * 2.2 - t * 0.06, y * 2.2 + t * 0.08, t * 0.04) * 0.26 +
+        noise(x * 4.4 + t * 0.12, y * 4.4 - t * 0.09, t * 0.03) * 0.12;
+
+      if (hill.strength > 0) {
+        const dx = px - hill.x;
+        const dy = py - hill.y;
+        const r2 = dx * dx + dy * dy;
+        const R2 = HILL_RADIUS * HILL_RADIUS;
+        if (r2 < R2 * 3) {
+          val += HILL_STRENGTH * hill.strength * Math.exp(-r2 / (2 * R2 * 0.42));
+        }
+      }
+
+      for (let i = 0; i < ripples.length; i++) {
+        const rp = ripples[i];
+        const age = t - rp.t0;
+        const frontR = age * RIPPLE_SPEED;
+        const dx = px - rp.x;
+        const dy = py - rp.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const delta = dist - frontR;
+        const envelope = Math.exp(-(delta * delta) / (2 * 26 * 26));
+        const distFade = Math.max(0, 1 - frontR / RIPPLE_MAX_R);
+        val += RIPPLE_STRENGTH * envelope * distFade * Math.cos((delta / RIPPLE_WAVELENGTH) * Math.PI * 2);
+      }
+
+      return val;
+    };
+
+    // Marching squares segment tables (KokonutUI algorithm)
+    const traceContours = (field, cols, rows, level) => {
+      const segments = [];
+      const interp = (v0, v1) => {
+        if (Math.abs(v1 - v0) < 1e-6) return 0.5;
+        return (level - v0) / (v1 - v0);
+      };
+
+      for (let gy = 0; gy < rows - 1; gy++) {
+        for (let gx = 0; gx < cols - 1; gx++) {
+          const idx = gy * cols + gx;
+          const tl = field[idx];
+          const tr = field[idx + 1];
+          const br = field[idx + cols + 1];
+          const bl = field[idx + cols];
+
+          let code = 0;
+          if (tl >= level) code |= 8;
+          if (tr >= level) code |= 4;
+          if (br >= level) code |= 2;
+          if (bl >= level) code |= 1;
+          if (code === 0 || code === 15) continue;
+
+          const x = gx * CELL;
+          const y = gy * CELL;
+          const top = [x + interp(tl, tr) * CELL, y];
+          const right = [x + CELL, y + interp(tr, br) * CELL];
+          const bottom = [x + interp(bl, br) * CELL, y + CELL];
+          const left = [x, y + interp(tl, bl) * CELL];
+
+          switch (code) {
+            case 1:
+            case 14:
+              segments.push([left[0], left[1], bottom[0], bottom[1]]);
+              break;
+            case 2:
+            case 13:
+              segments.push([bottom[0], bottom[1], right[0], right[1]]);
+              break;
+            case 3:
+            case 12:
+              segments.push([left[0], left[1], right[0], right[1]]);
+              break;
+            case 4:
+            case 11:
+              segments.push([top[0], top[1], right[0], right[1]]);
+              break;
+            case 5:
+              segments.push([left[0], left[1], top[0], top[1]]);
+              segments.push([bottom[0], bottom[1], right[0], right[1]]);
+              break;
+            case 6:
+            case 9:
+              segments.push([top[0], top[1], bottom[0], bottom[1]]);
+              break;
+            case 7:
+            case 8:
+              segments.push([left[0], left[1], top[0], top[1]]);
+              break;
+            case 10:
+              segments.push([top[0], top[1], right[0], right[1]]);
+              segments.push([left[0], left[1], bottom[0], bottom[1]]);
+              break;
+          }
+        }
+      }
+      return segments;
+    };
+
+    const drawFrame = () => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w <= 0 || h <= 0) return;
+
+      const cols = Math.ceil(w / CELL) + 2;
+      const rows = Math.ceil(h / CELL) + 2;
+      const field = new Float32Array(cols * rows);
+
+      stepHill();
+
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        if ((time - ripples[i].t0) * RIPPLE_SPEED > RIPPLE_MAX_R) {
+          ripples.splice(i, 1);
+        }
+      }
+
+      for (let gy = 0; gy < rows; gy++) {
+        for (let gx = 0; gx < cols; gx++) {
+          field[gy * cols + gx] = getElevation(gx, gy, time);
+        }
+      }
+
+      ctx.clearRect(0, 0, w, h);
+
+      const minLevel = -0.75;
+      const maxLevel = 0.75;
+      let levelIndex = 0;
+      const labelCandidates = [];
+
+      for (let level = minLevel; level <= maxLevel; level += interval) {
+        const isMajor = levelIndex % 4 === 0;
+        const segments = traceContours(field, cols, rows, level);
+
+        if (segments.length > 0) {
+          ctx.beginPath();
+          // Softer editorial alpha tuning requested by user
+          ctx.strokeStyle = isMajor
+            ? 'rgba(240, 120, 60, 0.16)'
+            : 'rgba(245, 241, 232, 0.052)';
+          ctx.lineWidth = isMajor ? 1.15 : 0.65;
+          ctx.lineCap = 'round';
+
+          for (let i = 0; i < segments.length; i++) {
+            const s = segments[i];
+            ctx.moveTo(s[0], s[1]);
+            ctx.lineTo(s[2], s[3]);
+          }
+          ctx.stroke();
+
+          // Collect survey elevation label candidate for major contours
+          if (isMajor && segments.length > 20) {
+            const pickIdx = Math.floor(segments.length * 0.62);
+            const seg = segments[pickIdx];
+            if (seg) {
+              const lx = (seg[0] + seg[2]) / 2;
+              const ly = (seg[1] + seg[3]) / 2;
+              // Ensure labels stay in visible editorial bounds
+              if (lx > 40 && lx < w - 60 && ly > 60 && ly < h - 60) {
+                const elev = Math.round((level + 1) * 450);
+                labelCandidates.push({ x: lx, y: ly, text: `${elev}m` });
+              }
+            }
+          }
+        }
+        levelIndex++;
+      }
+
+      // Draw elevation labels with destination-out knockouts (KokonutUI feature)
+      if (labelCandidates.length > 0) {
+        ctx.font = '500 9px "JetBrains Mono", monospace';
+        const spaced = [];
+        for (const cand of labelCandidates) {
+          const tooClose = spaced.some(
+            (s) => Math.hypot(s.x - cand.x, s.y - cand.y) < 180
+          );
+          if (!tooClose) spaced.push(cand);
+        }
+
+        // Pass 1: Destination-out knockout to clear contour lines behind text
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = '#000000';
+        for (const lbl of spaced) {
+          const metrics = ctx.measureText(lbl.text);
+          ctx.fillRect(lbl.x - 3, lbl.y - 10, metrics.width + 6, 13);
+        }
+        ctx.restore();
+
+        // Pass 2: Draw amber survey text
+        ctx.fillStyle = 'rgba(240, 120, 60, 0.32)';
+        for (const lbl of spaced) {
+          ctx.fillText(lbl.text, lbl.x, lbl.y);
+        }
+      }
+    };
+
+    if (DOMUtils.prefersReducedMotion()) {
+      drawFrame();
+      return;
+    }
+
+    const animate = (timestamp) => {
+      if (!this.isVisible) {
+        this.rafId = 0;
+        return;
+      }
+
+      // Throttling: 60 FPS when interacting or settling, ~30 FPS when idle
+      const isInteracting = (performance.now() - lastInteractionTime < 1400) || hill.strength > 0.01 || ripples.length > 0;
+      const minFrameInterval = isInteracting ? 16 : 33;
+
+      if (!lastRenderTime || (timestamp - lastRenderTime) >= minFrameInterval) {
+        lastRenderTime = timestamp;
+        time += 0.007 * speed;
+        drawFrame();
+      }
+
+      this.rafId = requestAnimationFrame(animate);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const wasVisible = this.isVisible;
+          this.isVisible = entry.isIntersecting;
+          if (this.isVisible && !wasVisible && !this.rafId) {
+            this.rafId = requestAnimationFrame(animate);
+          }
+        });
+      }, { rootMargin: '80px 0px' });
+      io.observe(container);
+    }
+
+    this.rafId = requestAnimationFrame(animate);
   }
 };
 
@@ -331,6 +857,110 @@ const DOMUtils = {
  */
 const UIComponents = {
   lastModalTrigger: null,
+
+  renderDynamicExperienceYears() {
+    const years = DOMUtils.getExperienceYears();
+    DOMUtils.qsa('[data-exp-years="plus"]').forEach((el) => {
+      el.textContent = `${years}+`;
+    });
+    DOMUtils.qsa('[data-exp-years="number"]').forEach((el) => {
+      el.textContent = `${years}`;
+    });
+
+    const ogDesc = DOMUtils.qs('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute(
+        'content',
+        `Engenheiro de Software Mobile com mais de ${years} anos de experiência em arquitetura escalável, liderança técnica na STTP, unificação de código na Bus2 e engenharia full stack na Accenture.`
+      );
+    }
+  },
+
+  openCompanyModal(companyId, triggerEl = null) {
+    const company = PORTFOLIO_DATA.companies.find((c) => c.id === companyId);
+    if (!company) return;
+
+    const modal = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.caseModal);
+    const titleEl = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalTitle);
+    const catEl = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalCategory);
+    const bodyEl = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalBody);
+    const closeBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalCloseBtn);
+
+    if (!modal || !titleEl || !catEl || !bodyEl) return;
+
+    this.lastModalTrigger = triggerEl || document.activeElement;
+
+    catEl.textContent = company.categoryLabel;
+    titleEl.textContent = company.name;
+
+    bodyEl.innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#F5F1E8]/10">
+        <div class="flex items-center gap-4">
+          <div class="px-3.5 py-2 rounded-lg bg-[#191920] border border-[#F0783C]/30">
+            <img src="${DOMUtils.escapeHTML(company.logoPath)}" alt="Logo ${DOMUtils.escapeHTML(company.shortName)}" class="modal-company-logo" />
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-[#F5F1E8]">${DOMUtils.escapeHTML(company.roleSummary)}</div>
+            <div class="font-mono-meta text-xs text-[#FF9A5C] mt-0.5">${DOMUtils.escapeHTML(company.period)} • ${DOMUtils.escapeHTML(company.location)}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        ${company.metrics.map((m) => `<span class="metric-badge">${DOMUtils.escapeHTML(m)}</span>`).join('')}
+      </div>
+
+      <div>
+        <h4 class="font-mono-meta text-xs text-[#FF9A5C] uppercase mb-1.5">Escopo de Atuação &amp; Liderança Técnica</h4>
+        <p class="text-[#F5F1E8] leading-relaxed">${DOMUtils.escapeHTML(company.scopeOverview)}</p>
+      </div>
+
+      <div>
+        <h4 class="font-mono-meta text-xs text-[#FF9A5C] uppercase mb-2">Progressão &amp; Responsabilidades</h4>
+        <div class="space-y-3">
+          ${company.progression.map((step) => `
+            <div class="p-3.5 rounded-lg bg-[#18181F] border border-[#F5F1E8]/10">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-sm font-semibold text-[#F5F1E8]">${DOMUtils.escapeHTML(step.role)}</span>
+                <span class="font-mono-meta text-[11px] text-[#FF9A5C]">${DOMUtils.escapeHTML(step.period)}</span>
+              </div>
+              <p class="text-xs md:text-sm text-[#AAA6A0] mt-1.5 leading-relaxed">${DOMUtils.escapeHTML(step.highlight)}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-mono-meta text-xs text-[#FF9A5C] uppercase mb-2">Decisões de Arquitetura &amp; Resultados</h4>
+        <ul class="space-y-2.5">
+          ${company.keyDecisions.map((dec) => `
+            <li class="flex items-start gap-2.5 text-[#AAA6A0]">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F0783C] mt-2 shrink-0"></span>
+              <span>${DOMUtils.escapeHTML(dec)}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+
+      <div class="pt-4 border-t border-[#F5F1E8]/10 flex flex-wrap items-center justify-between gap-4">
+        <div class="font-mono-meta text-xs text-[#AAA6A0]">
+          <span class="text-[#F5F1E8]">Stack &amp; Domínio:</span> ${company.technologies.map((t) => DOMUtils.escapeHTML(t)).join(' · ')}
+        </div>
+        <a href="#experiencia" onclick="UIComponents.closeCaseModal()" class="btn-secondary-editorial text-xs py-2 px-4">
+          <span>Ver na Linha do Tempo</span>
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    `;
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    if (closeBtn) {
+      setTimeout(() => closeBtn.focus(), 20);
+    }
+  },
 
   renderExperience() {
     const container = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.experienceContainer);
@@ -803,13 +1433,18 @@ const TeardownShowcase3D = {
   camera: null,
   pmremGenerator: null,
   rafId: null,
+  renderRequested: false,
   isVisible: true,
   isInitialized: false,
   isDragging: false,
   pointerStart: { x: 0, y: 0 },
   orbitTarget: { yaw: 0, pitch: 0 },
   orbitCurrent: { yaw: 0, pitch: 0 },
+  hoverParallax: { yaw: 0, pitch: 0 },
   clock: null,
+  cachedViewportRect: null,
+  cachedCalloutRects: [],
+  calloutsWereActive: false,
 
   state: {
     mode: 'studio',
@@ -843,16 +1478,18 @@ const TeardownShowcase3D = {
 
     try {
       const THREE = window.THREE;
+      const isMobile = window.innerWidth <= 768;
       const renderer = new THREE.WebGLRenderer({
         canvas,
         antialias: true,
         alpha: true,
-        powerPreference: 'high-performance'
+        powerPreference: 'default'
       });
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const maxDpr = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
+      renderer.setPixelRatio(maxDpr);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.14;
+      renderer.toneMappingExposure = 1.16;
       if ('outputEncoding' in renderer && THREE.sRGBEncoding) {
         renderer.outputEncoding = THREE.sRGBEncoding;
       }
@@ -881,7 +1518,7 @@ const TeardownShowcase3D = {
         this.state.spill = 1;
         this.state.popout = 1;
       }
-      this.renderFrame();
+      this.requestRender();
 
       return true;
     } catch (err) {
@@ -899,23 +1536,23 @@ const TeardownShowcase3D = {
       envScene.background = new THREE.Color(0x0B0B0D);
 
       const topSoftbox = new THREE.Mesh(
-        new THREE.PlaneGeometry(500, 320),
+        new THREE.PlaneGeometry(540, 340),
         new THREE.MeshBasicMaterial({ color: 0xF5F1E8, side: THREE.DoubleSide })
       );
-      topSoftbox.position.set(-60, 240, 120);
+      topSoftbox.position.set(-40, 250, 130);
       topSoftbox.rotation.x = Math.PI / 2.3;
       envScene.add(topSoftbox);
 
       const rimPanel = new THREE.Mesh(
-        new THREE.PlaneGeometry(360, 260),
+        new THREE.PlaneGeometry(380, 280),
         new THREE.MeshBasicMaterial({ color: 0xF0783C, side: THREE.DoubleSide })
       );
-      rimPanel.position.set(250, 60, -140);
+      rimPanel.position.set(250, 80, -140);
       rimPanel.lookAt(0, 0, 0);
       envScene.add(rimPanel);
 
       const fillStrip = new THREE.Mesh(
-        new THREE.PlaneGeometry(300, 240),
+        new THREE.PlaneGeometry(320, 240),
         new THREE.MeshBasicMaterial({ color: 0x64748B, side: THREE.DoubleSide })
       );
       fillStrip.position.set(-260, 40, 90);
@@ -924,7 +1561,13 @@ const TeardownShowcase3D = {
 
       const envRT = pmrem.fromScene(envScene, 0.045);
       this.scene.environment = envRT.texture;
-      this.pmremGenerator = pmrem;
+      pmrem.dispose();
+      topSoftbox.geometry.dispose();
+      topSoftbox.material.dispose();
+      rimPanel.geometry.dispose();
+      rimPanel.material.dispose();
+      fillStrip.geometry.dispose();
+      fillStrip.material.dispose();
     } catch (_) {
       // Fallback to direct lights if PMREM fails
     }
@@ -933,27 +1576,27 @@ const TeardownShowcase3D = {
   buildLighting() {
     const THREE = window.THREE;
 
-    const hemi = new THREE.HemisphereLight(0xF5F1E8, 0x0B0B0D, 0.55);
+    const hemi = new THREE.HemisphereLight(0xF5F1E8, 0x0B0B0D, 0.58);
     this.scene.add(hemi);
 
     // Key Light (Warm Studio Ivory)
-    const keyLight = new THREE.DirectionalLight(0xF5F1E8, 1.38);
+    const keyLight = new THREE.DirectionalLight(0xF5F1E8, 1.42);
     keyLight.position.set(-180, 260, 240);
     this.scene.add(keyLight);
 
     // Rim Light (Warm Burnt Orange Accent)
-    const rimLight = new THREE.PointLight(0xF0783C, 1.85, 720, 1.6);
-    rimLight.position.set(210, 95, -140);
+    const rimLight = new THREE.PointLight(0xF0783C, 1.95, 760, 1.6);
+    rimLight.position.set(220, 110, -130);
     this.scene.add(rimLight);
 
     // Cool Slate Fill Light
-    const fillLight = new THREE.DirectionalLight(0x94A3B8, 0.62);
+    const fillLight = new THREE.DirectionalLight(0x94A3B8, 0.65);
     fillLight.position.set(160, -80, 220);
     this.scene.add(fillLight);
 
     // Dynamic Screen Light Spill onto Keyboard Deck
-    const screenSpill = new THREE.PointLight(0xF0783C, 0, 240, 1.7);
-    screenSpill.position.set(0, 46, -15);
+    const screenSpill = new THREE.PointLight(0xF0783C, 0, 260, 1.65);
+    screenSpill.position.set(0, 48, -12);
     this.lights.screenSpill = screenSpill;
   },
 
@@ -961,27 +1604,27 @@ const TeardownShowcase3D = {
     const THREE = window.THREE;
 
     this.materials.anodizedDark = new THREE.MeshStandardMaterial({
-      color: 0x191920,
-      roughness: 0.46,
-      metalness: 0.85
+      color: 0x1A1A22,
+      roughness: 0.45,
+      metalness: 0.86
     });
 
     this.materials.anodizedChamfer = new THREE.MeshStandardMaterial({
-      color: 0x2B2B36,
-      roughness: 0.38,
-      metalness: 0.88
+      color: 0x2E2E3A,
+      roughness: 0.36,
+      metalness: 0.89
     });
 
     this.materials.titaniumShell = new THREE.MeshStandardMaterial({
-      color: 0x22222B,
-      roughness: 0.44,
-      metalness: 0.87
+      color: 0x23232D,
+      roughness: 0.42,
+      metalness: 0.88
     });
 
     this.materials.deckAluminum = new THREE.MeshStandardMaterial({
-      color: 0x1D1D25,
-      roughness: 0.47,
-      metalness: 0.83,
+      color: 0x1E1E27,
+      roughness: 0.46,
+      metalness: 0.84,
       transparent: true,
       opacity: 1
     });
@@ -996,25 +1639,17 @@ const TeardownShowcase3D = {
     this.materials.copperPipe = new THREE.MeshStandardMaterial({
       color: 0xE07238,
       emissive: 0x3A1405,
-      emissiveIntensity: 0.25,
-      roughness: 0.34,
-      metalness: 0.91
-    });
-
-    this.materials.keycapDark = new THREE.MeshStandardMaterial({
-      color: 0x0E0E13,
-      roughness: 0.62,
-      metalness: 0.24,
-      transparent: true,
-      opacity: 1
+      emissiveIntensity: 0.28,
+      roughness: 0.32,
+      metalness: 0.92
     });
 
     this.materials.keycapAccent = new THREE.MeshStandardMaterial({
       color: 0xF0783C,
       emissive: 0xF0783C,
-      emissiveIntensity: 0.22,
-      roughness: 0.45,
-      metalness: 0.35
+      emissiveIntensity: 0.25,
+      roughness: 0.42,
+      metalness: 0.38
     });
 
     this.materials.lipGlow = new THREE.MeshBasicMaterial({
@@ -1025,10 +1660,10 @@ const TeardownShowcase3D = {
 
     this.materials.screenGlass = new THREE.MeshStandardMaterial({
       color: 0xFFFFFF,
-      roughness: 0.12,
-      metalness: 0.15,
+      roughness: 0.1,
+      metalness: 0.14,
       transparent: true,
-      opacity: 0.18
+      opacity: 0.14
     });
   },
 
@@ -1048,300 +1683,551 @@ const TeardownShowcase3D = {
     return tex;
   },
 
-  createLaptopScreenTexture() {
-    return this.makeCanvasTexture(1600, 1020, (ctx, w, h) => {
-      const bg = ctx.createLinearGradient(0, 0, w, h);
-      bg.addColorStop(0, '#0E0E13');
-      bg.addColorStop(1, '#09090C');
-      ctx.fillStyle = bg;
+  drawRoundedRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  },
+
+  /**
+   * Optimized Procedural MacBook Pro Keyboard & Trackpad Texture
+   */
+  createKeyboardDeckTexture() {
+    const origW = 1024;
+    const origH = 680;
+    const targetW = 768;
+    const targetH = 510;
+    const scale = targetW / origW;
+
+    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
+      ctx.scale(scale, scale);
+      const w = origW;
+      const h = origH;
+
+      ctx.fillStyle = '#1B1B23';
       ctx.fillRect(0, 0, w, h);
 
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.035)';
-      ctx.lineWidth = 1;
-      for (let x = 0; x < w; x += 64) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-      for (let y = 0; y < h; y += 64) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
+      // Speaker grilles on left and right
+      ctx.fillStyle = 'rgba(8, 8, 12, 0.65)';
+      for (let sy = 56; sy < 370; sy += 7) {
+        for (let sx = 24; sx < 58; sx += 7) {
+          ctx.fillRect(sx, sy, 2.5, 2.5);
+          ctx.fillRect(w - sx - 3, sy, 2.5, 2.5);
+        }
       }
 
-      ctx.fillStyle = '#14141B';
-      ctx.fillRect(0, 0, w, 78);
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.1)';
-      ctx.beginPath();
-      ctx.moveTo(0, 78);
-      ctx.lineTo(w, 78);
+      // Recessed dark anodized keyboard well
+      this.drawRoundedRect(ctx, 72, 38, w - 144, 356, 14);
+      ctx.fillStyle = '#0A0A0E';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      const dots = ['#F0783C', 'rgba(245,241,232,0.32)', 'rgba(245,241,232,0.16)'];
-      dots.forEach((c, i) => {
-        ctx.fillStyle = c;
-        ctx.beginPath();
-        ctx.arc(46 + i * 28, 39, 8, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '600 22px "JetBrains Mono", monospace';
-      ctx.fillText('architecture // fullstack-mobility-engine.ts', 148, 47);
-
-      ctx.fillStyle = 'rgba(240, 120, 60, 0.14)';
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.45)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(w - 310, 18, 266, 42);
-      ctx.fillRect(w - 310, 18, 266, 42);
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 19px "JetBrains Mono", monospace';
-      ctx.fillText('NESTJS + REACT + TS', w - 288, 46);
-
-      ctx.fillStyle = 'rgba(20, 20, 26, 0.85)';
-      ctx.fillRect(44, 116, 900, 620);
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
-      ctx.strokeRect(44, 116, 900, 620);
-
-      const codeLines = [
-        ['01', '#FF9A5C', '@WebSocketGateway({ cors: true, namespace: "/telemetry" })'],
-        ['02', '#F5F1E8', 'export class MobilityGateway {'],
-        ['03', '#B8B2A6', '  constructor(private readonly tracker: FleetService) {}'],
-        ['04', '#F0783C', '  @SubscribeMessage("sync_fleet_state")'],
-        ['05', '#F5F1E8', '  async streamVehicleTelemetry(payload: GpsFrame) {'],
-        ['06', '#6EE7B7', '    return this.tracker.dispatchNormalized(payload);'],
-        ['07', '#F5F1E8', '  }'],
-        ['08', '#B8B2A6', '  // White-label Flavors: 40+ apps (Dev / Stg / Prod)'],
-        ['09', '#FF9A5C', '  public verifyReleaseHealth(): ReleaseMetrics {'],
-        ['10', '#F5F1E8', '    return { overhead: "-75%", coverage: "80%+" };'],
-        ['11', '#F5F1E8', '  }'],
-        ['12', '#F5F1E8', '}']
+      // 6 rows of backlit keys with crisp legends
+      const rows = [
+        ['ESC', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', '◉'],
+        ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '⌫'],
+        ['TAB', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', '\\'],
+        ['CAPS', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', "'", 'RETURN'],
+        ['SHIFT', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'SHIFT'],
+        ['fn', 'ctrl', 'opt', 'cmd', 'SPACE', 'cmd', 'opt', '◀', '▲▼', '▶']
       ];
 
-      codeLines.forEach(([num, color, text], idx) => {
-        const y = 176 + idx * 45;
-        ctx.fillStyle = 'rgba(184, 178, 166, 0.45)';
-        ctx.font = '500 22px "JetBrains Mono", monospace';
-        ctx.fillText(num, 74, y);
-        ctx.fillStyle = color;
-        ctx.font = '500 23px "JetBrains Mono", monospace';
-        ctx.fillText(text, 132, y);
+      const wellX = 84;
+      const wellW = w - 168;
+      let curY = 48;
+
+      rows.forEach((row, rIdx) => {
+        const rowH = rIdx === 0 ? 38 : 52;
+        const weights = row.map((label) => {
+          if (label === 'SPACE') return 4.8;
+          if (label === 'SHIFT') return 2.1;
+          if (label === 'RETURN' || label === 'CAPS') return 1.75;
+          if (label === 'TAB' || label === '⌫') return 1.45;
+          if (label === 'cmd') return 1.25;
+          return 1;
+        });
+        const totalWeight = weights.reduce((a, b) => a + b, 0);
+        const gap = 7;
+        const availW = wellW - gap * (row.length - 1);
+        let curX = wellX;
+
+        row.forEach((label, cIdx) => {
+          const kw = (weights[cIdx] / totalWeight) * availW;
+          const isEsc = rIdx === 0 && cIdx === 0;
+
+          this.drawRoundedRect(ctx, curX, curY, kw, rowH, 6);
+          ctx.fillStyle = isEsc ? '#D9642A' : '#13131A';
+          ctx.fill();
+
+          ctx.strokeStyle = isEsc ? '#FF9A5C' : 'rgba(245, 241, 232, 0.16)';
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+
+          ctx.fillStyle = isEsc ? '#0B0B0D' : 'rgba(245, 241, 232, 0.78)';
+          ctx.font = rIdx === 0 || label.length > 1
+            ? '600 12px "JetBrains Mono", monospace'
+            : '600 15px "Plus Jakarta Sans", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          if (label !== 'SPACE') {
+            ctx.fillText(label, curX + kw / 2, curY + rowH / 2 + 1);
+          }
+
+          curX += kw + gap;
+        });
+
+        curY += rowH + 7;
       });
 
-      ctx.fillStyle = 'rgba(25, 25, 32, 0.92)';
-      ctx.fillRect(980, 116, 576, 620);
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.35)';
-      ctx.strokeRect(980, 116, 576, 620);
-
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 20px "JetBrains Mono", monospace';
-      ctx.fillText('ECOSSISTEMA EM PRODUÇÃO', 1020, 172);
-
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 44px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('40+ Apps', 1020, 240);
-      ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = '#B8B2A6';
-      ctx.fillText('White-Label & Telemetria Real-Time', 1020, 284);
-
-      const bars = [
-        ['AppBus2 v5 • Core', 0.94],
-        ['NEAT • Bilhetagem & QR', 0.88],
-        ['Bus2Driver • GPS Stream', 0.91],
-        ['STTP • SaaS Público', 0.86]
-      ];
-      bars.forEach(([label, ratio], i) => {
-        const by = 350 + i * 82;
-        ctx.fillStyle = '#F5F1E8';
-        ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(label, 1020, by);
-
-        ctx.fillStyle = 'rgba(245, 241, 232, 0.08)';
-        ctx.fillRect(1020, by + 16, 496, 14);
-        ctx.fillStyle = '#F0783C';
-        ctx.fillRect(1020, by + 16, Math.round(496 * ratio), 14);
-      });
-
-      const metrics = [
-        ['FLAVORS CI/CD', 'Dev • Stg • Prod', '#F5F1E8'],
-        ['SETUP & OVERHEAD', '-75% Tempo', '#FF9A5C'],
-        ['COBERTURA TESTES', '80%+ Unit/Widget', '#6EE7B7']
-      ];
-      metrics.forEach(([k, v, col], idx) => {
-        const mx = 44 + idx * 518;
-        ctx.fillStyle = 'rgba(22, 22, 29, 0.95)';
-        ctx.fillRect(mx, 774, 488, 196);
-        ctx.strokeStyle = 'rgba(245, 241, 232, 0.12)';
-        ctx.strokeRect(mx, 774, 488, 196);
-
-        ctx.fillStyle = '#B8B2A6';
-        ctx.font = '600 19px "JetBrains Mono", monospace';
-        ctx.fillText(k, mx + 34, 832);
-
-        ctx.fillStyle = col;
-        ctx.font = '700 42px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(v, mx + 34, 908);
-      });
+      // Force Touch Glass Trackpad
+      const tpW = 340;
+      const tpH = 210;
+      const tpX = (w - tpW) / 2;
+      const tpY = 426;
+      this.drawRoundedRect(ctx, tpX, tpY, tpW, tpH, 16);
+      const tpGrad = ctx.createLinearGradient(tpX, tpY, tpX + tpW, tpY + tpH);
+      tpGrad.addColorStop(0, '#16161E');
+      tpGrad.addColorStop(1, '#121218');
+      ctx.fillStyle = tpGrad;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.12)';
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
     });
   },
 
-  createLogicBoardTexture() {
-    return this.makeCanvasTexture(1024, 640, (ctx, w, h) => {
-      ctx.fillStyle = '#0B0D10';
-      ctx.fillRect(0, 0, w, h);
+  /**
+   * Optimized macOS Sequoia Dark Engineering Workspace & Live Telemetry Canvas
+   */
+  createLaptopScreenTexture() {
+    const origW = 1600;
+    const origH = 1020;
+    const targetW = 1200;
+    const targetH = 765;
+    const scale = targetW / origW;
 
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.26)';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 28; i++) {
-        const y = 40 + i * 20;
-        ctx.beginPath();
-        ctx.moveTo(60, y);
-        ctx.lineTo(w / 2 - 90, y);
-        ctx.lineTo(w / 2 - 40, h / 2);
-        ctx.stroke();
+    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
+      ctx.scale(scale, scale);
+      const w = origW;
+      const h = origH;
 
-        ctx.beginPath();
-        ctx.moveTo(w - 60, y);
-        ctx.lineTo(w / 2 + 90, y);
-        ctx.lineTo(w / 2 + 40, h / 2);
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = '#F0783C';
-      for (let x = 80; x < w - 80; x += 28) {
-        ctx.fillRect(x, 18, 14, 22);
-        ctx.fillRect(x, h - 40, 14, 22);
-      }
-
-      ctx.fillStyle = '#181820';
-      ctx.fillRect(w / 2 - 140, h / 2 - 95, 280, 190);
-      ctx.strokeStyle = '#FF9A5C';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(w / 2 - 140, h / 2 - 95, 280, 190);
-
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 22px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('VR • FULL STACK CORE', w / 2, h / 2 - 16);
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 18px "JetBrains Mono", monospace';
-      ctx.fillText('REACT • NESTJS • DOCKER', w / 2, h / 2 + 22);
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 15px "JetBrains Mono", monospace';
-      ctx.fillText('TELEMETRY BUS // 60FPS', w / 2, h / 2 + 56);
-    });
-  },
-
-  createCardTexture(title, subtitle, highlight, badge) {
-    return this.makeCanvasTexture(640, 280, (ctx, w, h) => {
-      ctx.fillStyle = 'rgba(20, 20, 26, 0.96)';
-      ctx.fillRect(0, 0, w, h);
-
-      ctx.strokeStyle = 'rgba(240, 120, 60, 0.55)';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(2, 2, w - 4, h - 4);
-
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 19px "JetBrains Mono", monospace';
-      ctx.fillText(badge, 32, 48);
-
-      ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 34px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(title, 32, 112);
-
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(subtitle, 32, 162);
-
-      ctx.fillStyle = 'rgba(240, 120, 60, 0.14)';
-      ctx.fillRect(32, 194, w - 64, 54);
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '600 21px "JetBrains Mono", monospace';
-      ctx.fillText(highlight, 50, 229);
-    });
-  },
-
-  createPhoneScreenTexture() {
-    return this.makeCanvasTexture(900, 1840, (ctx, w, h) => {
-      const bg = ctx.createLinearGradient(0, 0, 0, h);
-      bg.addColorStop(0, '#121218');
+      // Deep studio wallpaper gradient
+      const bg = ctx.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#0C0C11');
+      bg.addColorStop(0.55, '#101017');
       bg.addColorStop(1, '#09090D');
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = '#B8B2A6';
-      ctx.font = '600 26px "JetBrains Mono", monospace';
-      ctx.fillText('9:41', 68, 86);
-      ctx.fillStyle = '#6EE7B7';
-      ctx.fillText('5G • IA LOCAL', w - 255, 86);
+      // Ambient warm radial glow inside screen
+      const glow = ctx.createRadialGradient(w * 0.72, h * 0.36, 40, w * 0.72, h * 0.36, 620);
+      glow.addColorStop(0, 'rgba(240, 120, 60, 0.16)');
+      glow.addColorStop(1, 'rgba(240, 120, 60, 0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 24px "JetBrains Mono", monospace';
-      ctx.fillText('FLUTTER • DART • ON-DEVICE AI', 64, 210);
+      // macOS Top Menu Bar
+      ctx.fillStyle = 'rgba(18, 18, 24, 0.94)';
+      ctx.fillRect(0, 0, w, 54);
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 54);
+      ctx.lineTo(w, 54);
+      ctx.stroke();
+
+      // Traffic lights
+      const dots = ['#FF5F56', '#FFBD2E', '#27C93F'];
+      dots.forEach((c, i) => {
+        ctx.fillStyle = c;
+        ctx.beginPath();
+        ctx.arc(36 + i * 24, 27, 7, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
       ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 54px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Mobile Core', 64, 286);
+      ctx.font = '600 18px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('vinicius-rodrigues — mobility-platform-v5', 124, 33);
 
-      ctx.fillStyle = '#181822';
-      ctx.fillRect(56, 350, w - 112, 540);
+      // Right status pill in menu bar
+      this.drawRoundedRect(ctx, w - 370, 11, 340, 32, 16);
+      ctx.fillStyle = 'rgba(240, 120, 60, 0.15)';
+      ctx.fill();
       ctx.strokeStyle = 'rgba(240, 120, 60, 0.45)';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(56, 350, w - 112, 540);
-
+      ctx.stroke();
       ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 22px "JetBrains Mono", monospace';
-      ctx.fillText('LOCALSKEAK // OFFLINE LLM', 96, 418);
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText('● CI/CD GREEN • 40+ FLAVORS • 60FPS', w - 350, 32);
 
+      // 1. Left Sidebar (Project Explorer)
+      this.drawRoundedRect(ctx, 24, 76, 280, h - 100, 16);
+      ctx.fillStyle = 'rgba(20, 20, 27, 0.9)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.08)';
+      ctx.stroke();
+
+      ctx.fillStyle = '#8E8A84';
+      ctx.font = '600 14px "JetBrains Mono", monospace';
+      ctx.fillText('WORKSPACE // MONOREPO', 48, 116);
+
+      const files = [
+        ['▾ packages/core_mobility', '#F5F1E8', false],
+        ['  ▸ isolates_worker.dart', '#6EE7B7', false],
+        ['  ▸ flavor_config.dart', '#FF9A5C', true],
+        ['  ▸ offline_sync_sqlite.dart', '#B8B2A6', false],
+        ['▾ services/telemetry-api', '#F5F1E8', false],
+        ['  ▸ fleet.gateway.ts', '#FF9A5C', false],
+        ['  ▸ redis.stream.ts', '#B8B2A6', false],
+        ['▾ apps/local_speak_ai', '#F5F1E8', false],
+        ['  ▸ sherpa_stt_engine.dart', '#6EE7B7', false],
+        ['  ▸ gemma_local_llm.dart', '#B8B2A6', false]
+      ];
+
+      files.forEach(([name, col, active], idx) => {
+        const fy = 160 + idx * 46;
+        if (active) {
+          this.drawRoundedRect(ctx, 36, fy - 24, 256, 36, 8);
+          ctx.fillStyle = 'rgba(240, 120, 60, 0.16)';
+          ctx.fill();
+        }
+        ctx.fillStyle = col;
+        ctx.font = active ? '600 16px "JetBrains Mono", monospace' : '500 15px "JetBrains Mono", monospace';
+        ctx.fillText(name, 48, fy);
+      });
+
+      // Lower sidebar architecture summary card
+      this.drawRoundedRect(ctx, 40, h - 240, 248, 190, 12);
+      ctx.fillStyle = 'rgba(14, 14, 19, 0.95)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.3)';
+      ctx.stroke();
+      ctx.fillStyle = '#FF9A5C';
+      ctx.font = '600 14px "JetBrains Mono", monospace';
+      ctx.fillText('RELEASE HEALTH', 60, h - 202);
       ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 40px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Voz & IA Sem Nuvem', 96, 486);
+      ctx.font = '700 36px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('-75%', 60, h - 150);
+      ctx.fillStyle = '#B8B2A6';
+      ctx.font = '500 16px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Redução de overhead', 60, h - 118);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText('✓ 80%+ Test Coverage', 60, h - 82);
+
+      // 2. Center Code & Architecture Panel
+      this.drawRoundedRect(ctx, 324, 76, 690, 560, 16);
+      ctx.fillStyle = 'rgba(18, 18, 25, 0.92)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
+      ctx.stroke();
+
+      // Editor Tab Bar
+      ctx.fillStyle = 'rgba(240, 120, 60, 0.12)';
+      this.drawRoundedRect(ctx, 342, 92, 260, 36, 8);
+      ctx.fill();
+      ctx.fillStyle = '#FF9A5C';
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText('fleet.gateway.ts', 364, 115);
+      ctx.fillStyle = '#8E8A84';
+      ctx.fillText('isolates_worker.dart', 630, 115);
+
+      const codeLines = [
+        ['01', '#FF9A5C', '@WebSocketGateway({ namespace: "/fleet-live" })'],
+        ['02', '#F5F1E8', 'export class MobilityTelemetryGateway {'],
+        ['03', '#8E8A84', '  // Real-time vehicle stream & dynamic ETA engine'],
+        ['04', '#F0783C', '  @SubscribeMessage("telemetry.frame")'],
+        ['05', '#F5F1E8', '  async handleFrame(frame: VehicleGpsFrame) {'],
+        ['06', '#6EE7B7', '    const route = await this.isolatePool.computeEta(frame);'],
+        ['07', '#F5F1E8', '    return this.broker.broadcastToConsortium(route);'],
+        ['08', '#F5F1E8', '  }'],
+        ['09', '#FF9A5C', '  public getMultiFlavorMatrix(): FlavorRelease {'],
+        ['10', '#6EE7B7', '    return { flavors: 42, startupDelta: "-40%" };'],
+        ['11', '#F5F1E8', '  }'],
+        ['12', '#F5F1E8', '}']
+      ];
+
+      codeLines.forEach(([ln, col, code], i) => {
+        const y = 172 + i * 36;
+        ctx.fillStyle = 'rgba(142, 138, 132, 0.5)';
+        ctx.font = '500 17px "JetBrains Mono", monospace';
+        ctx.fillText(ln, 352, y);
+        ctx.fillStyle = col;
+        ctx.font = '500 18px "JetBrains Mono", monospace';
+        ctx.fillText(code, 398, y);
+      });
+
+      // 3. Bottom-Center Live Telemetry Waveform Graph
+      this.drawRoundedRect(ctx, 324, 656, 690, h - 680, 16);
+      ctx.fillStyle = 'rgba(18, 18, 25, 0.92)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
+      ctx.stroke();
 
       ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('sherpa_onnx + flutter_gemma', 96, 542);
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText('DART ISOLATES // FRAME TIME & THROUGHPUT (60 FPS LOCK)', 352, 696);
 
-      for (let i = 0; i < 24; i++) {
-        const bh = 36 + Math.round(Math.sin(i * 0.65) * 28 + 32);
-        ctx.fillStyle = i % 3 === 0 ? '#FF9A5C' : '#F0783C';
-        ctx.fillRect(96 + i * 29, 680 - bh / 2, 16, bh);
+      // Smooth Bezier area chart
+      ctx.beginPath();
+      ctx.moveTo(352, 930);
+      const pts = [
+        [352, 860], [450, 810], [540, 845], [640, 770],
+        [740, 795], [850, 740], [976, 760]
+      ];
+      pts.forEach(([px, py]) => ctx.lineTo(px, py));
+      ctx.lineTo(976, 930);
+      ctx.closePath();
+      const areaGrad = ctx.createLinearGradient(0, 730, 0, 930);
+      areaGrad.addColorStop(0, 'rgba(240, 120, 60, 0.34)');
+      areaGrad.addColorStop(1, 'rgba(240, 120, 60, 0.0)');
+      ctx.fillStyle = areaGrad;
+      ctx.fill();
+
+      ctx.beginPath();
+      pts.forEach(([px, py], idx) => {
+        if (idx === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.strokeStyle = '#FF9A5C';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      pts.forEach(([px, py]) => {
+        ctx.fillStyle = '#F5F1E8';
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 4. Right Column: Geospatial Fleet Radar & Circular Gauges
+      this.drawRoundedRect(ctx, 1034, 76, w - 1058, h - 100, 16);
+      ctx.fillStyle = 'rgba(20, 20, 28, 0.94)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.28)';
+      ctx.stroke();
+
+      ctx.fillStyle = '#FF9A5C';
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText('LIVE FLEET GEOSPATIAL MESH', 1066, 118);
+
+      // Radar circle
+      const rx = 1304;
+      const ry = 310;
+      [145, 100, 55].forEach((rad) => {
+        ctx.beginPath();
+        ctx.arc(rx, ry, rad, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(245, 241, 232, 0.09)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      // Route vector inside radar
+      ctx.beginPath();
+      ctx.moveTo(rx - 95, ry + 70);
+      ctx.quadraticCurveTo(rx - 20, ry - 80, rx + 105, ry - 45);
+      ctx.strokeStyle = '#F0783C';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Active vehicle nodes
+      [[-95, 70], [-18, -12], [52, -32], [105, -45]].forEach(([dx, dy]) => {
+        ctx.fillStyle = '#6EE7B7';
+        ctx.beginPath();
+        ctx.arc(rx + dx, ry + dy, 7, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Architecture Pillar Bars in Right Column
+      const pillars = [
+        ['AppBus2 v5 • Multi-Flavor', '40+ Apps', 0.94],
+        ['STTP • NEAT & Mobilidade', '5+ Apps', 0.88],
+        ['Bus2Driver • WebSocket GPS', '+35% Sync', 0.91],
+        ['LocalSpeak • On-Device AI', '100% Offline', 0.96]
+      ];
+
+      pillars.forEach(([title, badge, ratio], i) => {
+        const py = 530 + i * 102;
+        ctx.fillStyle = '#F5F1E8';
+        ctx.font = '600 19px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(title, 1066, py);
+
+        ctx.fillStyle = '#FF9A5C';
+        ctx.font = '600 16px "JetBrains Mono", monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(badge, w - 58, py);
+        ctx.textAlign = 'left';
+
+        this.drawRoundedRect(ctx, 1066, py + 16, 476, 12, 6);
+        ctx.fillStyle = 'rgba(245, 241, 232, 0.08)';
+        ctx.fill();
+
+        this.drawRoundedRect(ctx, 1066, py + 16, Math.round(476 * ratio), 12, 6);
+        ctx.fillStyle = i === 3 ? '#6EE7B7' : '#F0783C';
+        ctx.fill();
+      });
+    });
+  },
+
+  /**
+   * Optimized iOS 18 / Flutter Flagship Mobile Screen
+   */
+  createPhoneScreenTexture() {
+    const origW = 900;
+    const origH = 1840;
+    const targetW = 540;
+    const targetH = 1104;
+    const scale = targetW / origW;
+
+    return this.makeCanvasTexture(targetW, targetH, (ctx) => {
+      ctx.scale(scale, scale);
+      const w = origW;
+      const h = origH;
+
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#101118');
+      bg.addColorStop(0.5, '#0C0D13');
+      bg.addColorStop(1, '#08080C');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // iOS Status Bar
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '700 28px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('9:41', 72, 82);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.font = '600 22px "JetBrains Mono", monospace';
+      ctx.fillText('5G ● 100%', w - 210, 80);
+
+      // Live Activity Pill below Dynamic Island
+      this.drawRoundedRect(ctx, 48, 138, w - 96, 132, 36);
+      ctx.fillStyle = 'rgba(24, 24, 34, 0.95)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.5)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#FF9A5C';
+      ctx.font = '700 20px "JetBrains Mono", monospace';
+      ctx.fillText('APPBUS2 V5 // LIVE TELEMETRY', 92, 186);
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '700 34px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Linha 092 • ETA 3 min', 92, 236);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.font = '700 24px "JetBrains Mono", monospace';
+      ctx.fillText('60 FPS', w - 180, 234);
+
+      // Dark Vector Route Map Canvas
+      this.drawRoundedRect(ctx, 48, 304, w - 96, 680, 40);
+      ctx.fillStyle = '#13151F';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.1)';
+      ctx.stroke();
+
+      // Subtle street grid inside map card
+      ctx.strokeStyle = 'rgba(245, 241, 232, 0.04)';
+      ctx.lineWidth = 2;
+      for (let gx = 90; gx < w - 90; gx += 75) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 320);
+        ctx.lineTo(gx, 960);
+        ctx.stroke();
+      }
+      for (let gy = 360; gy < 950; gy += 75) {
+        ctx.beginPath();
+        ctx.moveTo(64, gy);
+        ctx.lineTo(w - 64, gy);
+        ctx.stroke();
       }
 
-      ctx.fillStyle = '#6EE7B7';
-      ctx.font = '600 24px "JetBrains Mono", monospace';
-      ctx.fillText('LATÊNCIA ZERO • 100% PRIVADO', 96, 820);
+      // Glowing burnt-orange transit route curve
+      ctx.beginPath();
+      ctx.moveTo(130, 860);
+      ctx.bezierCurveTo(260, 780, 310, 520, 520, 540);
+      ctx.bezierCurveTo(650, 550, 690, 420, 740, 390);
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.3)';
+      ctx.lineWidth = 18;
+      ctx.lineCap = 'round';
+      ctx.stroke();
 
-      ctx.fillStyle = '#16161F';
-      ctx.fillRect(56, 950, w - 112, 560);
-      ctx.strokeStyle = 'rgba(245, 241, 232, 0.14)';
-      ctx.strokeRect(56, 950, w - 112, 560);
+      ctx.beginPath();
+      ctx.moveTo(130, 860);
+      ctx.bezierCurveTo(260, 780, 310, 520, 520, 540);
+      ctx.bezierCurveTo(650, 550, 690, 420, 740, 390);
+      ctx.strokeStyle = '#FF9A5C';
+      ctx.lineWidth = 7;
+      ctx.stroke();
+
+      // Waypoint pins
+      [[130, 860, '#F5F1E8'], [450, 555, '#FF9A5C'], [740, 390, '#6EE7B7']].forEach(([px, py, col]) => {
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        ctx.arc(px, py, 14, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Floating map telemetry badge
+      this.drawRoundedRect(ctx, 84, 868, w - 168, 84, 22);
+      ctx.fillStyle = 'rgba(15, 15, 22, 0.92)';
+      ctx.fill();
+      ctx.fillStyle = '#F5F1E8';
+      ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Dart Isolates • -40% Startup', 118, 920);
+
+      // Bottom Sheet: LocalSpeak On-Device AI Voice Assistant
+      this.drawRoundedRect(ctx, 48, 1020, w - 96, 710, 44);
+      ctx.fillStyle = 'rgba(22, 22, 31, 0.96)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(240, 120, 60, 0.42)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
 
       ctx.fillStyle = '#FF9A5C';
       ctx.font = '700 22px "JetBrains Mono", monospace';
-      ctx.fillText('APPBUS2 V5 • NEAT • BUS2DRIVER', 96, 1020);
+      ctx.fillText('LOCALSPEAK // ON-DEVICE AI', 96, 1092);
 
       ctx.fillStyle = '#F5F1E8';
-      ctx.font = '700 40px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Dart Isolates & GPS', 96, 1090);
+      ctx.font = '700 42px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('LLM & Voz 100% Offline', 96, 1156);
 
       ctx.fillStyle = '#B8B2A6';
-      ctx.font = '500 26px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('40+ Apps White-Label (Android/iOS)', 96, 1148);
+      ctx.font = '500 25px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('sherpa_onnx + flutter_gemma • Zero Nuvem', 96, 1208);
 
+      // Voice spectrum waveform bars
+      for (let i = 0; i < 24; i++) {
+        const bh = 36 + Math.round(Math.sin(i * 0.62) * 34 + 38);
+        this.drawRoundedRect(ctx, 96 + i * 29, 1345 - bh / 2, 16, bh, 8);
+        ctx.fillStyle = i % 3 === 0 ? '#6EE7B7' : '#FF9A5C';
+        ctx.fill();
+      }
+
+      // Architecture chips at bottom of sheet
+      this.drawRoundedRect(ctx, 96, 1480, w - 192, 92, 20);
       ctx.fillStyle = 'rgba(240, 120, 60, 0.14)';
-      ctx.fillRect(96, 1210, w - 192, 110);
-      ctx.fillStyle = '#FF9A5C';
-      ctx.font = '700 36px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('-40% Startup Time', 128, 1278);
-
+      ctx.fill();
       ctx.fillStyle = '#F5F1E8';
-      ctx.font = '600 24px "JetBrains Mono", monospace';
-      ctx.fillText('BLOC • CLEAN ARCH • SHADERS GPU', 96, 1420);
+      ctx.font = '600 23px "JetBrains Mono", monospace';
+      ctx.fillText('CLEAN ARCH • BLOC • SQLITE SYNC', 132, 1536);
 
-      ctx.fillStyle = 'rgba(245, 241, 232, 0.35)';
-      ctx.fillRect(w / 2 - 130, h - 48, 260, 12);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.font = '600 22px "JetBrains Mono", monospace';
+      ctx.fillText('● STTP • BUS2 • ACCENTURE', 96, 1656);
+
+      // iOS Home Indicator
+      this.drawRoundedRect(ctx, w / 2 - 130, h - 46, 260, 12, 6);
+      ctx.fillStyle = 'rgba(245, 241, 232, 0.42)';
+      ctx.fill();
     });
   },
 
@@ -1351,20 +2237,20 @@ const TeardownShowcase3D = {
     this.scene.add(laptopRoot);
     this.groups.laptopRoot = laptopRoot;
 
-    // 0. Studio Floor Contact Shadow Catcher
+    // 0. Studio Floor Contact Shadow Catcher (Lightweight 128x128 radial canvas)
     const shadowCanvas = document.createElement('canvas');
-    shadowCanvas.width = 256;
-    shadowCanvas.height = 256;
+    shadowCanvas.width = 128;
+    shadowCanvas.height = 128;
     const sctx = shadowCanvas.getContext('2d');
-    const grad = sctx.createRadialGradient(128, 128, 18, 128, 128, 120);
-    grad.addColorStop(0, 'rgba(0, 0, 0, 0.78)');
-    grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.32)');
+    const grad = sctx.createRadialGradient(64, 64, 10, 64, 64, 60);
+    grad.addColorStop(0, 'rgba(0, 0, 0, 0.82)');
+    grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.34)');
     grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     sctx.fillStyle = grad;
-    sctx.fillRect(0, 0, 256, 256);
+    sctx.fillRect(0, 0, 128, 128);
 
     const shadowPlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(390, 270),
+      new THREE.PlaneGeometry(410, 280),
       new THREE.MeshBasicMaterial({
         map: new THREE.CanvasTexture(shadowCanvas),
         transparent: true,
@@ -1376,7 +2262,7 @@ const TeardownShowcase3D = {
     laptopRoot.add(shadowPlane);
     this.groups.laptopShadow = shadowPlane;
 
-    // 1. Lower Unibody Chassis Group (moves down in Exploded view)
+    // 1. Lower Unibody Chassis Group
     const chassisBottomGroup = new THREE.Group();
     laptopRoot.add(chassisBottomGroup);
     this.groups.chassisBottomGroup = chassisBottomGroup;
@@ -1395,79 +2281,14 @@ const TeardownShowcase3D = {
 
     // Awakening Front Lip Amber Light Bar
     const lipGlowMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(126, 2.4, 3.2),
+      new THREE.BoxGeometry(132, 2.4, 3.2),
       this.materials.lipGlow
     );
     lipGlowMesh.position.set(0, -4.2, 107.2);
     chassisBottomGroup.add(lipGlowMesh);
     this.groups.lipGlowMesh = lipGlowMesh;
 
-    // 2. Internal Engineering Layer: Full Stack Logic Board + Copper Heatpipes + Dual Fans
-    const logicBoardGroup = new THREE.Group();
-    logicBoardGroup.position.set(0, -3.5, 2);
-    laptopRoot.add(logicBoardGroup);
-    this.groups.logicBoardGroup = logicBoardGroup;
-
-    const pcbMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(268, 2.4, 158),
-      new THREE.MeshStandardMaterial({
-        map: this.createLogicBoardTexture(),
-        roughness: 0.42,
-        metalness: 0.55
-      })
-    );
-    logicBoardGroup.add(pcbMesh);
-
-    const pipe1 = new THREE.Mesh(new THREE.BoxGeometry(196, 2.6, 8), this.materials.copperPipe);
-    pipe1.position.set(0, 2.4, -26);
-    logicBoardGroup.add(pipe1);
-
-    const pipe2 = new THREE.Mesh(new THREE.BoxGeometry(196, 2.6, 6), this.materials.copperPipe);
-    pipe2.position.set(0, 2.4, -12);
-    logicBoardGroup.add(pipe2);
-
-    const createFan = (xPos) => {
-      const fanHousing = new THREE.Group();
-      fanHousing.position.set(xPos, 2.2, -20);
-
-      const ring = new THREE.Mesh(
-        new THREE.CylinderGeometry(28, 28, 3, 24, 1, true),
-        this.materials.anodizedChamfer
-      );
-      fanHousing.add(ring);
-
-      const rotor = new THREE.Group();
-      const hub = new THREE.Mesh(
-        new THREE.CylinderGeometry(8, 8, 3.2, 16),
-        this.materials.copperPipe
-      );
-      rotor.add(hub);
-
-      for (let b = 0; b < 9; b++) {
-        const blade = new THREE.Mesh(
-          new THREE.BoxGeometry(17, 2.2, 3.2),
-          this.materials.anodizedChamfer
-        );
-        const angle = (b / 9) * Math.PI * 2;
-        blade.position.set(Math.cos(angle) * 14, 0, Math.sin(angle) * 14);
-        blade.rotation.y = -angle + 0.45;
-        rotor.add(blade);
-      }
-
-      fanHousing.add(rotor);
-      logicBoardGroup.add(fanHousing);
-      return rotor;
-    };
-
-    this.groups.fanLeft = createFan(-88);
-    this.groups.fanRight = createFan(88);
-
-    const anchorLogic = new THREE.Object3D();
-    anchorLogic.position.set(-25, 4, 0);
-    logicBoardGroup.add(anchorLogic);
-    this.anchors['laptop-logic'] = anchorLogic;
-
-    // 3. Top Keyboard Deck & 78-Key 3D Matrix + Glass Trackpad
+    // 2. Top Keyboard Deck (Baked High-DPI Backlit Keyboard & Trackpad)
     const keyboardDeckGroup = new THREE.Group();
     keyboardDeckGroup.position.set(0, 0, 5);
     laptopRoot.add(keyboardDeckGroup);
@@ -1479,68 +2300,32 @@ const TeardownShowcase3D = {
     );
     keyboardDeckGroup.add(topDeckMesh);
 
-    const topDeckWire = new THREE.Mesh(
-      new THREE.BoxGeometry(302.4, 2.4, 202.4),
-      this.materials.deckWireframe
+    const deckTex = this.createKeyboardDeckTexture();
+    const deckSurfaceMat = new THREE.MeshStandardMaterial({
+      map: deckTex,
+      roughness: 0.42,
+      metalness: 0.35
+    });
+    this.materials.deckSurface = deckSurfaceMat;
+
+    const deckSurfacePlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(298, 198),
+      deckSurfaceMat
     );
-    keyboardDeckGroup.add(topDeckWire);
-
-    const wellMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(264, 1.2, 102),
-      new THREE.MeshStandardMaterial({ color: 0x0B0B0F, roughness: 0.7, metalness: 0.2 })
-    );
-    wellMesh.position.set(0, 1.0, -24);
-    keyboardDeckGroup.add(wellMesh);
-
-    const keyRows = 5;
-    const keyCols = 13;
-    const keyW = 16.5;
-    const keyD = 14.5;
-    const gapX = 3.2;
-    const gapZ = 3.4;
-    const startX = -((keyCols - 1) * (keyW + gapX)) / 2;
-    const startZ = -62;
-
-    for (let r = 0; r < keyRows; r++) {
-      for (let c = 0; c < keyCols; c++) {
-        if (r === keyRows - 1 && c >= 4 && c <= 8) {
-          if (c === 6) {
-            const spaceMesh = new THREE.Mesh(
-              new THREE.BoxGeometry(keyW * 4.6, 2.4, keyD),
-              this.materials.keycapDark
-            );
-            spaceMesh.position.set(startX + c * (keyW + gapX), 2.1, startZ + r * (keyD + gapZ));
-            keyboardDeckGroup.add(spaceMesh);
-          }
-          continue;
-        }
-        const isEsc = r === 0 && c === 0;
-        const keyMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(keyW, 2.4, keyD),
-          isEsc ? this.materials.keycapAccent : this.materials.keycapDark
-        );
-        keyMesh.position.set(startX + c * (keyW + gapX), 2.1, startZ + r * (keyD + gapZ));
-        keyboardDeckGroup.add(keyMesh);
-      }
-    }
-
-    const trackpadMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(108, 1.4, 62),
-      new THREE.MeshStandardMaterial({ color: 0x15151C, roughness: 0.25, metalness: 0.45 })
-    );
-    trackpadMesh.position.set(0, 1.2, 62);
-    keyboardDeckGroup.add(trackpadMesh);
+    deckSurfacePlane.rotation.x = -Math.PI / 2;
+    deckSurfacePlane.position.set(0, 1.25, 0);
+    keyboardDeckGroup.add(deckSurfacePlane);
 
     laptopRoot.add(this.lights.screenSpill);
 
-    // 4. Unified Hinge Barrel & Articulated Lid at (y=0, z=-95)
+    // 3. Unified Hinge Barrel & Articulated Lid at (y=1.2, z=-95)
     const hingePivot = new THREE.Group();
     hingePivot.position.set(0, 1.2, -95);
     laptopRoot.add(hingePivot);
     this.groups.hingePivot = hingePivot;
 
     const hingeBarrel = new THREE.Mesh(
-      new THREE.CylinderGeometry(4.2, 4.2, 230, 20),
+      new THREE.CylinderGeometry(4.2, 4.2, 230, 14),
       this.materials.anodizedChamfer
     );
     hingeBarrel.rotation.z = Math.PI / 2;
@@ -1562,52 +2347,18 @@ const TeardownShowcase3D = {
       map: screenTex,
       emissiveMap: screenTex,
       emissive: 0xFFFFFF,
-      emissiveIntensity: 0.42,
-      roughness: 0.22,
-      metalness: 0.08,
-      transparent: true,
-      opacity: 1
+      emissiveIntensity: 0.46,
+      roughness: 0.2,
+      metalness: 0.08
     });
     this.materials.laptopScreen = screenMat;
 
     const screenMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(288, 182),
+      new THREE.PlaneGeometry(290, 184),
       screenMat
     );
     screenMesh.position.set(0, 98, 0.5);
     hingePivot.add(screenMesh);
-
-    const anchorFlavors = new THREE.Object3D();
-    anchorFlavors.position.set(-72, 42, 16);
-    hingePivot.add(anchorFlavors);
-    this.anchors['laptop-flavors'] = anchorFlavors;
-
-    const laptopCardsGroup = new THREE.Group();
-    laptopCardsGroup.position.set(0, 98, 2);
-    hingePivot.add(laptopCardsGroup);
-    this.groups.laptopCardsGroup = laptopCardsGroup;
-
-    const card1Mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(132, 58),
-      new THREE.MeshBasicMaterial({
-        map: this.createCardTexture('NestJS + WebSocket', 'Telemetria GPS & Eventos', 'MobilityGateway // 60fps', 'BACKEND CORE'),
-        transparent: true
-      })
-    );
-    card1Mesh.position.set(-66, 26, 2);
-    card1Mesh.userData = { baseZ: 2, popZ: 18, explodeZ: 42 };
-    laptopCardsGroup.add(card1Mesh);
-
-    const card2Mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(126, 56),
-      new THREE.MeshBasicMaterial({
-        map: this.createCardTexture('40+ Apps White-Label', 'Dev • Stg • Prod Flavors', '-75% Overhead • 80%+ Tests', 'CI/CD SCALE'),
-        transparent: true
-      })
-    );
-    card2Mesh.position.set(68, -22, 3);
-    card2Mesh.userData = { baseZ: 3, popZ: 26, explodeZ: 62 };
-    laptopCardsGroup.add(card2Mesh);
 
     const glassMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(292, 186),
@@ -1634,6 +2385,26 @@ const TeardownShowcase3D = {
     );
     phoneChassisGroup.add(frameMesh);
 
+    // Rear camera bump
+    const camBump = new THREE.Mesh(
+      new THREE.BoxGeometry(42, 42, 3.6),
+      this.materials.anodizedChamfer
+    );
+    camBump.position.set(-20, 64, -6.2);
+    phoneChassisGroup.add(camBump);
+
+    const lensGeom = new THREE.CylinderGeometry(6.5, 6.5, 2.2, 12);
+    const lensMat = new THREE.MeshStandardMaterial({ color: 0x050508, roughness: 0.2, metalness: 0.9 });
+    const lens1 = new THREE.Mesh(lensGeom, lensMat);
+    lens1.rotation.x = Math.PI / 2;
+    lens1.position.set(-28, 72, -7.8);
+    phoneChassisGroup.add(lens1);
+
+    const lens2 = new THREE.Mesh(lensGeom, lensMat);
+    lens2.rotation.x = Math.PI / 2;
+    lens2.position.set(-12, 56, -7.8);
+    phoneChassisGroup.add(lens2);
+
     const bezelTrim = new THREE.Mesh(
       new THREE.BoxGeometry(98, 196, 8.2),
       this.materials.anodizedChamfer
@@ -1654,42 +2425,6 @@ const TeardownShowcase3D = {
     btnPower.position.set(49.2, 28, 0);
     phoneChassisGroup.add(btnPower);
 
-    const phoneInternalGroup = new THREE.Group();
-    phoneInternalGroup.position.set(0, 0, 1);
-    phoneRoot.add(phoneInternalGroup);
-    this.groups.phoneInternalGroup = phoneInternalGroup;
-
-    const phonePcb = new THREE.Mesh(
-      new THREE.BoxGeometry(84, 178, 3.2),
-      new THREE.MeshStandardMaterial({ color: 0x0D0E12, roughness: 0.48, metalness: 0.6 })
-    );
-    phoneInternalGroup.add(phonePcb);
-
-    const coilRing = new THREE.Mesh(
-      new THREE.TorusGeometry(26, 3.2, 12, 36),
-      this.materials.copperPipe
-    );
-    coilRing.position.set(0, -14, 2.2);
-    phoneInternalGroup.add(coilRing);
-
-    const npuDie = new THREE.Mesh(
-      new THREE.BoxGeometry(44, 44, 4.2),
-      new THREE.MeshStandardMaterial({
-        color: 0x191922,
-        emissive: 0xF0783C,
-        emissiveIntensity: 0.28,
-        roughness: 0.3,
-        metalness: 0.85
-      })
-    );
-    npuDie.position.set(0, 42, 2.2);
-    phoneInternalGroup.add(npuDie);
-
-    const anchorNpu = new THREE.Object3D();
-    anchorNpu.position.set(0, 42, 6);
-    phoneInternalGroup.add(anchorNpu);
-    this.anchors['phone-npu'] = anchorNpu;
-
     const phoneScreenGroup = new THREE.Group();
     phoneScreenGroup.position.set(0, 0, 5.6);
     phoneRoot.add(phoneScreenGroup);
@@ -1700,11 +2435,9 @@ const TeardownShowcase3D = {
       map: phoneTex,
       emissiveMap: phoneTex,
       emissive: 0xFFFFFF,
-      emissiveIntensity: 0.45,
+      emissiveIntensity: 0.48,
       roughness: 0.18,
-      metalness: 0.08,
-      transparent: true,
-      opacity: 1
+      metalness: 0.08
     });
     this.materials.phoneScreen = phoneScreenMat;
 
@@ -1722,113 +2455,15 @@ const TeardownShowcase3D = {
     phoneScreenGroup.add(islandMesh);
 
     const cameraDot = new THREE.Mesh(
-      new THREE.CircleGeometry(2.2, 16),
+      new THREE.CircleGeometry(2.2, 12),
       new THREE.MeshBasicMaterial({ color: 0xFF9A5C })
     );
     cameraDot.position.set(9, 80, 1.6);
     phoneScreenGroup.add(cameraDot);
-
-    const phoneCardsGroup = new THREE.Group();
-    phoneCardsGroup.position.set(0, 0, 7);
-    phoneRoot.add(phoneCardsGroup);
-    this.groups.phoneCardsGroup = phoneCardsGroup;
-
-    const mCard1 = new THREE.Mesh(
-      new THREE.PlaneGeometry(82, 38),
-      new THREE.MeshBasicMaterial({
-        map: this.createCardTexture('LocalSpeak AI', 'sherpa_onnx • flutter_gemma', 'Voz & LLM 100% Offline', 'ON-DEVICE AI'),
-        transparent: true
-      })
-    );
-    mCard1.position.set(0, 32, 2);
-    mCard1.userData = { baseZ: 2, popZ: 14, explodeZ: 38 };
-    phoneCardsGroup.add(mCard1);
-
-    const mCard2 = new THREE.Mesh(
-      new THREE.PlaneGeometry(82, 38),
-      new THREE.MeshBasicMaterial({
-        map: this.createCardTexture('AppBus2 v5 & NEAT', 'Dart Isolates • 40+ Apps', '-40% Startup • GPS Live', 'MOBILITY CORE'),
-        transparent: true
-      })
-    );
-    mCard2.position.set(0, -36, 3);
-    mCard2.userData = { baseZ: 3, popZ: 20, explodeZ: 52 };
-    phoneCardsGroup.add(mCard2);
-
-    const anchorOled = new THREE.Object3D();
-    anchorOled.position.set(0, -36, 12);
-    phoneCardsGroup.add(anchorOled);
-    this.anchors['phone-oled'] = anchorOled;
-  },
-
-  setMode(mode) {
-    const validModes = ['studio', 'exploded', 'cutaway', 'mobile', 'reset'];
-    if (!validModes.includes(mode)) return;
-
-    const actualMode = mode === 'reset' ? 'studio' : mode;
-    this.state.mode = actualMode;
-    this.state.manualOverride = mode !== 'reset';
-
-    this.orbitTarget.yaw = 0;
-    this.orbitTarget.pitch = 0;
-
-    DOMUtils.qsa('.teardown-mode-btn').forEach((btn) => {
-      const btnMode = btn.getAttribute('data-teardown-mode');
-      const isActive = (btnMode === actualMode && mode !== 'reset') || (mode === 'reset' && btnMode === 'studio');
-      btn.classList.toggle('active', isActive);
-      btn.setAttribute('aria-pressed', String(isActive));
-    });
-
-    const hudStatus = DOMUtils.qs('#showcase-hud-status');
-    const statusLabels = {
-      studio: 'MODO: ESTÚDIO PBR // ARRASTE PARA ORBITAR',
-      exploded: 'MODO: EXPLODIDO (@TEARDOWN) // CAMADAS INTERNAS E CALLOUTS ATIVOS',
-      cutaway: 'MODO: RAIO-X CUTAWAY // DISSIPAÇÃO EM COBRE, COOLERS E NPU VISÍVEIS',
-      mobile: 'MODO: FOCO MOBILE & IA // LOCALSKEAK (SHERPA_ONNX) + APPBUS2 V5'
-    };
-    if (hudStatus) {
-      hudStatus.textContent = statusLabels[actualMode] || statusLabels.studio;
-    }
-
-    const targets = {
-      explode: actualMode === 'exploded' ? 1 : 0,
-      cutaway: actualMode === 'cutaway' ? 1 : 0,
-      mobileFocus: actualMode === 'mobile' ? 1 : 0
-    };
-
-    if (typeof window.gsap !== 'undefined' && !DOMUtils.prefersReducedMotion()) {
-      gsap.to(this.state, {
-        explode: targets.explode,
-        cutaway: targets.cutaway,
-        mobileFocus: targets.mobileFocus,
-        lidOpen: this.state.manualOverride ? 1 : this.state.lidOpen,
-        lipGlow: 1,
-        spill: 1,
-        popout: 1,
-        duration: 0.88,
-        ease: 'expo.out',
-        overwrite: 'auto'
-      });
-    } else {
-      Object.assign(this.state, targets, {
-        lidOpen: 1,
-        lipGlow: 1,
-        spill: 1,
-        popout: 1
-      });
-      this.applyStateToScene(0);
-      if (this.renderer) this.renderer.render(this.scene, this.camera);
-      this.updateCalloutLines();
-    }
   },
 
   bindToolbarAndPointer(viewport, canvas) {
-    DOMUtils.qsa('.teardown-mode-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const mode = btn.getAttribute('data-teardown-mode');
-        if (mode) this.setMode(mode);
-      });
-    });
+    const section = DOMUtils.qs('#showcase');
 
     const onDown = (clientX, clientY) => {
       this.isDragging = true;
@@ -1837,14 +2472,33 @@ const TeardownShowcase3D = {
     };
 
     const onMove = (clientX, clientY) => {
-      if (!this.isDragging) return;
-      const dx = clientX - this.pointerStart.x;
-      const dy = clientY - this.pointerStart.y;
-      this.pointerStart.x = clientX;
-      this.pointerStart.y = clientY;
+      if (this.isDragging) {
+        const dx = clientX - this.pointerStart.x;
+        const dy = clientY - this.pointerStart.y;
+        this.pointerStart.x = clientX;
+        this.pointerStart.y = clientY;
 
-      this.orbitTarget.yaw = Math.max(-0.52, Math.min(0.52, this.orbitTarget.yaw + dx * 0.0045));
-      this.orbitTarget.pitch = Math.max(-0.28, Math.min(0.28, this.orbitTarget.pitch + dy * 0.0035));
+        this.orbitTarget.yaw = Math.max(-0.45, Math.min(0.45, this.orbitTarget.yaw + dx * 0.0035));
+        this.orbitTarget.pitch = Math.max(-0.25, Math.min(0.25, this.orbitTarget.pitch + dy * 0.0025));
+        this.orbitCurrent.yaw = this.orbitTarget.yaw;
+        this.orbitCurrent.pitch = this.orbitTarget.pitch;
+        this.requestRender();
+        return;
+      }
+
+      // Subtle hover parallax & ambient light spill when moving pointer inside #showcase
+      if (section && this.isVisible && window.innerWidth > 992) {
+        const rect = this.cachedViewportRect || viewport.getBoundingClientRect();
+        if (clientY >= rect.top - 100 && clientY <= rect.bottom + 100) {
+          const nx = ((clientX - rect.left) / Math.max(1, rect.width)) - 0.5;
+          const ny = ((clientY - rect.top) / Math.max(1, rect.height)) - 0.5;
+          this.hoverParallax.yaw = Math.max(-0.05, Math.min(0.05, nx * 0.09));
+          this.hoverParallax.pitch = Math.max(-0.03, Math.min(0.03, ny * 0.06));
+          section.style.setProperty('--spill-x', `${Math.round(50 + nx * 24)}%`);
+          section.style.setProperty('--spill-y', `${Math.round(52 + ny * 18)}%`);
+          this.requestRender();
+        }
+      }
     };
 
     const onUp = () => {
@@ -1865,93 +2519,87 @@ const TeardownShowcase3D = {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         this.isVisible = entry.isIntersecting;
-        if (this.isVisible && !this.rafId && !DOMUtils.prefersReducedMotion()) {
-          this.startLoop();
+        if (this.isVisible) {
+          this.requestRender();
         }
       });
-    }, { rootMargin: '120px 0px' });
+    }, { rootMargin: '80px 0px' });
     observer.observe(viewport);
   },
 
   onResize() {
     const viewport = DOMUtils.qs('#showcase-viewport');
-    if (!viewport || !this.renderer || !this.camera) return;
+    const canvas = DOMUtils.qs('#showcase-webgl-canvas');
+    if (!viewport || !canvas || !this.renderer || !this.camera) return;
 
-    const rect = viewport.getBoundingClientRect();
-    const width = Math.max(300, rect.width);
-    const height = Math.max(420, rect.height);
+    const isStacked = window.innerWidth <= 992;
+    const isMobile = window.innerWidth <= 768;
 
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(300, rect.width || viewport.clientWidth);
+    const height = Math.max(420, rect.height || 600);
+
+    const maxDpr = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
+    this.renderer.setPixelRatio(maxDpr);
     this.renderer.setSize(width, height, false);
     this.camera.aspect = width / height;
+
+    if (isStacked) {
+      this.camera.fov = 38;
+      this.camera.position.set(0, 8, 680);
+      this.camera.lookAt(0, 8, 0);
+    } else {
+      this.camera.fov = 34;
+      this.camera.position.set(15, -5, 560);
+      this.camera.lookAt(15, -25, 0);
+    }
     this.camera.updateProjectionMatrix();
-    this.applyStateToScene(0);
-    this.renderer.render(this.scene, this.camera);
-    this.updateCalloutLines();
+    this.requestRender();
   },
 
   applyStateToScene(elapsed) {
     const isStacked = window.innerWidth <= 992;
     const s = this.state;
 
-    this.orbitCurrent.yaw += (this.orbitTarget.yaw - this.orbitCurrent.yaw) * 0.12;
-    this.orbitCurrent.pitch += (this.orbitTarget.pitch - this.orbitCurrent.pitch) * 0.12;
+    const targetYaw = this.orbitTarget.yaw + (isStacked ? 0 : this.hoverParallax.yaw);
+    const targetPitch = this.orbitTarget.pitch + (isStacked ? 0 : this.hoverParallax.pitch);
+    this.orbitCurrent.yaw += (targetYaw - this.orbitCurrent.yaw) * 0.22;
+    this.orbitCurrent.pitch += (targetPitch - this.orbitCurrent.pitch) * 0.22;
 
     const effectiveLid = s.manualOverride ? 1 : s.lidOpen;
-    const effectivePop = s.manualOverride ? 1 : s.popout;
     const effectiveSpill = s.manualOverride ? 1 : s.spill;
 
-    if (isStacked) {
-      const camX = 0;
-      const camY = 10 - s.mobileFocus * 105;
-      const camZ = 640 - s.mobileFocus * 250;
-      this.camera.fov = 38;
-      this.camera.position.set(camX, camY, camZ);
-      this.camera.lookAt(0, -12 - s.mobileFocus * 96, 0);
-    } else {
-      const camX = s.mobileFocus * 138;
-      const camY = 34 - s.mobileFocus * 26;
-      const camZ = 475 - s.mobileFocus * 185;
-      this.camera.fov = 33;
-      this.camera.position.set(camX, camY, camZ);
-      this.camera.lookAt(s.mobileFocus * 148, -6 - s.mobileFocus * 4, s.mobileFocus * 18);
+    const section = DOMUtils.qs('#showcase');
+    if (section) {
+      section.style.setProperty('--spill-alpha', (0.04 + effectiveSpill * 0.08).toFixed(3));
     }
-    this.camera.updateProjectionMatrix();
 
     const {
       laptopRoot,
       phoneRoot,
       hingePivot,
-      chassisBottomGroup,
-      logicBoardGroup,
-      keyboardDeckGroup,
-      lidBackGroup,
-      laptopCardsGroup,
-      phoneChassisGroup,
-      phoneInternalGroup,
-      phoneScreenGroup,
-      phoneCardsGroup,
-      fanLeft,
-      fanRight,
       lipGlowMesh
     } = this.groups;
 
-    const floatY = Math.sin(elapsed * 1.4) * 2.2;
-
     if (laptopRoot) {
       if (isStacked) {
-        laptopRoot.scale.setScalar(0.80);
-        laptopRoot.position.set(0, 86 + (1 - effectiveLid) * 14 + floatY * 0.5, 0);
+        laptopRoot.scale.setScalar(0.50);
+        laptopRoot.position.set(0, 48 + (1 - effectiveLid) * 14, 0);
         laptopRoot.rotation.set(
-          0.32 + this.orbitCurrent.pitch,
+          0.26 + this.orbitCurrent.pitch,
           this.orbitCurrent.yaw,
           0
         );
       } else {
-        laptopRoot.scale.setScalar(0.95);
-        laptopRoot.position.set(-76 - s.mobileFocus * 40, -14 + (1 - effectiveLid) * 16 + floatY, 0);
+        laptopRoot.scale.setScalar(0.52);
+        laptopRoot.position.set(
+          -15,
+          -142 + (1 - effectiveLid) * 16,
+          0
+        );
         laptopRoot.rotation.set(
-          0.26 + (1 - effectiveLid) * 0.14 + this.orbitCurrent.pitch,
-          0.16 + (1 - effectiveLid) * -0.12 + this.orbitCurrent.yaw,
+          0.20 + (1 - effectiveLid) * 0.12 + this.orbitCurrent.pitch,
+          0.05 + (1 - effectiveLid) * -0.05 + this.orbitCurrent.yaw,
           0
         );
       }
@@ -1959,34 +2607,8 @@ const TeardownShowcase3D = {
 
     if (hingePivot) {
       const closedAngle = 1.54;
-      const openAngle = -0.20 - s.explode * 0.08;
+      const openAngle = -0.18;
       hingePivot.rotation.x = closedAngle + (openAngle - closedAngle) * effectiveLid;
-    }
-
-    if (chassisBottomGroup) {
-      chassisBottomGroup.position.y = -s.explode * 28;
-    }
-    if (logicBoardGroup) {
-      logicBoardGroup.position.y = -3.5 + s.explode * 10;
-    }
-    if (keyboardDeckGroup) {
-      keyboardDeckGroup.position.y = s.explode * 36;
-    }
-    if (lidBackGroup) {
-      lidBackGroup.position.z = -s.explode * 20;
-    }
-
-    const deckAlpha = Math.max(0.14, 1 - s.cutaway * 0.84);
-    this.materials.deckAluminum.opacity = deckAlpha;
-    this.materials.keycapDark.opacity = Math.max(0.22, 1 - s.cutaway * 0.76);
-    this.materials.deckWireframe.opacity = s.cutaway * 0.72;
-    if (this.materials.laptopScreen) {
-      this.materials.laptopScreen.opacity = Math.max(0.38, 1 - s.cutaway * 0.58);
-    }
-
-    if (fanLeft && fanRight) {
-      fanLeft.rotation.y = elapsed * 5.5;
-      fanRight.rotation.y = -elapsed * 5.5;
     }
 
     if (lipGlowMesh) {
@@ -1994,126 +2616,51 @@ const TeardownShowcase3D = {
       lipGlowMesh.scale.x = 0.38 + s.lipGlow * 0.62;
     }
     if (this.lights.screenSpill) {
-      this.lights.screenSpill.intensity = effectiveSpill * 1.95;
-    }
-
-    if (laptopCardsGroup) {
-      laptopCardsGroup.children.forEach((card) => {
-        const { baseZ, popZ, explodeZ } = card.userData;
-        card.position.z = baseZ + effectivePop * popZ + s.explode * explodeZ;
-      });
+      this.lights.screenSpill.intensity = effectiveSpill * 1.8;
     }
 
     if (phoneRoot) {
       if (isStacked) {
-        phoneRoot.scale.setScalar(0.86);
-        phoneRoot.position.set(0, -108 + (1 - effectiveLid) * 20 - floatY * 0.5, 22);
+        phoneRoot.scale.setScalar(0.58);
+        phoneRoot.position.set(0, -96 + (1 - effectiveLid) * 16, 18);
         phoneRoot.rotation.set(
-          -0.08 + this.orbitCurrent.pitch,
+          -0.06 + this.orbitCurrent.pitch,
           this.orbitCurrent.yaw,
           0
         );
       } else {
-        phoneRoot.scale.setScalar(0.96);
-        phoneRoot.position.set(154, -6 + (1 - effectiveLid) * 28 - floatY * 0.8, 34);
+        phoneRoot.scale.setScalar(0.54);
+        phoneRoot.position.set(
+          225,
+          50 + (1 - effectiveLid) * 16,
+          24
+        );
         phoneRoot.rotation.set(
-          -0.08 + (1 - effectiveLid) * 0.18 + this.orbitCurrent.pitch,
-          -0.26 + (1 - effectiveLid) * 0.25 + s.mobileFocus * 0.22 + this.orbitCurrent.yaw,
+          -0.04 + (1 - effectiveLid) * 0.14 + this.orbitCurrent.pitch,
+          -0.22 + (1 - effectiveLid) * 0.18 + this.orbitCurrent.yaw,
           0
         );
       }
     }
-
-    if (phoneChassisGroup) {
-      phoneChassisGroup.position.z = -s.explode * 26;
-    }
-    if (phoneInternalGroup) {
-      phoneInternalGroup.position.z = 1 + s.explode * 4;
-    }
-    if (phoneScreenGroup) {
-      phoneScreenGroup.position.z = 5.6 + s.explode * 24;
-    }
-    if (this.materials.phoneScreen) {
-      this.materials.phoneScreen.opacity = Math.max(0.24, 1 - s.cutaway * 0.72);
-    }
-    if (phoneCardsGroup) {
-      phoneCardsGroup.children.forEach((card) => {
-        const { baseZ, popZ, explodeZ } = card.userData;
-        card.position.z = baseZ + effectivePop * popZ + s.explode * explodeZ;
-      });
-    }
-
-    const calloutsLayer = DOMUtils.qs('#showcase-callouts-layer');
-    if (calloutsLayer) {
-      const showCallouts = s.explode > 0.15 || s.cutaway > 0.15 || s.mobileFocus > 0.15 || effectivePop > 0.45;
-      calloutsLayer.classList.toggle('active', showCallouts);
-    }
   },
 
-  updateCalloutLines() {
-    const svg = DOMUtils.qs('#showcase-callouts-svg');
-    const viewport = DOMUtils.qs('#showcase-viewport');
-    const calloutsLayer = DOMUtils.qs('#showcase-callouts-layer');
-    if (!svg || !viewport || !calloutsLayer || !this.camera) return;
+  updateCalloutLines() {},
 
-    if (window.innerWidth <= 992 || !calloutsLayer.classList.contains('active')) {
-      svg.innerHTML = '';
-      return;
-    }
-
-    const THREE = window.THREE;
-    const vRect = viewport.getBoundingClientRect();
-    const width = vRect.width;
-    const height = vRect.height;
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-    const cards = DOMUtils.qsa('.teardown-callout-card', calloutsLayer);
-    const tempVec = new THREE.Vector3();
-    let svgMarkup = '';
-
-    cards.forEach((card) => {
-      const anchorKey = card.getAttribute('data-anchor');
-      const anchorObj = this.anchors[anchorKey];
-      if (!anchorObj) return;
-
-      anchorObj.getWorldPosition(tempVec);
-      tempVec.project(this.camera);
-
-      const ax = (tempVec.x * 0.5 + 0.5) * width;
-      const ay = (-(tempVec.y * 0.5) + 0.5) * height;
-
-      const cRect = card.getBoundingClientRect();
-      const isLeftCard = (cRect.left - vRect.left) < width * 0.45;
-      const cx = isLeftCard ? (cRect.right - vRect.left) : (cRect.left - vRect.left);
-      const cy = (cRect.top - vRect.top) + cRect.height * 0.5;
-      const kneeX = cx + (isLeftCard ? 28 : -28);
-
-      svgMarkup += `
-        <polyline class="callout-leader-line" points="${cx.toFixed(1)},${cy.toFixed(1)} ${kneeX.toFixed(1)},${cy.toFixed(1)} ${ax.toFixed(1)},${ay.toFixed(1)}" />
-        <circle class="callout-anchor-dot" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="4" />
-        <circle class="callout-anchor-ring" cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="9" />
-      `;
+  requestRender() {
+    if (!this.isVisible || !this.renderer) return;
+    if (this.renderRequested) return;
+    this.renderRequested = true;
+    requestAnimationFrame(() => {
+      this.renderRequested = false;
+      this.renderFrame();
     });
-
-    svg.innerHTML = svgMarkup;
   },
 
-  startLoop() {
-    if (this.rafId) return;
-    const tick = () => {
-      if (!this.isVisible) {
-        this.rafId = null;
-        return;
-      }
-      this.rafId = requestAnimationFrame(tick);
-      const elapsed = this.clock ? this.clock.getElapsedTime() : 0;
-      this.applyStateToScene(elapsed);
-      if (this.renderer && this.scene && this.camera) {
-        this.renderer.render(this.scene, this.camera);
-      }
-      this.updateCalloutLines();
-    };
-    this.rafId = requestAnimationFrame(tick);
+  renderFrame() {
+    if (!this.renderer || !this.scene || !this.camera) return;
+    const elapsed = this.clock ? this.clock.getElapsedTime() : 0;
+    this.applyStateToScene(elapsed);
+    this.renderer.render(this.scene, this.camera);
   }
 };
 window.TeardownShowcase3D = TeardownShowcase3D;
@@ -2218,12 +2765,14 @@ const AnimationController = {
 
     if (webglActive) {
       const tlWebgl = gsap.timeline({
+        onUpdate: () => TeardownShowcase3D.requestRender(),
         scrollTrigger: {
           trigger: '#showcase-viewport',
           start: 'top 84%',
           end: isStacked ? 'bottom 66%' : 'center 42%',
           scrub: 0.85,
-          invalidateOnRefresh: true
+          invalidateOnRefresh: true,
+          onUpdate: () => TeardownShowcase3D.requestRender()
         }
       });
 
@@ -2249,6 +2798,7 @@ const AnimationController = {
       );
 
       this.showcaseTimeline = tlWebgl;
+      TeardownShowcase3D.requestRender();
       return;
     }
 
@@ -2804,6 +3354,7 @@ const NavigationController = {
 
   bindCaseModals() {
     const openBtns = DOMUtils.qsa('.open-case-modal-btn');
+    const companyBtns = DOMUtils.qsa('.hero-company-card');
     const closeBtn = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.modalCloseBtn);
     const backdrop = DOMUtils.qs(PORTFOLIO_CONFIG.selectors.caseModal);
 
@@ -2811,6 +3362,13 @@ const NavigationController = {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-project-id');
         if (id) UIComponents.openCaseModal(id, btn);
+      });
+    });
+
+    companyBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const companyId = btn.getAttribute('data-company-id');
+        if (companyId) UIComponents.openCompanyModal(companyId, btn);
       });
     });
 
@@ -2932,6 +3490,8 @@ const NavigationController = {
 const PortfolioApp = {
   init() {
     try {
+      UIComponents.renderDynamicExperienceYears();
+      TopoHeroBackground.init();
       UIComponents.renderExperience();
       UIComponents.renderCarousel();
       UIComponents.renderTechStack();
