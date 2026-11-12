@@ -53,7 +53,7 @@ const PORTFOLIO_DATA = Object.freeze({
       logoPath: 'assets/logos/sttp.png',
       categoryLabel: 'Setor Público • Mobilidade Urbana & Engenharia de Tráfego',
       roleSummary: 'Mobile Development Lead | Flutter Developer (Pleno)',
-      period: 'Jan 2022 – Presente (Estágio / Júnior → Mobile Development Lead)',
+      period: 'Jan 2022 – 2026 (Estágio / Júnior → Mobile Development Lead)',
       location: 'Campina Grande, PB',
       metrics: [
         '+25% Velocidade de Sprint',
@@ -65,7 +65,7 @@ const PORTFOLIO_DATA = Object.freeze({
       progression: [
         {
           role: 'Mobile Development Lead | Flutter Developer (Mid-Level)',
-          period: 'Dez 2024 – Presente',
+          period: 'Dez 2024 – 2026',
           highlight: 'Liderança técnica da equipe mobile, definição de arquitetura padrão (Clean Architecture + BLoC/Cubit), revisão de código e mentoria direta de desenvolvedores juniores.'
         },
         {
@@ -168,7 +168,7 @@ const PORTFOLIO_DATA = Object.freeze({
       id: 'sttp-lead',
       company: 'STTP (Superintendência de Trânsito e Transportes Públicos)',
       role: 'Mobile Development Lead | Flutter Developer (Mid-Level)',
-      period: 'Dez 2024 – Presente',
+      period: 'Dez 2024 – 2026',
       location: 'Campina Grande, PB',
       metrics: [
         '+25% velocidade de sprint',
@@ -348,6 +348,240 @@ const PORTFOLIO_DATA = Object.freeze({
       accessNoticeType: 'dev',
       linkLabel: 'Repositório no GitHub',
       linkUrl: 'https://github.com/ViniRodrigBarros/tcc_speak_lab'
+    },
+    {
+      id: 'syncflow',
+      index: '05',
+      classification: 'personal',
+      classificationLabel: 'Projeto Pessoal',
+      companyOrContext: 'Projeto de Estudo • Full Stack Mobile',
+      categoryLabel: 'Offline-First Sync & Multi-Tenant Architecture',
+      title: 'SyncFlow — Gestão Offline-First & API Multi-Tenant',
+      subtitle: 'Aplicativo mobile em React Native (Expo) + WatermelonDB integrado a backend NestJS, Prisma e MySQL com sincronização delta.',
+      description: 'Aplicativo mobile de gestão de registros com operação offline-first real, permitindo criar, editar e consultar dados sem conexão e sincronizar automaticamente em background quando a rede retorna.',
+      problemSolved: 'Persistência local em WatermelonDB (SQLite + JSI) com protocolo de sincronização delta (/sync/pull e /sync/push desde lastPulledAt), backend NestJS + Prisma + MySQL, upload multipart de fotos e isolamento multi-tenant via JWT.',
+      architectureOverview: 'Arquitetura dividida em Mobile (MVVM + Clean Architecture com core transversal e features verticais) e API REST modular em NestJS (módulos auth, empresas, registros, fotos e sync). Cada usuário autenticado acessa exclusivamente os registros da própria empresa (empresa_id) com suporte a soft delete e sync incremental.',
+      keyDecisions: [
+        'Implementação de sincronismo delta via WatermelonDB (/sync/pull e /sync/push) trafegando apenas alterações desde o último pull (lastPulledAt) para minimizar consumo de dados.',
+        'Monitoramento em tempo real de conectividade via NetInfo com o hook useSyncEngine disparando sincronização automática na reconexão e botão manual imediato.',
+        'Garantia de isolamento multi-tenant por empresa_id em todas as camadas (token JWT, serviços NestJS e consultas Prisma/MySQL), incluindo upload multipart de anexos.'
+      ],
+      myRole: 'Concepção e implementação integral de estudo cobrindo aplicativo React Native (Expo SDK 56 + WatermelonDB) e API backend modular em NestJS, Prisma, MySQL e Docker.',
+      metrics: [
+        'Offline-First (WatermelonDB + SQLite JSI)',
+        'Protocolo Delta Sync (/pull & /push)',
+        'Multi-Tenant Isolado por Empresa (JWT)'
+      ],
+      technologies: ['React Native (Expo)', 'TypeScript', 'WatermelonDB', 'NestJS', 'Prisma', 'MySQL', 'Clean Architecture & MVVM'],
+      productionBadge: 'Projeto de Estudo • Código Aberto',
+      accessNotice: 'Projeto de estudo',
+      accessNoticeType: 'dev',
+      linkLabel: 'Repositório no GitHub',
+      linkUrl: 'https://github.com/ViniRodrigBarros/SyncFlow'
+    },
+    {
+      id: 'fibrosaude',
+      index: '06',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
+      companyOrContext: 'STTP • Prefeitura de Campina Grande & SMS',
+      categoryLabel: 'Aplicativo Oficial Público • Android & iOS',
+      title: 'FibroSaúde (STTP) — Carteira Digital & Cadastro Oficial',
+      subtitle: 'Aplicativo oficial desenvolvido pela Prefeitura de Campina Grande em parceria com a Secretaria Municipal de Saúde e STTP para cadastro de pessoas com fibromialgia.',
+      description: 'Aplicativo público oficial da Prefeitura de Campina Grande — em parceria com a Secretaria Municipal de Saúde e a STTP — para o cadastro de pessoas com fibromialgia e emissão da carteira oficial de identificação.',
+      problemSolved: 'Emissão ágil da carteirinha (virtual diretamente no app ou impressa presencialmente na STTP), assegurando atendimento prioritário, gratuidade no transporte público e vagas exclusivas de estacionamento conforme a Lei Municipal nº 8.142/2021, Lei Federal nº 14.705/2023 e Portaria nº 015/2023 da STTP.',
+      architectureOverview: 'Aplicativo móvel oficial publicado na Google Play (Android) e App Store (iOS), estruturando o fluxo digital de cadastro cidadão e exibição da carteirinha virtual validável em pontos de atendimento, transporte público e fiscalização da STTP.',
+      keyDecisions: [
+        'Disponibilização multiplataforma pública nas lojas oficiais Android (Google Play) e iOS (App Store).',
+        'Fluxo direto para geração e consulta da carteirinha virtual no dispositivo ou emissão impressa integrada ao atendimento da STTP.',
+        'Conformidade operacional com os critérios da Lei Municipal nº 8.142/2021, Lei Federal nº 14.705/2023 e Portaria nº 015/2023 da STTP.'
+      ],
+      myRole: 'Desenvolvimento e entrega do aplicativo móvel oficial pela STTP para publicação nas lojas Android (Google Play) e iOS (App Store).',
+      metrics: [
+        'Publicado Google Play & App Store',
+        'Carteira Digital & Impressa (STTP)',
+        'Atendimento Prioritário & Gratuidade'
+      ],
+      technologies: ['Flutter', 'Dart', 'Android (Google Play)', 'iOS (App Store)', 'APIs REST'],
+      productionBadge: 'Aplicativo Público Oficial • STTP',
+      storeLinks: [
+        {
+          platform: 'android',
+          sublabel: 'GOOGLE PLAY',
+          label: 'Android',
+          url: 'https://play.google.com/store/apps/details?id=com.mycompany.fibromialgia&hl=pt'
+        },
+        {
+          platform: 'ios',
+          sublabel: 'APP STORE',
+          label: 'iOS',
+          url: 'https://apps.apple.com/br/app/fibrosa%C3%BAde/id6475401613'
+        }
+      ],
+      linkLabel: 'Matéria Oficial CG',
+      linkUrl: 'https://campinagrande.pb.gov.br/prefeitura-de-campina-grande-lanca-o-aplicativo-fibro-saude-e-outras-acoes-para-pessoas-com-fibromialgia/'
+    },
+    {
+      id: 'transitolandia',
+      index: '07',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
+      companyOrContext: 'STTP • Educação para o Trânsito (Campina Grande)',
+      categoryLabel: 'Educação Viária & Minigames Interativos',
+      title: 'Transitolândia (STTP) — Plataforma Educativa de Trânsito',
+      subtitle: 'Aplicativo educativo oficial desenvolvido pela STTP (Prefeitura de Campina Grande) para ensinar cidadania, sinalização e segurança no trânsito de forma lúdica.',
+      description: 'Plataforma digital educativa desenvolvida pela STTP em Campina Grande para ensinar crianças, jovens e estudantes sobre sinalização, cidadania e comportamento seguro nas vias.',
+      problemSolved: 'Desenvolvimento mobile de minigames interativos educativos — Jogo da Memória, Quiz de Trânsito, Jogo da Cobrinha, Salve o Personagem (Forca) e Jogo da Velha — levando ações escolares e educativas da STTP para o smartphone.',
+      architectureOverview: 'Aplicativo móvel estruturado com múltiplos módulos de jogos educativos e interface lúdica de alta resposta, publicado gratuitamente para estudantes, escolas e famílias.',
+      keyDecisions: [
+        'Construção de cinco minigames educativos (Memória, Quiz, Cobrinha, Salve o Personagem e Jogo da Velha) temáticos sobre sinalização e trânsito.',
+        'Interface lúdica e intuitiva voltada a crianças, adolescentes e ações pedagógicas da STTP nas escolas.',
+        'Distribuição pública oficial pela conta institucional da STTP na Google Play Store (br.sttp.transitolandia).'
+      ],
+      myRole: 'Desenvolvimento dos fluxos interativos e minigames educativos no aplicativo oficial Transitolândia pela STTP.',
+      metrics: [
+        '5 Minigames Educativos',
+        'Publicado na Google Play',
+        'Educação Viária & Escolas'
+      ],
+      technologies: ['Flutter', 'Dart', 'Android (Google Play)', 'UI Interativa & Minigames'],
+      productionBadge: 'Aplicativo Educativo Público • STTP',
+      storeLinks: [
+        {
+          platform: 'android',
+          sublabel: 'GOOGLE PLAY',
+          label: 'Android',
+          url: 'https://play.google.com/store/apps/details?id=br.sttp.transitolandia&hl=pt_BR'
+        }
+      ],
+      linkLabel: null,
+      linkUrl: null
+    },
+    {
+      id: 'sos-hemofilia',
+      index: '08',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
+      companyOrContext: 'STTP • Prefeitura de Campina Grande & Saúde',
+      categoryLabel: 'Suporte Emergencial & Geolocalização',
+      title: 'SOS Hemofilia (STTP) — Suporte Emergencial & GPS',
+      subtitle: 'Aplicativo voltado para suporte rápido a pessoas com hemofilia em situações de urgência médica com alertas por geolocalização em tempo real.',
+      description: 'Ferramenta digital desenvolvida pela equipe técnica vinculada à Prefeitura de Campina Grande e STTP para apoio imediato a pessoas com hemofilia em situações de urgência e emergência.',
+      problemSolved: 'Integração de geolocalização em tempo real para disparo ágil de alertas automáticos e comunicação direta durante crises e emergências médicas, otimizando o socorro ao paciente.',
+      architectureOverview: 'Aplicativo móvel projetado para operação crítica em poucos toques, capturando coordenadas GPS em tempo real e enviando alertas estruturados para agilizar o atendimento de emergência.',
+      keyDecisions: [
+        'Fluxo de acionamento rápido com interface direta e legível para uso sob situação de urgência médica.',
+        'Envio automático de coordenadas GPS em tempo real junto ao pedido de socorro.',
+        'Disponibilização pública na Google Play Store (com.hemofilia.sttp) com foco em segurança do paciente.'
+      ],
+      myRole: 'Desenvolvimento técnico do aplicativo SOS Hemofilia pela equipe da STTP em integração com as iniciativas municipais de saúde.',
+      metrics: [
+        'Geolocalização em Tempo Real',
+        'Alertas Automáticos de Socorro',
+        'Publicado na Google Play'
+      ],
+      technologies: ['Flutter', 'Dart', 'Geolocation Services', 'Android (Google Play)', 'APIs REST'],
+      productionBadge: 'Aplicativo Oficial de Saúde • STTP',
+      storeLinks: [
+        {
+          platform: 'android',
+          sublabel: 'GOOGLE PLAY',
+          label: 'Android',
+          url: 'https://play.google.com/store/apps/details?id=com.hemofilia.sttp&hl=pt_BR'
+        }
+      ],
+      linkLabel: null,
+      linkUrl: null
+    },
+    {
+      id: 'bus2-operacao',
+      index: '09',
+      classification: 'work',
+      classificationLabel: 'Projeto de Trabalho',
+      companyOrContext: 'Bus2 • Gestão & Monitoramento de Frotas',
+      categoryLabel: 'Operação de Transporte Público • Corporativo',
+      title: 'Bus2 Operação — Monitoramento & Gestão Operacional',
+      subtitle: 'Solução corporativa utilizada por operadores e equipes de campo para gestão e acompanhamento em tempo real da frota de transporte público.',
+      description: 'Aplicativo corporativo interno da Bus2 voltado à gestão e monitoramento operacional do transporte público, utilizado diariamente por operadores e equipes de campo.',
+      problemSolved: 'Acompanhamento em tempo real da frota, status de operação e eventos em rota diretamente em campo, ampliando visibilidade gerencial e velocidade de atuação das equipes operacionais.',
+      architectureOverview: 'Cliente móvel corporativo integrado aos serviços em tempo real da Bus2 para monitoramento contínuo de veículos, linhas e indicadores operacionais por operadores autorizados.',
+      keyDecisions: [
+        'Interface de consulta rápida para operadores e equipes de campo monitorarem o andamento da frota em tempo real.',
+        'Integração com telemetria de frota, posicionamento geográfico e eventos operacionais do ecossistema Bus2.',
+        'Distribuição corporativa restrita a equipes de operação e parceiros credenciados.'
+      ],
+      myRole: 'Atuação no desenvolvimento de fluxos e funcionalidades operacionais do aplicativo corporativo Bus2 Operação.',
+      metrics: [
+        'Monitoramento de Frota Live',
+        'Equipes de Campo & Operadores',
+        'Gestão de Transporte Público'
+      ],
+      technologies: ['Flutter', 'Dart', 'Real-Time Telemetry', 'Google Maps SDK', 'REST APIs'],
+      productionBadge: 'Aplicativo Corporativo Interno • Bus2',
+      accessNotice: 'Projeto de uso interno, não disponível para o público',
+      accessNoticeType: 'internal',
+      linkLabel: null,
+      linkUrl: null
+    },
+    {
+      id: 'fintracker',
+      index: '10',
+      classification: 'academic',
+      classificationLabel: 'Projeto Acadêmico',
+      companyOrContext: 'Trabalho Acadêmico • Padrões de Projeto & Mobile',
+      categoryLabel: 'Design Patterns (Java) & React Native',
+      title: 'FinTracker — Gestor Financeiro com Padrões de Projeto',
+      subtitle: 'Gestor financeiro acadêmico combinando backend Java com Padrões de Projeto (Maven/Docker) e aplicativo móvel React Native.',
+      description: 'Sistema financeiro desenvolvido como trabalho acadêmico para aplicar padrões de projeto no controle de despesas diárias, categorização de transações, definição de orçamentos, contas/cartões e relatórios detalhados.',
+      problemSolved: 'Integração entre arquitetura backend modular em Java (Maven/Spring & Dockerfile) guiada por Design Patterns e aplicativo mobile em React Native com gráficos, gerenciamento automático de saldos e orientações de gastos.',
+      architectureOverview: 'Repositório estruturado em backend Java Maven (fintracker/), cliente móvel React Native (fintracker_app/) e documentação técnica dedicada (fintracker_docs/), com suporte a containerização via Dockerfile.',
+      keyDecisions: [
+        'Aplicação prática de Padrões de Projeto em Java para modelagem de orçamentos, regras de contas/cartões e geração de relatórios financeiros.',
+        'Desenvolvimento de cliente móvel em React Native focado no registro ágil de despesas diárias e visualização de estatísticas de gastos.',
+        'Containerização do backend com Dockerfile e desenvolvimento colaborativo em equipe acadêmica.'
+      ],
+      myRole: 'Desenvolvimento em equipe do trabalho acadêmico FinTracker, colaborando na arquitetura com padrões de projeto em Java e na experiência mobile em React Native.',
+      metrics: [
+        'Padrões de Projeto em Java',
+        'Mobile em React Native',
+        'Controle de Orçamentos & Relatórios'
+      ],
+      technologies: ['Java', 'React Native', 'JavaScript', 'Design Patterns', 'Maven', 'Docker'],
+      productionBadge: 'Trabalho Acadêmico • Open Source',
+      accessNotice: 'Trabalho acadêmico',
+      accessNoticeType: 'dev',
+      linkLabel: 'Repositório no GitHub',
+      linkUrl: 'https://github.com/ViniRodrigBarros/FinTracker'
+    },
+    {
+      id: 'ingrid-cunha-psi',
+      index: '11',
+      classification: 'personal',
+      classificationLabel: 'Projeto Pessoal',
+      companyOrContext: 'Projeto Pessoal • Web & UI Editorial',
+      categoryLabel: 'Landing Page Clínica • HTML, CSS & JS',
+      title: 'Ingrid Cunha — Landing Page para Clínica de Psicologia',
+      subtitle: 'Landing page responsiva que desenvolvi para a clínica da minha namorada (Ingrid Cunha — Psicóloga Infantojuvenil, CRP 13/12719).',
+      description: 'Landing page que desenvolvi para a clínica da minha namorada (Ingrid Cunha — Psicóloga Infantojuvenil, CRP 13/12719 e pós-graduanda em Neuropsicologia), com foco em acolhimento familiar, clareza de informações e atendimento pela TCC.',
+      problemSolved: 'Criação ponta a ponta em HTML5, CSS3 e JavaScript de uma página editorial acolhedora apresentando sinais para acompanhamento psicológico, atendimento infantil, atendimento de adolescentes e orientação de pais, publicada no GitHub Pages.',
+      architectureOverview: 'Aplicação web estática leve em HTML5 semântico, CSS3 customizado e JavaScript vanilla, estruturada para rápida leitura em dispositivos móveis, SEO configurado e entrega contínua no GitHub Pages.',
+      keyDecisions: [
+        'Direção de arte e microcopy pensadas para acolher pais e responsáveis com clareza visual e confiança clínica.',
+        'Jornada de leitura guiada por cenários práticos (emoções intensas, socialização, aprendizagem) e frentes de atendimento infantil e adolescente.',
+        'Publicação otimizada como site estático leve em produção no GitHub Pages.'
+      ],
+      myRole: 'Design de interface (UI/UX), estruturação de conteúdo, implementação front-end completa (HTML, CSS e JavaScript) e deploy no GitHub Pages.',
+      metrics: [
+        'Site Publicado em Produção',
+        'HTML5 • CSS3 • JavaScript',
+        'Design Editorial Responsivo'
+      ],
+      technologies: ['HTML5', 'CSS3', 'JavaScript', 'UI/UX Design', 'Design Responsivo', 'GitHub Pages'],
+      productionBadge: 'Projeto Pessoal • No Ar',
+      accessNotice: 'Landing page desenvolvida para a clínica da minha namorada',
+      accessNoticeType: 'dev',
+      linkLabel: 'Acessar landing page',
+      linkUrl: 'https://ingridcunhapsi.github.io/IngridCunhaPsic-logaInfantojuvenil/'
     }
   ],
 
@@ -1370,6 +1604,244 @@ const UIComponents = {
       `;
     }
 
+    if (project.id === 'syncflow') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">SYNCFLOW // OFFLINE-FIRST ENGINE</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">DELTA + MULTI-TENANT</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / MOBILE</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">React Native</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Expo + WatermelonDB (SQLite JSI) e NetInfo.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / DELTA SYNC</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">/pull &amp; /push</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Sync incremental desde lastPulledAt.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / BACKEND</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">NestJS + Prisma</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">MySQL isolado por empresa_id via JWT.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>MVVM + Clean Architecture</span>
+            <span class="text-[#FF9A5C]">Projeto de Estudo</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'fibrosaude') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">FIBROSAÚDE // SERVIÇO PÚBLICO STTP</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">ANDROID &amp; iOS</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / IDENTIFICAÇÃO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Carteira Digital</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Emissão virtual no app ou impressa na STTP.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / DIREITOS</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Prioridade &amp; Acesso</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Gratuidade no transporte e vagas exclusivas.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / BASE LEGAL</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Leis &amp; Portaria</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Lei 8.142/21, 14.705/23 e Portaria 015/23.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>Prefeitura CG • SMS • STTP</span>
+            <span class="text-[#FF9A5C]">● Lojas Oficiais</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'transitolandia') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">TRANSITOLÂNDIA // EDUCAÇÃO STTP</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">5 MINIGAMES</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / JOGOS</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Mecânica Lúdica</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Memória, Snake, Forca e Jogo da Velha temáticos.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / QUIZ</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Educação Viária</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Sinalização, leis e segurança no trânsito.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / ALCANCE</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Escolas &amp; Famílias</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Ações educativas da STTP em Campina Grande.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>br.sttp.transitolandia</span>
+            <span class="text-[#FF9A5C]">● Google Play Oficial</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'sos-hemofilia') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">SOS HEMOFILIA // URGÊNCIA MÉDICA</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">REAL-TIME GPS</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / ACIONAMENTO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Alerta Rápido</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Pedido de socorro ágil em situações de crise.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / LOCALIZAÇÃO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">GPS Contínuo</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Coordenadas enviadas automaticamente no alerta.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / SAÚDE</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Atendimento Ágil</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Apoio público para pessoas com hemofilia.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>com.hemofilia.sttp</span>
+            <span class="text-[#FF9A5C]">● Google Play Oficial</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'bus2-operacao') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">BUS2 OPERAÇÃO // FLEET OPS</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">USO INTERNO</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / FROTA</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Live Tracking</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Acompanhamento de veículos em tempo real.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / CAMPO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Operadores</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Fluxo operacional para fiscais e centrais.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / GESTÃO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Controle Viário</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Visibilidade de partidas, rotas e ocorrências.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>Corporativo • Bus2</span>
+            <span class="text-[#FF9A5C]">Acesso Restrito</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'fintracker') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">FINTRACKER // DESIGN PATTERNS</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">JAVA + REACT NATIVE</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / ARQUITETURA</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Java + Maven</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Padrões de Projeto e containerização Docker.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / MOBILE</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">React Native</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Despesas diárias, contas bancárias e cartões.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / INSIGHTS</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">Orçamentos</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Metas mensais e relatórios de gastos.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>ViniRodrigBarros/FinTracker</span>
+            <span class="text-[#FF9A5C]">Trabalho Acadêmico</span>
+          </div>
+        </div>
+      `;
+    }
+
+    if (project.id === 'ingrid-cunha-psi') {
+      return `
+        <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
+          <div class="flex items-center justify-between border-b border-[#F5F1E8]/10 pb-3">
+            <span class="font-mono-meta text-xs text-[#FF9A5C]">INGRID CUNHA PSI // WEB EDITORIAL</span>
+            <span class="font-mono-meta text-xs text-[#F5F1E8]">CRP 13/12719</span>
+          </div>
+
+          <div class="my-5 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#F5F1E8]/10">
+            <div class="py-3 sm:py-1 sm:pr-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">01 / ACOLHIMENTO</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">UX Clínica</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Jornada guiada para pais, crianças e adolescentes.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:px-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">02 / ABORDAGEM</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">TCC &amp; Neuro</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Atendimento infantojuvenil e orientação familiar.</p>
+            </div>
+            <div class="py-3 sm:py-1 sm:pl-4">
+              <div class="font-mono-meta text-[10px] text-[#FF9A5C]">03 / STACK WEB</div>
+              <div class="text-sm font-semibold text-[#F5F1E8] mt-1">HTML • CSS • JS</div>
+              <p class="text-xs text-[#AAA6A0] mt-1">Página responsiva leve publicada no GitHub Pages.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#F5F1E8]/10 flex items-center justify-between font-mono-meta text-[11px] text-[#AAA6A0]">
+            <span>Psicologia Infantojuvenil</span>
+            <span class="text-[#FF9A5C]">● Site no Ar</span>
+          </div>
+        </div>
+      `;
+    }
+
     // LocalSpeak Visual
     return `
       <div class="w-full h-full min-h-[320px] lg:pl-10 lg:border-l border-[#F5F1E8]/10 flex flex-col justify-between py-2">
@@ -1410,7 +1882,27 @@ const UIComponents = {
   renderProjectAccessControl(project) {
     const parts = [];
 
-    if (project.linkUrl && project.linkImage) {
+    if (Array.isArray(project.storeLinks) && project.storeLinks.length) {
+      project.storeLinks.forEach((store) => {
+        const storeIcon = store.platform === 'android'
+          ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 3.8l14.2 8.2L5 20.2V3.8z" />'
+          : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 4.5a4 4 0 013-1.5m-1 3.2c1.8 0 3.5 1.1 4.2 2.8-2.3 1.3-2.5 4.4-.2 5.9-.5 1.4-1.5 2.9-2.8 3.1-1 .2-1.7-.4-2.8-.4-1.1 0-1.9.6-2.9.4-1.3-.2-2.4-1.8-3-3.4-1.2-3.4.3-7.6 3.2-7.8 1-.1 2 .5 2.7.5.5 0 1-.4 1.6-.4z" />';
+        parts.push(`
+          <a href="${DOMUtils.escapeHTML(store.url)}" target="_blank" rel="noopener noreferrer" class="project-official-card group" aria-label="Baixar ${DOMUtils.escapeHTML(project.title)} na ${DOMUtils.escapeHTML(store.sublabel)}">
+            <span class="project-official-thumb">
+              <svg class="w-4 h-4 text-[#FF9A5C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">${storeIcon}</svg>
+            </span>
+            <span class="flex flex-col text-left leading-tight">
+              <span class="font-mono-meta text-[10px] text-[#FF9A5C]">${DOMUtils.escapeHTML(store.sublabel)}</span>
+              <span class="text-xs font-medium text-[#F5F1E8] group-hover:text-[#FF9A5C] transition-colors">${DOMUtils.escapeHTML(store.label)}</span>
+            </span>
+            <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C] ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </a>
+        `);
+      });
+    } else if (project.linkUrl && project.linkImage) {
       parts.push(`
         <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="project-official-card group" aria-label="${DOMUtils.escapeHTML(project.linkLabel || 'Acessar landing page oficial')}">
           <span class="project-official-thumb">
@@ -1429,6 +1921,17 @@ const UIComponents = {
       parts.push(`
         <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial text-xs py-3 px-5 flex items-center gap-2">
           <span>${DOMUtils.escapeHTML(project.linkLabel || 'Acessar projeto')}</span>
+          <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </a>
+      `);
+    }
+
+    if (project.storeLinks?.length && project.linkUrl) {
+      parts.push(`
+        <a href="${DOMUtils.escapeHTML(project.linkUrl)}" target="_blank" rel="noopener noreferrer" class="btn-secondary-editorial text-xs py-2.5 px-4 flex items-center gap-1.5">
+          <span>${DOMUtils.escapeHTML(project.linkLabel || 'Fonte Oficial')}</span>
           <svg class="w-3.5 h-3.5 shrink-0 text-[#F0783C]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
           </svg>

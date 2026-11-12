@@ -29,6 +29,13 @@ O projeto foi construído sem etapa de compilação (*zero-build*), combinando H
      - **NEAT (STTP)** — Mapeamento geoespacial Offline-First com SQLite, sync queue e Google Maps API.
      - **Bus2Driver** — Telemetria veicular em tempo real com streams bidirecionais WebSocket e cálculo de ETA.
      - **LocalSpeak** — TCC em Engenharia de Computação (IFPB) executando LLMs quantizados (`flutter_gemma`) e STT/TTS (`sherpa_onnx`) 100% on-device.
+     - **SyncFlow** — Projeto pessoal de estudo offline-first com React Native (Expo), WatermelonDB e API multi-tenant em NestJS + Prisma + MySQL.
+     - **FibroSaúde (STTP)** — Aplicativo público oficial (Google Play e App Store) da Prefeitura de Campina Grande / STTP para cadastro e emissão de carteira digital de fibromialgia.
+     - **Transitolândia (STTP)** — Aplicativo educativo oficial (Google Play) com minigames lúdicos sobre segurança e sinalização viária.
+     - **SOS Hemofilia (STTP)** — Aplicativo de suporte rápido com alertas automáticos baseados em geolocalização para urgências médicas (Google Play).
+     - **Bus2 Operação** — Aplicativo corporativo interno da Bus2 para monitoramento e gestão em tempo real da frota por operadores e equipes de campo.
+     - **FinTracker** — Trabalho acadêmico combinando Padrões de Projeto em backend Java (Maven/Docker) e aplicativo móvel React Native para gestão financeira pessoal.
+     - **Ingrid Cunha — Landing Page Clínica** — Projeto pessoal web responsivo em HTML5, CSS3 e JavaScript desenvolvido para clínica de psicologia infantojuvenil (GitHub Pages).
 
 5. **Stack, Ferramentas & Engenharia com IA (`#stack`)**
    - **Matriz Técnica (`#stack-grid`)**: 6 grupos cobrindo Mobile Development, Clean Architecture/Patterns, APIs em tempo real, QA/CI/CD, Backend/Web e Metodologias.
